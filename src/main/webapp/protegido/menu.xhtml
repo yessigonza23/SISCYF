@@ -1,0 +1,157 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+<body>
+	<ui:composition template="/WEB-INF/templates/master.xhtml">
+		<ui:define name="content">
+			
+			<h:form id="frm" enctype="multipart/form-data"
+				onkeypress="if (event.keyCode == 13) { return false; }">
+				<h2 style="color: #003778; text-align: center">REGISTRO DE
+					OPCIONES DE MENÚ</h2>
+				<p:growl id="growl" autoUpdate="true" showDetail="true"
+					sticky="true" />
+
+
+
+				<p:panelGrid columns="3"
+					style="display:block; text-align:center; width:100%; margin:0px auto;"
+					columnClasses="centered">
+					<p:commandButton value="Nuevo" oncomplete="PF('wdlg').show()"
+						actionListener="#{menuDinamicoBean.limpiarControles()}"
+						update="frm:dlg" process="@this" />
+					<p:commandButton id="btnRegresar" value="Principal"
+						icon="fa fa-fw fa-hand-o-left"
+						action="#{navegarVistasBean.principal()}" process="@this"
+						update="@this" />
+				</p:panelGrid>
+				<p:dataTable id="dt" resizableColumns="true"
+					value="#{menuDinamicoBean.listaMenu}" var="e"
+					widgetVar="estudiosTabla" rows="15" paginator="true"
+					paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+					rowsPerPageTemplate="10,15,20" sortOrder="descending"
+					paginatorPosition="top"
+					emptyMessage="No hay ningún registro con esa opción">
+
+					<p:column headerText="Codigo" filterBy="#{e.id}"
+						filterMatchMode="contains" style="width:10px">
+						<p:cellEditor>
+							<f:facet name="output">
+								<p:outputLabel value="#{e.id}" />
+							</f:facet>
+
+							<f:facet name="input">
+								<p:inputText value="#{e.id}" />
+							</f:facet>
+						</p:cellEditor>
+					</p:column>
+					<p:column headerText="Nombre" filterBy="#{e.nombre}"
+						filterMatchMode="contains" style="width:50px">
+						<p:cellEditor>
+							<f:facet name="output">
+								<p:outputLabel value="#{e.nombre}" />
+							</f:facet>
+
+							<f:facet name="input">
+								<p:inputText value="#{e.nombre}" />
+							</f:facet>
+						</p:cellEditor>
+					</p:column>
+					<p:column exportable="false" style="width: 10px">
+						<p:commandLink actionListener="#{menuDinamicoBean.mostrarData(e)}"
+							oncomplete="PF('wdlg').show()" update="frm:dlg" immediate="true"
+							process="@this">
+							<i class="fa fa-fw fa-edit"></i>
+						</p:commandLink>
+					</p:column>
+				</p:dataTable>
+
+				<p:dialog id="dlg" widgetVar="wdlg" modal="true"
+					closeOnEscape="true" resizable="false" draggable="false"
+					width="700" position="center">
+					<p:fieldset legend="#{menuDinamicoBean.tipoDialog}"
+						style="width:80%">
+
+						<p:panelGrid id="pg" columns="3" tyle="margin-left: 35%">
+							<p:column style="border-style: hidden;width:50px;"></p:column>
+							<p:column style="border-style: hidden; width:130px;">Código: </p:column>
+							<p:column style="border-style: hidden;">
+								<p:inputText id="txtId" value="#{menuDinamicoBean.menu.id}"
+									required="true" style="width:300px" />
+								<p:messages for="txtId" display="icon" />
+							</p:column>
+
+							<p:column style="border-style: hidden;width:50px;"></p:column>
+							<p:column style="border-style: hidden; width:130px;">Nombre Menú: </p:column>
+							<p:column style="border-style: hidden;">
+								<p:inputText id="txtNombre"
+									value="#{menuDinamicoBean.menu.nombre}" required="true"
+									style="width:300px" />
+								<p:messages for="txtNombre" display="icon" />
+							</p:column>
+
+							<p:column style="border-style: hidden;width:50px;"></p:column>
+							<p:column style="border-style: hidden; width:130px;">Tipo: </p:column>
+							<p:column style="border-style: hidden;">
+								<p:selectOneMenu id="txtEstado"
+									value="#{menuDinamicoBean.menu.tipo}" required="true"
+									style="width:100px">
+									<f:selectItem itemLabel="Principal" itemValue="S" />
+									<f:selectItem itemLabel="Submenú" itemValue="I" />
+								</p:selectOneMenu>
+							</p:column>
+
+							<p:column style="border-style: hidden;width:50px;"></p:column>
+							<p:column style="border-style: hidden; width:130px;">Código Submenú: </p:column>
+							<p:column style="border-style: hidden;">
+								<p:selectOneMenu id="categorie_article"
+									value="#{menuDinamicoBean.menu.submenu}" effect="fade"
+									converter="omnifaces.SelectItemsConverter" filter="true"
+									filterMatchMode="startsWith" tyle="width:100px">
+									<f:selectItem itemLabel="Select One" noSelectionOption="true" />
+									<f:selectItems value="#{menuDinamicoBean.listaMenu}" var="e"
+										itemLabel="#{e.nombre}" itemValue="#{e}" />
+									<f:ajax render="selected_item" />
+								</p:selectOneMenu>
+								<p:messages for="cboMenu" />
+							</p:column>
+
+							<p:column style="border-style: hidden;width:50px;"></p:column>
+							<p:column style="border-style: hidden; width:130px;">Link: </p:column>
+							<p:column style="border-style: hidden;">
+								<p:inputText id="txtLink" value="#{menuDinamicoBean.menu.link}"
+									required="true" style="width:300px" />
+								<p:messages for="txtLink" display="icon" />
+							</p:column>
+
+						</p:panelGrid>
+
+					</p:fieldset>
+					<p:panelGrid id="pgBotones" columns="3" style="margin-left: 35%">
+						<p:commandButton value="Registrar"
+							actionListener="#{menuDinamicoBean.operar('R')}" ajax="true"
+							oncomplete="if (args &amp;&amp; !args.validationFailed) PF('wdlg').hide()"
+							update="pg, dt"
+							rendered="#{menuDinamicoBean.tipoDialog == 'Nuevo Proceso'}" />
+
+						<p:commandButton value="Modificar"
+							actionListener="#{menuDinamicoBean.operar('M')}" ajax="true"
+							oncomplete="if (args &amp;&amp; !args.validationFailed) PF('wdlg').hide()"
+							update="pg, dt"
+							rendered="#{menuDinamicoBean.tipoDialog == 'Modificar Proceso'}" />
+					</p:panelGrid>
+				</p:dialog>
+			</h:form>
+
+			<!-- Script de estilos para el contenido fel formulario-->
+			<h:outputStylesheet library="css" name="buscar.css" />
+			<h:outputStylesheet library="css" name="registroUsuario.css" />
+		</ui:define>
+
+	</ui:composition>
+</body>
+</html>
