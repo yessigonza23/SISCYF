@@ -16,8 +16,11 @@
 	<div id="principal"
 		style="background-image: url('resources/images/fondo.png'); background-repeat: no-repeat; background-size: 100%; background-position-x: 20%; background-position-y: 5%">
 		<h:form id="cuadrado">
-			<p:growl id="mensaje" autoUpdate="false" severity="warn, fatal"
-				showSummary="true" showDetail="true" />
+		
+		<p:growl id="mensaje" showDetail="true" sticky="true">
+			<p:autoUpdate />
+		</p:growl>
+		
 
 			<h:panelGrid id="pgDatosUsuario" columns="3" cellpadding="8"
 				style="padding-top: 0%">

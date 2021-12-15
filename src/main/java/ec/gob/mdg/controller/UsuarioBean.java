@@ -82,10 +82,11 @@ public class UsuarioBean implements Serializable {
 			if (!(usuarioRegCivil.getNombre() == null)) {
 				usuario.setNombre(usuarioRegCivil.getNombre());
 				render = true;
-				System.out.println("Nombre de la identificación" + usuarioRegCivil.getNombre());
+				
+				FacesContext.getCurrentInstance().addMessage(null,
+						new FacesMessage(FacesMessage.SEVERITY_INFO, "biennnnn", "ok"));
 			}
-			FacesContext.getCurrentInstance().addMessage(null,
-					new FacesMessage(FacesMessage.SEVERITY_INFO, "biennnnn", "ok"));
+		
 		}
 
 	}

@@ -4,23 +4,21 @@
 	xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:p="http://primefaces.org/ui">
+
+<h:head>
+	<h:outputStylesheet name="css/estilos.css" />
+</h:head>
 <body>
 
 	<h:form id="cuadrado">
-		<h:messages globalOnly="true" showDetail="true" showSummary="false"></h:messages>
-
+		
 		<p:growl id="growl" showDetail="true" sticky="true">
 			<p:autoUpdate />
 		</p:growl>
 		<h2 style="color: #003778; text-align: center">REGISTRAR USUARIOS</h2>
 
-		<p:commandButton id="btnguardar" value="Guardar"
-			icon="fa fa-fw fa-floppy-o"
-			actionListener="#{usuarioBean.registrar()}" process="@form"
-			update=" @this" disabled="#{usuarioBean.estadeshabilitado}">
 
-		</p:commandButton>
-		<h:panelGrid id="panel" columns="1" cellpadding="5" cellspacing="1"
+		<p:panelGrid id="panel" columns="1" cellpadding="5" cellspacing="1"
 			style="padding-right: 50px; margin: 0 auto;">
 
 			<p:column style="border-style: hidden; width:130px;">Ci/RUC/Pasaporte: </p:column>
@@ -33,10 +31,9 @@
 				<p:message for="txtCi" display="icon" />
 			</p:column>
 
-			<p:commandButton id="btng" value="Consultar"
+			<p:commandButton id="btng" value="Consultar" ajax="false"
 				actionListener="#{usuarioBean.consultaIdentificacion(usuarioBean.usuario.username)}"
-				update="pgDatosUsuario,txtNombres">
-
+				update="pgDatosUsuario,txtNombres,txtCargo1">
 			</p:commandButton>
 
 			<p:column style="border-style: hidden; width:130px;">Nombres: </p:column>
@@ -46,7 +43,17 @@
 				</p:inputText>
 				<p:message for="txtNombres" display="text" />
 			</p:column>
-		</h:panelGrid>
+			
+			
+			<p:column style="border-style: hidden; width:130px;" rendered="#{usuarioBean.render}">Cargo: </p:column>
+			<p:column style="border-style: hidden;" rendered="#{usuarioBean.render}">
+				<p:inputText id="txtCargo1" value="#{usuarioBean.usuario.cargo}" rendered="#{usuarioBean.render}"
+					style="width:300px;" disabled="#{usuarioBean.valida}"
+					maxlength="100" required="true" requiredMessage="Requerido Cargp">
+				</p:inputText>
+				<p:message for="txtCargo1" display="text" />
+			</p:column>
+		</p:panelGrid>
 
 		<p:panelGrid id="pgDatosUsuario" rendered="#{usuarioBean.render}"
 			columns="1" cellpadding="5" cellspacing="1"
@@ -92,7 +99,12 @@
 					<f:selectItem itemLabel="Archivo" itemValue="A" />
 				</p:selectOneMenu>
 			</p:column>
+			<p:commandButton id="btnguardar" value="Guardar"
+				icon="fa fa-fw fa-floppy-o"
+				actionListener="#{usuarioBean.registrar()}" process="@form"
+				update=" @this" disabled="#{usuarioBean.estadeshabilitado}">
 
+			</p:commandButton>
 		</p:panelGrid>
 
 	</h:form>
