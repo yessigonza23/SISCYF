@@ -5,13 +5,12 @@
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:f="http://xmlns.jcp.org/jsf/core">
 <h:head>
-	<title><ui:insert name="titulo">Siscyf </ui:insert></title>
+	<title><ui:insert name="titulo">SisFacturacion </ui:insert></title>
 	<!-- 		<h:outputStylesheet library="css" name="estilos.css" /> -->
 	<link href="./resources/css/indexmito.css" rel="stylesheet"
 		type="text/css" />
 	<!-- 		<h:outputStylesheet library="css" name="estilos.css" /> -->
 </h:head>
-
 <body>
 
 	<div class="registrarDiv" style="width: 400px">
@@ -20,9 +19,9 @@
 		<h:form id="cambioPunto"
 			onkeypress="if (event.keyCode == 13) { return false; }">
 			<p:panel id="panel1" style="font-size:100%; border:1%; width:600px ">
-				<h2 style="color: #003778; text-align: center">CAMBIAR
+				<h2 style="color: #003778; text-align: center">RECUPERAR
 					CONTRASEÑA</h2>
-				<h2 style="color: #003778; text-align: center">#{usuarioModificaBean.usuario.nombre} </h2>
+
 				<p:growl id="growl" showDetail="true" sticky="true">
 					<p:autoUpdate />
 				</p:growl>
@@ -32,31 +31,23 @@
 					<br />
 					<p:row style="border-style: hidden;">
 						<p:column style="border-style: hidden;width:50px;"></p:column>
-						<p:column style="border-style: hidden; width:130px;">Digete Contraseña para Sistema: </p:column>
+						<p:column style="border-style: hidden; width:130px;">Cédula : </p:column>
 						<p:column style="border-style: hidden;">
-							<p:password id="Clave" size="30"
-								value="#{usuarioModificaBean.usuario.password}"
-								toggleMask="true" match="RepiteClave" />
-						</p:column>
-					</p:row>
-					<p:row style="border-style: hidden;">
-						<p:column style="border-style: hidden;width:50px;"></p:column>
-						<p:column style="border-style: hidden; width:130px;">Confirme Contraseña para Sistema: </p:column>
-						<p:column style="border-style: hidden;">
-							<p:password id="RepiteClave" size="30"
-								value="#{usuarioModificaBean.usuario.password}"
-								toggleMask="true" />
+							<p:inputText id="txtCi" maxlength="13"
+								value="#{olvidoContraseniaBean.cedula}" required="true"
+								requiredMessage="Cedula requerida" style="width:100px;">
+
+							</p:inputText>
+							<p:message for="txtCi" display="icon" />
 						</p:column>
 					</p:row>
 				</h:panelGrid>
 
 				<h:panelGrid columns="2" cellpadding="5" cellspacing="1"
 					style="padding-right: 50px; margin: 0 auto;">
-					<p:commandButton icon="ui-icon-disk" id="btnGuardar"
-						value="Guardar" style="text-align: center"
-						actionListener="#{usuarioModificaBean.modificar()}"
-						process="@form" update="@form"
-						disabled="#{usuarioModificaBean.estadeshabilitado}">
+					<p:commandButton icon="ui-icon-disk" id="btnValidar"
+						value="Validar"
+						actionListener="#{olvidoContraseniaBean.validarCedula(olvidoContraseniaBean.cedula)}">
 					</p:commandButton>
 					<p:commandButton icon="ui-icon-key" value="Regresar"
 						action="index?faces-redirect=true" immediate="true"
@@ -72,6 +63,3 @@
 
 </body>
 </html>
-
-
-

@@ -1,0 +1,183 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui">
+
+
+<h:body>
+	<ui:composition template="/WEB-INF/templates/master.xhtml">
+		<ui:define name="content">
+			<h:form id="frm" enctype="multipart/form-data"
+				onkeypress="if (event.keyCode == 13) { return false; }"
+				method="post" action="/form" autocomplete="off">
+				<h2 style="color: #003778; text-align: center">CONSULTA DE
+					USUARIOS</h2>
+				<p:growl id="growl" showDetail="true" sticky="true">
+					<p:autoUpdate />
+				</p:growl>
+				<p:panelGrid columns="3"
+					style="display:block; text-align:center; width:100%; margin:0px auto;"
+					columnClasses="centered">
+					<p:commandButton id="btnRegresar" value="Principal"
+						icon="fa fa-fw fa-hand-o-left"
+						action="#{navegarVistasBean.principal()}" process="@this"
+						update="@this" />
+				</p:panelGrid>
+
+				<p:dataTable id="dt" resizableColumns="true" var="e"
+					value="#{usuarioConsultaBean.listaUsuario}" rows="15"
+					paginator="true" selectionMode="single"
+					selection="#{usuarioConsultaBean.usuario}" rowKey="#{usuario.id}"
+					paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+					rowsPerPageTemplate="10,15,20" sortOrder="descending"
+					paginatorPosition="top"
+					emptyMessage="No hay ningún registro con esa opción">
+
+					<p:ajax event="rowSelect"
+						listener="#{usuarioConsultaBean.operar('M')}" update="frm:dlg"
+						oncomplete="PF('wdlg').show();" />
+					<p:ajax event="rowUnselect"
+						listener="#{usuarioConsultaBean.onRowUnselect}" update=":frm:dt" />
+
+
+
+					<p:column headerText="No. Cédula" filterBy="#{e.username}"
+						filterMatchMode="contains" style="width:20px">
+						<p:outputLabel value="#{e.username}" />
+					</p:column>
+
+					<p:column headerText="Nombres y Apellidos"
+						filterBy="#{e.nombre} #{e.nombre}" filterMatchMode="contains"
+						style="width:100px">
+						<p:outputLabel value="#{e.nombre}"
+							style="text-transform: uppercase" />
+					</p:column>
+					<p:column headerText="Cargo" filterBy="#{e.cargo}"
+						filterMatchMode="contains" style="width:50px">
+						<p:outputLabel value="#{e.cargo}"
+							style="text-transform: uppercase" />
+					</p:column>
+					<p:column headerText="Titulo" filterBy="#{e.titulo}"
+						filterMatchMode="contains" style="width:50px">
+						<p:outputLabel id="titulo" value="#{e.titulo}">
+							<f:converter converterId="titulos" />
+						</p:outputLabel>
+					</p:column>
+					<p:column headerText="Correo Electrónico"
+						filterBy="#{e.correo_electronico}" filterMatchMode="contains"
+						style="width:120px">
+						<p:outputLabel id="correo" value="#{e.correo_electronico}">
+						</p:outputLabel>
+					</p:column>
+
+					<p:column headerText="Estado" filterBy="#{e.estado}"
+						filterMatchMode="contains" style="width:50px">
+						<p:outputLabel id="estado" value="#{e.estado}" style="width:100px">
+							<f:converter converterId="estadoUsuarios" />
+						</p:outputLabel>
+					</p:column>
+
+				</p:dataTable>
+
+				<p:dialog id="dlg" widgetVar="wdlg" modal="true"
+					closeOnEscape="true" resizable="false" draggable="true">
+					<p:fieldset legend="#{usuarioConsultaBean.tipoDialog}"
+						style="width:90%">
+
+						<p:panelGrid id="pg" columns="3"
+							columnClasses="p-col-12 p-md-3 p-xl-2, p-col-12 p-md-9 p-xl-4, p-col-12 p-md-3 p-xl-2, p-col-12 p-md-9 p-xl-4"
+							contentStyleClass="p-align-baseline ui-fluid">
+							<p:column style="border-style: hidden;width:50px;"></p:column>
+							<p:column style="border-style: hidden; width:130px;">No. Cédula: </p:column>
+							<p:column style="border-style: hidden;">
+								<p:inputText id="txtCedula" disabled="true" autocomplete="off"
+									value="#{usuarioConsultaBean.usuario.username}" />
+								<p:message for="txtCedula" display="text" />
+							</p:column>
+
+							<p:column style="border-style: hidden;width:50px;"></p:column>
+							<p:column style="border-style: hidden; width:130px;">Nombres: </p:column>
+							<p:column style="border-style: hidden;">
+								<p:inputText id="txtNombres" autocomplete="off"
+									style="width:250px; text-transform: uppercase"
+									value="#{usuarioConsultaBean.usuario.nombre}" />
+								<p:message for="txtNombres" display="text" />
+							</p:column>
+
+							<p:column style="border-style: hidden;width:50px;"></p:column>
+							<p:column style="border-style: hidden; width:130px;">Correo Electrónico: </p:column>
+							<p:column style="border-style: hidden;">
+								<p:inputText id="txtCorreo" autocomplete="off"
+									value="#{usuarioConsultaBean.usuario.correo_electronico}"
+									style="width:300px; text-transform:lowercase"
+									requiredMessage="Requerido Correo electronico"
+									validatorMessage="Correo electrónico no es válido">
+									<f:validateRegex
+										pattern="[\w\.-]*[a-zA-Z0-9_]@[\w\.-]*[a-zA-Z0-9]\.[a-zA-Z][a-zA-Z\.]*[a-zA-Z]" />
+								</p:inputText>
+								<p:message for="txtCorreo" display="text" />
+							</p:column>
+
+							<p:column style="border-style: hidden;width:50px;"></p:column>
+							<p:column style="border-style: hidden; width:130px;">Cargo: </p:column>
+							<p:column style="border-style: hidden;">
+								<p:inputText id="txtCargo" autocomplete="off"
+									style="width:250px; text-transform: uppercase"
+									value="#{usuarioConsultaBean.usuario.cargo}" />
+								<p:message for="txtCargo" display="text" />
+							</p:column>
+
+
+
+							<p:column style="border-style: hidden;width:50px;"></p:column>
+							<p:column style="border-style: hidden; width:130px;">Estado: </p:column>
+							<p:column style="border-style: hidden;">
+								<p:selectOneMenu id="estado"
+									value="#{usuarioConsultaBean.usuario.estado}"
+									style="width:100px">
+									<f:selectItem itemLabel="Activo" itemValue="A" />
+									<f:selectItem itemLabel="Bloqueado" itemValue="B" />
+								</p:selectOneMenu>
+							</p:column>
+
+							<p:column style="border-style: hidden;width:50px;"></p:column>
+							<p:column style="border-style: hidden; width:130px;">Título: </p:column>
+							<p:column style="border-style: hidden;">
+								<p:selectOneMenu id="titulo" disabled="#{usuarioBean.valida}"
+									value="#{usuarioConsultaBean.usuario.titulo}" required="true"
+									style="width:100px">
+									<f:selectItem itemLabel="Economista" itemValue="Eco." />
+									<f:selectItem itemLabel="Licenciado/a" itemValue="Lic." />
+									<f:selectItem itemLabel="Ingeniero/a" itemValue="Ing." />
+									<f:selectItem itemLabel="Señora." itemValue="Sra." />
+									<f:selectItem itemLabel="Señor" itemValue="Sr." />
+									<f:selectItem itemLabel="Señorita" itemValue="Srta." />
+									<f:selectItem itemLabel="Magister." itemValue="Mgs." />
+									<f:selectItem itemLabel="Doctora." itemValue="Dra." />
+									<f:selectItem itemLabel="Doctor" itemValue="Dr." />
+									<f:selectItem itemLabel="Quimico/a" itemValue="Quim." />
+								</p:selectOneMenu>
+							</p:column>
+						</p:panelGrid>
+
+					</p:fieldset>
+
+					<p:commandButton value="Modificar"
+						actionListener="#{usuarioConsultaBean.operar('M')}" ajax="true"
+						oncomplete="if (args &amp;&amp; !args.validationFailed) PF('wdlg').hide()"
+						update="pg, dt"
+						rendered="#{usuarioConsultaBean.tipoDialog == 'Modificar Usuario'}" />
+
+				</p:dialog>
+
+			</h:form>
+			<!-- Script de estilos para el contenido fel formulario-->
+			<h:outputStylesheet library="css" name="buscar.css" />
+			<h:outputStylesheet library="css" name="registroUsuario.css" />
+		</ui:define>
+
+	</ui:composition>
+</h:body>
+</html>

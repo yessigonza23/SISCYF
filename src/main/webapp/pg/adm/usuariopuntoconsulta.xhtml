@@ -1,0 +1,165 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui">
+
+
+<h:body>
+	<ui:composition template="/WEB-INF/templates/master.xhtml">
+		<ui:define name="content">
+			<h:form id="frm" enctype="multipart/form-data" onkeypress="if (event.keyCode == 13) { return false; }">
+				<h2 style="color: #003778; text-align: center">PUNTOS DE RECAUDACIÓN ASIGNADOS AL USUARIO:</h2>
+
+			<h3 style="color: #003778; text-align: center">#{usuarioAsignaPuntoBean.usuario.nombre} #{usuarioAsignaPuntoBean.usuario.apellido}</h3>
+				<p:growl id="growl" showDetail="true" sticky="true">
+					<p:autoUpdate />
+				</p:growl>
+
+
+				<p:panelGrid columns="3" style="display:block; text-align:center"
+					columnClasses="centered">
+					<p:commandButton value="Nuevo" oncomplete="PF('wdlg').show()"
+						actionListener="#{usuarioPuntoBean.limpiarControles()}"
+						update="frm:dlg" process="@this" />
+
+					<p:commandButton id="btnRegresar" value="Principal"
+						icon="fa fa-fw fa-hand-o-left"
+						action="#{navegarVistasBean.principal()}" process="@this"
+						update="@this" />
+				</p:panelGrid>
+
+				<p:dataTable id="dt" resizableColumns="true" var="d" editable="true"
+					value="#{usuarioPuntoBean.listaUsuarioPunto}" rows="15"
+					paginator="true"
+					paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+					rowsPerPageTemplate="10,15,20" sortOrder="descending"
+					paginatorPosition="top"
+					emptyMessage="No hay ningún registro con esa opción">
+
+					<p:column headerText="Nombres y Apellidos"
+						filterBy="#{d.usuario.nombre} #{d.usuario.apellido}"
+						filterMatchMode="contains" style="width:100px">
+						<p:outputLabel value="#{d.usuario.nombre} #{d.usuario.apellido}" />
+					</p:column>
+					<p:column headerText="Punto Recaudación:"
+						filterBy="#{d.puntoRecaudacion.nombre}" filterMatchMode="contains"
+						style="width:100px">
+						<p:outputLabel value="#{d.puntoRecaudacion.nombre}" />
+					</p:column>
+					<p:column headerText="Fecha Inicio" style="width:40px">
+						<p:outputLabel value="#{d.fechainicio}">
+							<f:convertDateTime pattern="dd/MM/yyyy" />
+						</p:outputLabel>
+					</p:column>
+					<p:column headerText="Fecha Fin" style="width:40px">
+						<p:outputLabel value="#{d.fechafin}">
+							<f:convertDateTime pattern="dd/MM/yyyy" />
+						</p:outputLabel>
+					</p:column>
+					<p:column headerText="Estado" style="width:50px">
+						<p:cellEditor>
+							<f:facet name="output">
+								<h:outputText value="#{d.estado}">
+									<f:converter converterId="estadoUsuarios" />
+								</h:outputText>
+							</f:facet>
+
+							<f:facet name="input">
+								<h:selectOneMenu value="#{d.estado}" style="width:100%">
+									<f:selectItem itemLabel="Activo" itemValue="A" />
+									<f:selectItem itemLabel="Inactivo" itemValue="I" />
+								</h:selectOneMenu>
+							</f:facet>
+						</p:cellEditor>
+
+					</p:column>
+
+					<p:column style="width:35px" headerText="Editar">
+						<p:rowEditor />
+					</p:column>
+
+					<p:ajax event="rowEdit" listener="#{usuarioPuntoBean.modificar(d.id,d.estado)}" />
+
+			
+
+				</p:dataTable>
+
+				<p:dialog id="dlg" widgetVar="wdlg" modal="true"
+					closeOnEscape="true" resizable="false" draggable="false"
+					width="700" position="center">
+					<p:fieldset legend="#{usuarioPuntoBean.tipoDialog}"
+						style="width:80%">
+
+						<p:panelGrid id="pg" columns="3"
+							columnClasses="p-col-12 p-md-3 p-xl-2, p-col-12 p-md-9 p-xl-4, p-col-12 p-md-3 p-xl-2, p-col-12 p-md-9 p-xl-4"
+							contentStyleClass="p-align-baseline ui-fluid">
+
+
+							<p:column style="border-style: hidden;width:50px;"></p:column>
+							<p:column style="border-style: hidden; width:130px;">Seleccione Punto de Recaudación: </p:column>
+							<p:column style="border-style: hidden;">
+								<p:selectOneMenu
+									value="#{usuarioPuntoBean.usuarioPunto.puntoRecaudacion}"
+									converter="omnifaces.SelectItemsConverter">
+									<f:selectItem itemLabel="--Seleccione--" itemValue="#{null}"
+										noSelectionOption="true" />
+									<f:selectItems
+										value="#{usuarioPuntoBean.listaPuntoRecaudacion}" var="e"
+										itemValue="#{e}" itemLabel="#{e.nombre}" />
+								</p:selectOneMenu>
+
+							</p:column>
+
+
+							<p:column style="border-style: hidden;width:50px;"></p:column>
+							<p:column style="border-style: hidden;  width:130px;">Fecha de Inicio: </p:column>
+							<p:column style="border-style: hidden;">
+								<p:calendar id="txtFechaIni" locale="es" pattern="dd-MM-yyyy"
+									navigator="true" mask="true" required="true"
+									value="#{usuarioPuntoBean.usuarioPunto.fechainicio}"
+									requiredMessage="Campo requerido"
+									style="width:90%;margin-left:5%;" />
+								<p:watermark for="txtFechaIni" value="dd-mm-aaaa" />
+								<p:messages for="txtFechaIni" />
+							</p:column>
+
+							
+
+							<p:column style="border-style: hidden;width:50px;"></p:column>
+							<p:column style="border-style: hidden; width:130px;">Estado: </p:column>
+							<p:column style="border-style: hidden;">
+								<p:selectOneMenu id="estado"
+									value="#{usuarioPuntoBean.usuarioPunto.estado}" required="true"
+									style="width:100px">
+									<f:selectItem itemLabel="Activo" itemValue="A" />
+									
+								</p:selectOneMenu>
+							</p:column>
+						</p:panelGrid>
+					</p:fieldset>
+
+					<p:panelGrid id="pgBotones" columns="3" style="margin-left: 35%">
+						<p:commandButton value="Registrar"
+							actionListener="#{usuarioPuntoBean.operar('R')}" ajax="true"
+							oncomplete="if (args &amp;&amp; !args.validationFailed) PF('wdlg').hide()"
+							update="pg, dt"
+							rendered="#{usuarioPuntoBean.tipoDialog == 'Nuevo Registro'}" />
+
+						<p:commandButton value="Modificar"
+							actionListener="#{usuarioPuntoBean.operar('M')}" ajax="true"
+							oncomplete="if (args &amp;&amp; !args.validationFailed) PF('wdlg').hide()"
+							update="pg, dt"
+							rendered="#{usuarioPuntoBean.tipoDialog == 'Modificar Registro'}" />
+					</p:panelGrid>
+				</p:dialog>
+			</h:form>
+			<!-- Script de estilos para el contenido fel formulario-->
+			<h:outputStylesheet library="css" name="buscar.css" />
+			<h:outputStylesheet library="css" name="registroUsuario.css" />
+		</ui:define>
+
+	</ui:composition>
+</h:body>
+</html>

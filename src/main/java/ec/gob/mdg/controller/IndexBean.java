@@ -2,6 +2,9 @@ package ec.gob.mdg.controller;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
+import java.util.Calendar;
 import java.util.Date;
 
 import javax.annotation.PostConstruct;
@@ -38,6 +41,7 @@ public class IndexBean implements Serializable {
 
 	private Usuario us;
 	private UsuarioSesiones usuarioSesiones;
+
 	Date fechaActual;
 	Integer contador;
 
@@ -52,96 +56,68 @@ public class IndexBean implements Serializable {
 	public String login() throws Exception {
 		String redireccion = "";
 
-		us.setUsername(us.getUsername());
-		boolean respuesta = serviceOpUsuarios.rucEstaRegistrado(us.getUsername());
+		// us.setUsername(us.getUsername());
+		if (us.getUsername() != null) {
+			boolean respuesta = serviceOpUsuarios.rucEstaRegistrado(us.getUsername());
+			boolean respuestaB = serviceOpUsuarios.usuarioBloqueado(us.getUsername());
 
-		boolean respuestaB = serviceOpUsuarios.usuarioBloqueado(us.getUsername());
-		
-		UsuarioSesiones usuarioSesiones = new UsuarioSesiones();
-	
-		if (respuesta == false) {
-			try {
-				usuarioSesiones.setFecha(fechaActual);
-				usuarioSesiones.setMensaje("Usuario no Existe");
-				usuarioSesiones.setTipo("Fallido");
-				usuarioSesiones.setUsername(us.getUsername());
-				serviceUsuarioSesiones.registrar(usuarioSesiones);
-
-				FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,
-						"Credenciales incorrectas, Usuario no existe ", "Aviso, "));
-			} catch (Exception e) {
-				System.out.println("error usuario existe null " + e);			
-				e.printStackTrace();
-			}
-
-		} else if (respuesta == true) {
-
-			if (respuestaB == true) {
-				usuarioSesiones.setFecha(fechaActual);
-				usuarioSesiones.setMensaje("Usuario Bloqueado");
-				usuarioSesiones.setTipo("Fallido");
-				usuarioSesiones.setUsername(us.getUsername());
-				serviceUsuarioSesiones.registrar(usuarioSesiones);
-
-				FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN,
-						"El usuario ha sido bloqueado, enviar correo al Administrador Funcional de la Dirección",
-						"Aviso"));
-			} else if (respuestaB == false) {
+			if (respuesta == false) {
 				try {
-					
-					Usuario usuario = serviceUsuario.login(us);				
-					
+					grabaSesion("Usuario no Existe", "Fallido");
+					FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,
+							"Credenciales incorrectas, Usuario no existe ", "Aviso, "));
+				} catch (Exception e) {
+					System.out.println("error no existe null " + e);
+					e.printStackTrace();
+				}
+			} else if (respuesta == true) {
+				if (respuestaB == true) {
+					grabaSesion("Usuario Bloqueado", "Fallido");
+					FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN,
+							"El usuario ha sido bloqueado, enviar correo al Administrador Funcional de la Dirección",
+							"Aviso"));
+				} else if (respuestaB == false) {
+					Usuario usuario = serviceUsuario.login(us);
+
 					if (usuario != null && usuario.getEstado().equalsIgnoreCase("A")) {
-						System.out.println("entra a usuario activo" );
 						
-						if (usuario.getFecha_registro() == null) {
-							
+						if (usuario.isReseteaClave() == true) {
 							FacesContext.getCurrentInstance().getExternalContext().getSessionMap().put("usuario",
 									usuario);
 							redireccion = "/cambioClave?faces-redirect=true";
-							
-							
-						} else if (usuario.getFecha_cambio_clave() != null) {						
-							LocalDateTime fecha = usuario.getFecha_cambio_clave();
-							fecha = fecha.plusDays(90);
+						} else if (usuario.getFecha_cambio_clave() == null) {
+							FacesContext.getCurrentInstance().getExternalContext().getSessionMap().put("usuario",
+									usuario);
+							redireccion = "/cambioClave?faces-redirect=true";
+						} else if (usuario.getFecha_cambio_clave() != null) {
 
-							if (fecha.compareTo(LocalDateTime.now()) < 0) {
+							LocalDateTime ldt = usuario.getFecha_cambio_clave();
+							ZonedDateTime zdt = ldt.atZone(ZoneId.systemDefault());
+							Date fecha = Date.from(zdt.toInstant());
+
+							// Date fecha = usuario.getFecha_cambio_clave();
+							Calendar calendar = Calendar.getInstance();
+							calendar.setTime(fecha);
+							calendar.add(Calendar.DAY_OF_YEAR, 90);
+							Date fechaS = Date.from(zdt.toInstant());
+							
+
+							if (fechaS.compareTo(fechaActual) > 0) {
 								FacesContext.getCurrentInstance().getExternalContext().getSessionMap().put("usuario",
 										usuario);
 								redireccion = "/cambioClave?faces-redirect=true";
 							} else {
-								
-								System.out.println("entra a principal " + usuario.getNombre());
 								FacesContext.getCurrentInstance().getExternalContext().getSessionMap().put("usuario",
 										usuario);
-								redireccion = "/protegido/principal?faces-redirect=true";
+								redireccion = "/pg/adm/principal?faces-redirect=true";
 							}
-						}else if (usuario.getFecha_cambio_clave() == null){
-							System.out.println("entra a cambiar clave " );
-							FacesContext.getCurrentInstance().getExternalContext().getSessionMap().put("usuario",
-									usuario);
-							redireccion = "/cambioClave?faces-redirect=true";
 						}
-						System.out.println("Termina antes de insertar " );
-						
-						usuarioSesiones.setFecha(fechaActual);
-						
-						usuarioSesiones.setMensaje("Usuario correcto");
-						usuarioSesiones.setTipo("Exitoso");
-						System.out.println("fecha" + usuarioSesiones.getTipo() );
-						usuarioSesiones.setUsername(us.getUsername());
-						System.out.println("fecha" + usuarioSesiones.getUsername() );
-						serviceUsuarioSesiones.registrar(usuarioSesiones);
+						grabaSesion("Usuario Correcto","Exitoso");
 
 					} else {
-
+					
 						contador++;
-
-						usuarioSesiones.setFecha(fechaActual);
-						usuarioSesiones.setMensaje("Contraseña Incorrecta");
-						usuarioSesiones.setTipo("Fallido");
-						usuarioSesiones.setUsername(us.getUsername());
-						serviceUsuarioSesiones.registrar(usuarioSesiones);
+						grabaSesion( "Contraseña Incorrecta","Fallido");
 
 						if (contador < 3) {
 
@@ -150,6 +126,7 @@ public class IndexBean implements Serializable {
 											"Credenciales incorrectas, " + contador
 													+ " de 3 intentos, al tercer intento el usuario será bloqueado",
 											"Aviso, "));
+					
 						} else {
 							System.out.println("ENTRA MAS DE 3");
 
@@ -161,34 +138,28 @@ public class IndexBean implements Serializable {
 									"Credenciales incorrectas, el usuario fue bloqueado, comuníquese con la Dirección Financiera",
 									"Aviso"));
 						}
-
-					}
-				} catch (Exception e) {
-
-					if (contador > 3) {
-						try {
-							usuarioSesiones.setFecha(fechaActual);
-							usuarioSesiones.setMensaje("Usuario Bloqueado");
-							usuarioSesiones.setTipo("Fallido");
-							usuarioSesiones.setUsername(us.getUsername());
-							serviceUsuarioSesiones.registrar(usuarioSesiones);
-
-							FacesContext.getCurrentInstance().addMessage(null,
-									new FacesMessage(FacesMessage.SEVERITY_WARN,
-											"El usuario ha sido bloqueado, comuníquese con la Dirección Financiera",
-											"Aviso"));
-						} catch (Exception e1) {
-							System.out.println("error " + e);
-							e1.printStackTrace();
-						}
-
 					}
 				}
 			}
-
 		}
-
 		return redireccion;
+	}
+
+	// almacena tabla usuariosesiones
+	@Transactional
+	public void grabaSesion(String Mensaje, String Tipo) {
+		UsuarioSesiones usuarioSesiones = new UsuarioSesiones();
+
+		usuarioSesiones.setFecha(fechaActual);
+		usuarioSesiones.setMensaje(Mensaje);
+		usuarioSesiones.setTipo(Tipo);
+		usuarioSesiones.setUsername(us.getUsername());
+		try {
+			serviceUsuarioSesiones.registrar(usuarioSesiones);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 }

@@ -11,6 +11,9 @@ import javax.faces.view.ViewScoped;
 import javax.inject.Inject;
 import javax.inject.Named;
 
+import org.primefaces.event.SelectEvent;
+import org.primefaces.event.UnselectEvent;
+
 import ec.gob.mdg.control.ejb.modelo.Usuario;
 import ec.gob.mdg.control.ejb.operaciones.OperacionesConUsuario;
 import ec.gob.mdg.control.ejb.service.IUsuarioService;
@@ -44,7 +47,6 @@ public class UsuarioConsultaBean implements Serializable {
 	@PostConstruct
 	public void init() {
 		this.listarUsuarioPunto();
-		usuario = new Usuario();
 	}
 
 	//VALIDA SI EXISTE EL USUARIO
@@ -71,11 +73,7 @@ public class UsuarioConsultaBean implements Serializable {
 	public void operar(String accion) {
 		try {
 			 if(accion.equalsIgnoreCase("M")) {
-				 contrasena="1";
-//				 String clave = contrasena;	
-//					String claveHash = BCrypt.hashpw(clave, BCrypt.gensalt());
-//					
-//					usuario.setContrasena(claveHash);
+				 mostrarData(usuario);
 					usuario.setNombre(usuario.getNombre().toUpperCase());
 					usuario.setCorreo_electronico(usuario.getCorreo_electronico().toLowerCase());
 					usuario.setCargo(usuario.getCargo().toUpperCase());
@@ -97,5 +95,16 @@ public class UsuarioConsultaBean implements Serializable {
 		this.tipoDialog = "Modificar Usuario";
 	}
 	
+	public void onRowSelect(SelectEvent event) {
+        FacesMessage msg = new FacesMessage("Usuario Seleccionado", String.valueOf(((Usuario) event.getObject()).getId()));
+        FacesContext.getCurrentInstance().addMessage(null, msg);
+        
+      //  List<Usuario> Lstusuario=serviceUsuario.listarPorId(String.valueOf(((Usuario) event.getObject()));
+        
+    }
 
+    public void onRowUnselect(UnselectEvent event) {
+        FacesMessage msg = new FacesMessage("Product Unselected", String.valueOf(((Usuario) event.getObject()).getId()));
+        FacesContext.getCurrentInstance().addMessage(null, msg);
+    }
 }

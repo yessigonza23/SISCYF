@@ -1,7 +1,9 @@
-/*Centra la página web*/
+/*Centra la pï¿½gina web*/
 .resolucion {     
-    width: 900px; margin: 0 auto;
-         
+    width: 100%; margin: 1 auto;background-color: aqua;
+	background: url("../resources/images/FondoSiscyf.jpeg");
+       background-size: 98%;
+	background-repeat: no-repeat;
 }
 
 .ui-widget {
@@ -11,6 +13,10 @@
     font-size: 100% !important;
 }
 
-body{
-	font-family: Lato; 
+.body{
+	background-color: aqua;
+	background: url("#{resources['images:banner.png']}");
+	background-size: 80%;
+	background-position: bottom;
+	background-repeat: no-repeat;
 }

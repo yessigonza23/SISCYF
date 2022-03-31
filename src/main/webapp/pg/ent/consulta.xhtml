@@ -1,0 +1,69 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+<h:body>
+	<ui:composition template="/WEB-INF/templates/master.xhtml">
+		<ui:define name="content">
+
+			<h:form id="frm" enctype="multipart/form-data"
+				onkeypress="if (event.keyCode == 13) { return false; }">
+				<h3 style="color: #003778; text-align: center">CONSULTA DE
+					ENTIDADES</h3>
+
+				<p:growl id="mensaje" autoUpdate="false" showSummary="false"
+					showDetail="true" />
+				<br />
+
+				<p:panel>
+					<p:panelGrid style="text-align: center" columns="4">
+						<p:commandButton id="btnRegresar" value="Principal"
+							icon="fa fa-fw fa-hand-o-left"
+							action="#{navegarVistasBean.principal()}" />
+					</p:panelGrid>
+					<p:separator></p:separator>
+
+					<p:panelGrid style="text-align: center" columns="4">
+						<p:column style="border-style: hidden; width:130px;">
+							<strong>Seleccione la Entidad:</strong>
+						</p:column>
+						<p:column style="border-style: hidden;">
+							<p:selectOneMenu value="#{consultaEntidadesBean.empresa.id}"
+								id="cboEmpresa" converter="omnifaces.SelectItemsConverter"
+								autoWidth="false" style="width:500px;" filter="true"
+								requiredMessage="Empresa requerido">
+								<f:selectItem itemLabel="--Seleccione--" itemValue="#{null}"
+									noSelectionOption="true" />
+								<f:selectItems value="#{consultaEntidadesBean.listaEmpresas}"
+									var="e" itemValue="#{e.id}" itemLabel="#{e.nombre}" />
+								<p:ajax event="change"
+									listener="#{consultaEntidadesBean.cargaEmpresa(consultaEntidadesBean.empresa.id)}"
+									update="@form" />
+							</p:selectOneMenu>
+						</p:column>
+					</p:panelGrid>
+
+					<p:separator></p:separator>
+					<p:tabView >
+						<p:tab title="Información General">
+							<ui:include src="/pg/ent/consultadatosgenerales.xhtml" />
+						</p:tab>
+						<p:tab title="Sustancias">
+							<ui:include src="/pg/ent/consultasustancias.xhtml" />
+						</p:tab>
+					</p:tabView>
+				</p:panel>
+
+			</h:form>
+
+			<!-- Script de estilos para el contenido fel formulario-->
+			<h:outputStylesheet library="css" name="buscar.css" />
+			<h:outputStylesheet library="css" name="registroUsuario.css" />
+		</ui:define>
+
+	</ui:composition>
+</h:body>
+</html>

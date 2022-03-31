@@ -1,0 +1,67 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+<h:body>
+	<h:form id="frmSus" enctype="multipart/form-data"
+		onkeypress="if (event.keyCode == 13) { return false; }">
+		<p:growl id="mensaje" autoUpdate="false" showSummary="false"
+			showDetail="true" />
+		<br />
+		<p:panel>
+			<p:dataTable id="dt" resizableColumns="true" var="e"
+					value="#{consultaEntidadesBean.listaCalRenovaciones}" rows="15"
+					paginator="true" selectionMode="single"
+					selection="#{consultaEntidadesBean.calificacionesRenovaciones}" rowKey="#{calificacionesRenovaciones.id}"
+					paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+					rowsPerPageTemplate="10,15,20" sortOrder="descending"
+					paginatorPosition="top"
+					emptyMessage="No hay ningún registro con esa opción">
+
+					
+					<p:column headerText="No.a" filterBy="#{e.id}"
+						filterMatchMode="contains" style="width:20px">
+						<p:outputLabel value="#{e.id}" />
+					</p:column>
+
+					<p:column headerText="Fecha Renovación"
+						filterBy="#{e.fecha_renovacion}" filterMatchMode="contains"
+						style="width:100px">
+						<p:outputLabel value="#{e.fecha_renovacion}" />
+					</p:column>
+					<p:column headerText="Fecha caducidad" filterBy="#{e.fecha_caducidad}"
+						filterMatchMode="contains" style="width:50px">
+						<p:outputLabel value="#{e.fecha_caducidad}" />
+					</p:column>
+					<p:column headerText="No. Informe" filterBy="#{e.numero_informe}"
+						filterMatchMode="contains" style="width:50px">
+						<p:outputLabel id="informe" value="#{e.numero_informe}">
+						</p:outputLabel>
+					</p:column>
+					<p:column headerText="Fecha Informe"
+						filterBy="#{e.fecha_informe}" filterMatchMode="contains"
+						style="width:120px">
+						<p:outputLabel id="fecinforme" value="#{e.fecha_informe}">
+						</p:outputLabel>
+					</p:column>
+
+					<p:column headerText="Aprobado" filterBy="#{e.aprobado}"
+						filterMatchMode="contains" style="width:50px">
+						<p:outputLabel id="estado" value="#{e.aprobado}" style="width:100px">
+							<f:converter converterId="estadoAprobados" />
+						</p:outputLabel>
+					</p:column>
+
+				</p:dataTable>
+		</p:panel>
+	</h:form>
+
+	<!-- Script de estilos para el contenido fel formulario-->
+	<h:outputStylesheet library="css" name="buscar.css" />
+	<h:outputStylesheet library="css" name="registroUsuario.css" />
+
+</h:body>
+</html>

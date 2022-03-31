@@ -22,6 +22,7 @@ import org.mindrot.jbcrypt.BCrypt;
 
 import ec.gob.mdg.control.ejb.modelo.Correo;
 import ec.gob.mdg.control.ejb.modelo.Usuario;
+import ec.gob.mdg.control.ejb.operaciones.OperacionesConUsuario;
 import ec.gob.mdg.control.ejb.service.ICorreoService;
 import ec.gob.mdg.control.ejb.service.IUsuarioService;
 import ec.gob.mdg.control.ejb.utils.CedulaRuc;
@@ -38,6 +39,9 @@ public class UsuarioBean implements Serializable {
 
 	@Inject
 	private IUsuarioService serviceUsuario;
+	
+	@Inject
+	private OperacionesConUsuario serviceOpUsuario;
 	
 	@Inject
 	private ICorreoService serviceCorreo;
@@ -65,35 +69,42 @@ public class UsuarioBean implements Serializable {
 	/// Consultar por cédula en el WS de Registro Civil
 	
 	public void consultaIdentificacion(String id) {
-		System.out.println("entra al método " + id);
-		int aInteger = id.length();
-		System.out.println("tamaño " + aInteger);
-		
 		if (id.length() == 0) {
 			FacesContext.getCurrentInstance().addMessage(null,
-					new FacesMessage(FacesMessage.SEVERITY_ERROR, "maaaaaaaaaaaal", "lll"));
-			
-			
+					new FacesMessage(FacesMessage.SEVERITY_ERROR, "Ingrese el usuario", "Datos incompletos"));				
 		} else {
-			System.out.println("entra ELSE " + id);
-			validaIdentificacion(id);
-			usuarioRegCivil = ServiciosWeb.consultarCiudadanoRegistroCivil(id);
-
-			if (!(usuarioRegCivil.getNombre() == null)) {
-				usuario.setNombre(usuarioRegCivil.getNombre());
-				render = true;
-				
-				FacesContext.getCurrentInstance().addMessage(null,
-						new FacesMessage(FacesMessage.SEVERITY_INFO, "biennnnn", "ok"));
+			boolean validaI =validaIdentificacion(id);
+			
+			if (validaI == false) {
+				usuarioRegCivil = ServiciosWeb.consultarCiudadanoRegistroCivil(id);
+				if (!(usuarioRegCivil.getNombre() == null)) {
+					usuario.setNombre(usuarioRegCivil.getNombre());
+					render = true;				
+					FacesContext.getCurrentInstance().addMessage(null,
+							new FacesMessage(FacesMessage.SEVERITY_INFO, "Usuario correcto", "Continuar"));
+				}
+			}else if (validaI == true) {
+				render = false;
+				FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,
+						"Tipo de identificacion erronea", "Error"));
 			}
-		
 		}
-
 	}
+	
+	//VALIDA SI EXISTE EL USUARIO
+		public boolean validaCedula(String cedula) {
+			valida=serviceOpUsuario.validaUsuarioCedula(cedula);
+//			System.out.println("imprime el valida : "+valida);
+			if(valida==true) {
+				estadeshabilitado=true;
+				FacesContext.getCurrentInstance().addMessage(null,
+						new FacesMessage(FacesMessage.SEVERITY_FATAL, "Este usuario ya ha sido ingresado", "ERROR"));
+			}
+			return valida;
+		}
 
 	// Registrar usuario
 	public void registrar() {
-
 		try {
 			String clave = claveNueva;// this.usuario.getContrasena();
 			String claveHash = BCrypt.hashpw(clave, BCrypt.gensalt());
@@ -104,6 +115,7 @@ public class UsuarioBean implements Serializable {
 			usuario.setEstado("A");
 			usuario.setTipo_interno_externo("I");
 			usuario.setEnabled(true);
+			usuario.setReseteaClave(false);
 			usuario.setFecha_registro(LocalDateTime.now());
 			usuario.setCantidadDeEntradas(1);
 			usuario.setTipoCertificado(usuario.getTipoCertificado());
@@ -112,7 +124,6 @@ public class UsuarioBean implements Serializable {
 			estadeshabilitado = true;
 			valida = true;
 			activarAP();
-			System.out.println("ANTES DE ENVIAR " + usuario.getUsername() + " - " + claveNueva);
 			enviarContrasenia(usuario.getUsername(), claveNueva);
 
 		} catch (Exception e) {
@@ -121,25 +132,19 @@ public class UsuarioBean implements Serializable {
 	}
 
 	// VALIDADOR DE CEDULA-RUC
-	public void validaIdentificacion(String id) {
+	public boolean  validaIdentificacion(String id) {
       if(id.length()==10) {
-		System.out.println("entra a valida identifciación " + id);
+		
 		String validaIdentificacion = CedulaRuc.comprobacion(id);
-		System.out.println("validaIdentificacion " + validaIdentificacion);
 		if (validaIdentificacion.equals("T")) {
 			validador = false;
-			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO,
-					"Identificación correcta", validaIdentificacion));
 		} else {
-			System.out.println("entra a diferente de T: " + validaIdentificacion);
 			validador = true;
-			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,
-					"Tipo de identificacion erronea", validaIdentificacion));
 		}
       }else {
-    	  FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,
-					"Identificacion erronea", "Error"));
+    	  validador = true;
       }
+      return validador;
 	}
 
 	// NUEVO REGISTR0
@@ -180,33 +185,16 @@ public class UsuarioBean implements Serializable {
 		eviarCorreo(cedula, claveNueva);
 	}
 
-	public boolean eviarCorreo(String ci, String clave) {
-		System.out.println("entra a enviar correo " + ci + " - " + clave);
-		
+	public boolean eviarCorreo(String ci, String clave) {		
 		correo = serviceCorreo.obtenerDatosCorreo();
-		
-		System.out.println("correo.getMailSmtpHost() " + correo.getMailSmtpHost());
-		
 		Properties props = System.getProperties();
-		props.put("mail.smtp.host", correo.getMailSmtpHost()); // El servidor SMTP de Google
-		
+		props.put("mail.smtp.host", correo.getMailSmtpHost()); 		
 		props.put("mail.smtp.user", correo.getMailEmisor());
-		System.out.println("correo.getMailEmisor() " + correo.getMailEmisor());
-		props.put("mail.smtp.clave", correo.getMailPasswordEmisor()); // La clave de la cuenta
-		System.out.println("correo.getMailPasswordEmisor() " + correo.getMailPasswordEmisor());
-		props.put("mail.smtp.auth", correo.getMailSmtpAuth()); // Usar autenticacin mediante usuario y clave
-		System.out.println("correo.getMailSmtpAuth() " + correo.getMailSmtpAuth());
-		
-		
-		props.put("mail.smtp.starttls.enable", correo.getMailSmtpStartTlsEnable()); // Para conectar de manera segura al
-		System.out.println("correo.getMailSmtpStartTlsEnable() " + correo.getMailSmtpStartTlsEnable());
-		
-		
-		
-		props.put("mail.smtp.port", correo.getMailSmtpPort()); // El puerto SMTP seguro de Google
-		System.out.println("correo.getMailSmtpPort() " + correo.getMailSmtpPort());
+		props.put("mail.smtp.clave", correo.getMailPasswordEmisor());
+		props.put("mail.smtp.auth", correo.getMailSmtpAuth()); 
+		props.put("mail.smtp.starttls.enable", correo.getMailSmtpStartTlsEnable()); 
+		props.put("mail.smtp.port", correo.getMailSmtpPort());
 		props.put("mail.smtp.ssl.trust", correo.getMailSmtpSslTrust());
-		System.out.println("correo.getMailSmtpSslTrust() " + correo.getMailSmtpSslTrust());
 		String asuntoMensaje = "MDG - Sistema SISCYF - Credenciales del Usuario " + usuario.getNombre() + " "
 				+ usuario.getNombre();
 
@@ -219,7 +207,6 @@ public class UsuarioBean implements Serializable {
 
 		Session session = Session.getInstance(props, null);
 		session.setDebug(true);
-		System.out.println("PASA MENSAJE");
 		try {
 			MimeBodyPart textoMensaje = new MimeBodyPart();
 			textoMensaje.setContent(cuerpoMensaje, "text/html");
@@ -228,23 +215,14 @@ public class UsuarioBean implements Serializable {
 			multiParte.addBodyPart(textoMensaje);
 
 			MimeMessage message = new MimeMessage(session);
-			message.setFrom(new InternetAddress(correo.getMailEmisor(), "Ministerio de Gobierno"));
-			System.out.println("correo electrónico " + correo.getMailPasswordEmisor());
-			
-			message.addRecipients(Message.RecipientType.TO, usuario.getCorreo_electronico());
-			
-			message.setSubject(asuntoMensaje);
-			
+			message.setFrom(new InternetAddress(correo.getMailEmisor(), "Ministerio de Gobierno"));			
+			message.addRecipients(Message.RecipientType.TO, usuario.getCorreo_electronico());			
+			message.setSubject(asuntoMensaje);			
 			message.setContent(multiParte);
-			
-			Transport transport = session.getTransport("smtp");
-			
-			transport.connect(correo.getMailSmtpHost(), correo.getMailEmisor(), correo.getMailPasswordEmisor());
-			
+			Transport transport = session.getTransport("smtp");			
+			transport.connect(correo.getMailSmtpHost(), correo.getMailEmisor(), correo.getMailPasswordEmisor());			
 			transport.sendMessage(message, message.getAllRecipients());
-			transport.close();
-
-			
+			transport.close();			
 			
 			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO,
 					"Usuario registrado y se remite las credenciales al email registrado", "Aviso"));

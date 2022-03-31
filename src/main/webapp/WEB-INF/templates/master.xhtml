@@ -12,13 +12,15 @@
 		listener="#{masterBean.verificarSesion()}" />
 
 	<h:outputStylesheet library="css" name="estilos.css" />
+	<h:outputScript library="js" name="utilitario.js" target="body" />
+	<h:outputScript library="js" name="excel.js" target="body" />
+	<h:outputScript library="js" name="xlsx.core.min.js" target="body" />
 </h:head>
 
 <h:body class="resolucion">
 	<div id="header">
 
-		<h:graphicImage value="/resources/images/banner.png"
-			style="background-size: 10%;" width="800"></h:graphicImage>
+		
 
 		<ui:insert name="header">
 			<p:idleMonitor timeout="666000">
@@ -55,10 +57,7 @@
 				showSummary="true" showDetail="true" />
 		</ui:insert>
 	</div>
-	<p id="bottom" style="text-align: center">
-		<h:graphicImage value="/resources/images/banner_pie.png"
-			style="background-size: 10%;" width="800"></h:graphicImage>
-	</p>
+
 
 	<p:ajaxStatus onstart="PF('statusDialog').show()"
 		onsuccess="PF('statusDialog').hide()" />

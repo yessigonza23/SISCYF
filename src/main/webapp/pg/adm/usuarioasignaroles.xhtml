@@ -1,0 +1,81 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+<body>
+	<ui:composition template="/WEB-INF/templates/master.xhtml">
+		<ui:define name="content">
+			<h:form id="asignaRol" onkeypress="if (event.keyCode == 13) { return false; }">
+
+				<h2 style="color: #003778; text-align: center">ASIGNACIÓN DE
+					ROLES PARA EL USUARIO:</h2>
+
+				<h3 style="color: #003778; text-align: center">
+					#{asignarRolUsuarioBean.usuario.nombre}
+					#{asignarRolUsuarioBean.usuario.apellido}</h3>
+
+				<p:growl id="growl" showDetail="true" sticky="true">
+					<p:autoUpdate />
+				</p:growl>
+				<h:panelGrid columns="2" columnClasses="topAligned">
+					<p:fieldset legend="Roles Asignados" tyle="width:50%">
+						<p:dataTable id="rolasignado" resizableColumns="true"
+							value="#{asignarRolUsuarioBean.listaUsuarioRol}" var="e" rows="15"
+							paginator="true"
+							paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+							rowsPerPageTemplate="10,15,20" sortOrder="descending"
+							paginatorPosition="top"
+							emptyMessage="No hay ningún registro con esa opción">
+
+							<p:column headerText="Rol " filterBy="#{e.rol.tipo}"
+								filterMatchMode="contains" style="width: 100px">
+								<p:outputLabel value="#{e.rol.tipo}" />
+							</p:column>
+							<p:column style="width: 20px">
+								<p:commandButton id="btnQuitaRol" value="Quitar"
+									action="#{asignarRolUsuarioBean.quitar(e.usuario.id,e.rol.id)}"
+									update="asignaRol:rolasignado,asignaRol:rolpendiente">
+
+								</p:commandButton>
+							</p:column>
+
+						</p:dataTable>
+					</p:fieldset>
+					<p:fieldset legend="Roles Pendientes de Asignación" styleClass=""
+						tyle="width:50%">
+						<p:dataTable id="rolpendiente" resizableColumns="true"
+							value="#{asignarRolUsuarioBean.listaRol}" var="e" rows="15"
+							paginator="true"
+							paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+							rowsPerPageTemplate="10,15,20" sortOrder="descending"
+							paginatorPosition="top"
+							emptyMessage="No hay ningún registro con esa opción">
+
+							<p:column headerText="Rol " filterBy="#{e.tipo}"
+								filterMatchMode="contains" style="width: 100px">
+								<p:outputLabel value="#{e.tipo}" />
+							</p:column>
+							<p:column style="width: 50px">
+								<p:commandButton id="btnAsignaRol" value="Asignar"
+									action="#{asignarRolUsuarioBean.asignar(asignarRolUsuarioBean.usuario.id,e.id)}"
+									update="asignaRol:rolasignado,asignaRol:rolpendiente">
+
+								</p:commandButton>
+							</p:column>
+						</p:dataTable>
+					</p:fieldset>
+				</h:panelGrid>
+
+			</h:form>
+			<!-- Script de estilos para el contenido fel formulario-->
+			<h:outputStylesheet library="css" name="buscar.css" />
+			<h:outputStylesheet library="css" name="registroUsuario.css" />
+		</ui:define>
+
+	</ui:composition>
+
+</body>
+</html>

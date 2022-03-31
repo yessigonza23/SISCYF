@@ -1,0 +1,69 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui">
+
+
+<h:body>
+	<ui:composition template="/WEB-INF/templates/master.xhtml">
+		<ui:define name="content">
+			<h:form id="frm" enctype="multipart/form-data"
+				onkeypress="if (event.keyCode == 13) { return false; }">
+				<h2 style="color: #003778; text-align: center">CAMBIO DE CLAVE
+					DEL USUARIO</h2>
+				<h2 style="color: #003778; text-align: center">#{usuarioModificaBean.usuario.nombre}</h2>
+				<p:growl id="growl" showDetail="true" sticky="true">
+					<p:autoUpdate />
+				</p:growl>
+
+				<p:fieldset  tyle="width:50%">
+					<p:panelGrid columns="2"
+						style="display:block; text-align:center;width:500px;"
+						columnClasses="centered">
+
+						<p:row style="border-style: hidden;">
+							<p:column style="border-style: hidden;width:50px;"></p:column>
+							<p:column style="border-style: hidden; width:130px;">Digete Contraseña para Sistema: </p:column>
+							<p:column style="border-style: hidden;">
+								<p:password id="Clave" size="40"
+									value="#{usuarioModificaBean.usuario.password}"
+									toggleMask="true" match="RepiteClave" />
+							</p:column>
+						</p:row>
+						<p:row style="border-style: hidden;">
+							<p:column style="border-style: hidden;width:50px;"></p:column>
+							<p:column style="border-style: hidden; width:130px;">Confirme Contraseña para Sistema: </p:column>
+							<p:column style="border-style: hidden;">
+								<p:password id="RepiteClave" size="40"
+									value="#{usuarioModificaBean.usuario.password}"
+									toggleMask="true" />
+							</p:column>
+						</p:row>
+
+
+					</p:panelGrid>
+					<p:panelGrid columns="2" style="display:block; text-align:center"
+						columnClasses="centered">
+						<p:commandButton icon="ui-icon-disk" id="btnGuardar"
+							value="Guardar" style="text-align: center"
+							actionListener="#{usuarioModificaBean.modificar()}"
+							process="@form" update="@form"
+							disabled="#{usuarioModificaBean.estadeshabilitado}">
+						</p:commandButton>
+						<p:commandButton id="btnRegresar" value="Principal"
+							icon="fa fa-fw fa-hand-o-left"
+							action="#{navegarVistasBean.principal()}" process="@this"
+							update="@this" />
+					</p:panelGrid>
+				</p:fieldset>
+			</h:form>
+			<!-- Script de estilos para el contenido fel formulario-->
+			<h:outputStylesheet library="css" name="buscar.css" />
+			<h:outputStylesheet library="css" name="registroUsuario.css" />
+		</ui:define>
+
+	</ui:composition>
+</h:body>
+</html>
