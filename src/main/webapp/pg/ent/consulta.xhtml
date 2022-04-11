@@ -31,30 +31,45 @@
 							<strong>Seleccione la Entidad:</strong>
 						</p:column>
 						<p:column style="border-style: hidden;">
-							<p:selectOneMenu value="#{consultaEntidadesBean.empresa.id}"
-								id="cboEmpresa" converter="omnifaces.SelectItemsConverter"
-								autoWidth="false" style="width:500px;" filter="true"
-								requiredMessage="Empresa requerido">
-								<f:selectItem itemLabel="--Seleccione--" itemValue="#{null}"
-									noSelectionOption="true" />
-								<f:selectItems value="#{consultaEntidadesBean.listaEmpresas}"
-									var="e" itemValue="#{e.id}" itemLabel="#{e.nombre}" />
-								<p:ajax event="change"
-									listener="#{consultaEntidadesBean.cargaEmpresa(consultaEntidadesBean.empresa.id)}"
-									update="@form" />
-							</p:selectOneMenu>
+							<p:inputText id="txtEmp" size="60"
+								style="text-transform: uppercase ;float:left"
+								value="#{consultaGeneralBean.nombre_emp}" />
 						</p:column>
-					</p:panelGrid>
 
-					<p:separator></p:separator>
-					<p:tabView >
-						<p:tab title="Información General">
-							<ui:include src="/pg/ent/consultadatosgenerales.xhtml" />
-						</p:tab>
-						<p:tab title="Sustancias">
-							<ui:include src="/pg/ent/consultasustancias.xhtml" />
-						</p:tab>
-					</p:tabView>
+						<p:commandButton id="btnConsultar" value="Consultar"
+							icon="fa fa-fw fa-search"
+							actionListener="#{consultaGeneralBean.consultarListaEmpresas(consultaGeneralBean.nombre_emp)}"
+							process="@form" update=" @this, frm:dt">
+
+						</p:commandButton>
+					</p:panelGrid>
+					<p:panelGrid style="text-align: center" columns="4">
+						<p:dataTable id="dt" resizableColumns="true" var="e"
+							value="#{consultaGeneralBean.listaEmpresas}" rows="15"
+							paginator="true"
+							paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+							rowsPerPageTemplate="10,15,20" sortOrder="descending"
+							paginatorPosition="top"
+							emptyMessage="No hay ningún registro con esa opción">
+
+							<p:column headerText="Nombre" filterBy="#{e.nombre}"
+								filterMatchMode="contains" style="width:20px">
+								<p:outputLabel value="#{e.nombre}"
+									style="text-transform: uppercase ;float:left" />
+							</p:column>
+							<p:column headerText="RUC" filterBy="#{e.ruc}"
+								filterMatchMode="contains" style="width:20px">
+								<p:outputLabel value="#{e.ruc}"
+									style="text-transform: uppercase ;float:left;width:20px" />
+							</p:column>
+							<p:column headerText="Acción" style="width:20px">
+								<p:commandButton id="btnDetalle" value="Detalle"
+									icon="fa fa-fw fa-hand-o-right"
+									action="#{consultaGeneralBean.irDetalleEmpresa(e.id)}">
+								</p:commandButton>
+							</p:column>
+						</p:dataTable>
+					</p:panelGrid>
 				</p:panel>
 
 			</h:form>

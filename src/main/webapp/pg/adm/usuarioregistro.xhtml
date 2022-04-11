@@ -65,16 +65,18 @@
 							<p:column style="border-style: hidden; width:130px;">Título: </p:column>
 							<p:column style="border-style: hidden;">
 								<p:selectOneMenu id="titulo" disabled="#{usuarioBean.valida}"
-									value="#{usuarioConsultaBean.usuario.titulo}" required="true"
+									value="#{usuarioBean.usuario.titulo}" required="true"
 									style="width:100px">
-									<f:selectItem itemLabel="Eco." itemValue="Eco" />
-									<f:selectItem itemLabel="Lic." itemValue="Lic." />
-									<f:selectItem itemLabel="Ing." itemValue="Ing." />
-									<f:selectItem itemLabel="Sra." itemValue="Sra." />
-									<f:selectItem itemLabel="Sr." itemValue="Sr." />
-									<f:selectItem itemLabel="Mgs." itemValue="Mgs." />
-									<f:selectItem itemLabel="Dra." itemValue="Dra." />
-									<f:selectItem itemLabel="Dr." itemValue="Dr." />
+									<f:selectItem itemLabel="Economista" itemValue="Eco." />
+									<f:selectItem itemLabel="Licenciado/a" itemValue="Lic." />
+									<f:selectItem itemLabel="Ingeniero/a" itemValue="Ing." />
+									<f:selectItem itemLabel="Señora." itemValue="Sra." />
+									<f:selectItem itemLabel="Señor" itemValue="Sr." />
+									<f:selectItem itemLabel="Señorita" itemValue="Srta." />
+									<f:selectItem itemLabel="Magister." itemValue="Mgs." />
+									<f:selectItem itemLabel="Doctora." itemValue="Dra." />
+									<f:selectItem itemLabel="Doctor" itemValue="Dr." />
+									<f:selectItem itemLabel="Quimico/a" itemValue="Quim." />
 								</p:selectOneMenu>
 							</p:column>
 

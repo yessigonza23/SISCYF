@@ -7,6 +7,8 @@ import javax.faces.context.Flash;
 import javax.faces.view.ViewScoped;
 import javax.inject.Named;
 
+import ec.gob.mdg.control.ejb.utils.Utilitario;
+
 @Named
 @ViewScoped
 public class NavegarVistasBean implements Serializable {
@@ -22,13 +24,23 @@ public class NavegarVistasBean implements Serializable {
 	public void principal() {
 		try {
 
-			FacesContext.getCurrentInstance().getExternalContext().redirect("./../pg/adm/principal.xhtml");
+//			FacesContext.getCurrentInstance().getExternalContext().redirect("./../principal.xhtml");
+			Utilitario.irAPagina("/pg/adm/principal.xhtml");
 		} catch (Exception e) {
 			System.out.println("FALLO LA REDIRECCION A UN NUEVO FORMULARIO");
 			e.printStackTrace();
 		}
 	}
 
+	public void principalConsultaEmpresas() {
+		try {
+
+			Utilitario.irAPagina("/pg/ent/consulta.xhtml");
+		} catch (Exception e) {
+			System.out.println("FALLO LA REDIRECCION A UN NUEVO FORMULARIO");
+			e.printStackTrace();
+		}
+	}
 	
 
 	//// DIRECCIONAR A LA PAGINA INDEXX
@@ -42,9 +54,6 @@ public class NavegarVistasBean implements Serializable {
 			e.printStackTrace();
 		}
 	}
-
-
-	
 	
 	////// DIRECCIONAR USUARIOS
 	// REGISTRAR

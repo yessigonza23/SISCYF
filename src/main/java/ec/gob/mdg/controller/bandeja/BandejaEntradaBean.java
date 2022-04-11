@@ -29,14 +29,14 @@ public class BandejaEntradaBean implements Serializable{
 	private BandejaEntrada bandejaEntrada= new BandejaEntrada();
 	Usuario u = (Usuario) FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("usuario");
 	
-	public List<BandejaEntrada> getLista() {
-		if (u!=null) {
-			return lista= this.serviceBandejaEntrada.listarTramitesEstado(u);
-		}else {
-			return null;
-		}
-		
-	}
+//	public List<BandejaEntrada> getLista() {
+//		if (u!=null) {
+//			return lista= this.serviceBandejaEntrada.listarTramitesEstado(u);
+//		}else {
+//			return null;
+//		}
+//		
+//	}
 
 
 

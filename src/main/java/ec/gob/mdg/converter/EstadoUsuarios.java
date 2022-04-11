@@ -25,6 +25,9 @@ public class EstadoUsuarios implements Converter{
 				case "B":
 					estado = "Bloqueado";
 					break;
+				case "N":
+					estado = "No Activo";
+					break;		
 			}
 		}
 		return estado;

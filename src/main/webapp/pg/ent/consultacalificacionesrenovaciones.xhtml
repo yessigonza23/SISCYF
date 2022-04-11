@@ -1,0 +1,104 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui">
+
+<h:body>
+	<h:form id="frmSus" enctype="multipart/form-data"
+		onkeypress="if (event.keyCode == 13) { return false; }">
+		<p:growl id="mensaje" autoUpdate="false" showSummary="false"
+			showDetail="true" />
+		<br />
+
+		<p:dataTable id="dt" resizableColumns="true" editable="true"
+			value="#{consultaEntidadesBean.listaCalRenovaciones}" var="e"
+			widgetVar="accionTabla" rows="15" paginator="true"
+			paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+			rowsPerPageTemplate="10,15,20" sortOrder="descending"
+			paginatorPosition="top"
+			emptyMessage="No hay ningún registro con esa opción"
+			rowIndexVar="index">
+			<p:column style="width:35px" headerText="Editar">
+				<p:rowEditor />
+			</p:column>
+			<p:ajax event="rowEdit" listener="#{consultaEntidadesBean.operar(e)}"
+				update="frm:tabView:frmSus:dt" />
+			<p:column headerText="No.a" style="width:20px">
+				<p:outputLabel value="#{e.secuencia}" />
+			</p:column>
+			<p:column headerText="Fecha Renovación" style="width:100px">
+				<p:outputLabel value="#{e.fecha_renovacion}" style="width:60px" />
+			</p:column>
+			<p:column headerText="Fecha caducidad" style="width:50px">
+				<p:outputLabel value="#{e.fecha_caducidad}" />
+			</p:column>
+			<p:column headerText="No. Informe" style="width:50px">
+				<p:outputLabel id="informe" value="#{e.numero_informe}">
+				</p:outputLabel>
+			</p:column>
+			<p:column headerText="Fecha Registro" style="width:60px">
+				<p:outputLabel id="fecreg" value="#{e.fecha_registro}">
+				</p:outputLabel>
+			</p:column>
+			<p:column headerText="Aprobado" style="width:50px">
+				<p:outputLabel id="aprobado" value="#{e.aprobado}"
+					style="width:30px">
+					<f:converter converterId="estadoAprobados" />
+				</p:outputLabel>
+			</p:column>
+			<p:column headerText="Categoría actual" style="width:50px">
+				<p:outputLabel id="categoriaActual" value="#{e.categoria_actual}"
+					style="width:20px">
+				</p:outputLabel>
+			</p:column>
+			<p:column headerText="Cupo kg actual" style="width:50px">
+				<p:outputLabel id="cupoKgActual" value="#{e.cupo_kg_actual}"
+					style="width:50px">
+				</p:outputLabel>
+			</p:column>
+			<p:column headerText="Estado Calif. Ren.">
+				<p:outputLabel id="txtEstadoCalren" disabled="true"
+					autocomplete="off" value="#{e.estado_calren}">
+					<f:converter converterId="estadoUsuarios" />
+				</p:outputLabel>
+			</p:column>
+			<p:column headerText="Factura:">
+				<p:inputText id="txtFactura" disabled="true" autocomplete="off"
+					value="#{e.factura}">
+				</p:inputText>
+			</p:column>
+			<p:column headerText="Fecha de pago">
+				<p:calendar id="txtFechaPago" pattern="dd/MM/yyyy" mask="true"
+					disabled="true" value="#{e.fecha_pago}">
+				</p:calendar>
+				<p:watermark for="txtFechaPago" value="dd/mm/yyyy" />
+			</p:column>
+			<p:column headerText="Fecha de registro:">
+				<p:calendar id="txtFechaRegistro" pattern="dd/MM/yyyy" mask="true"
+					disabled="true" value="#{e.fecha_registro}">
+				</p:calendar>
+				<p:watermark for="txtFechaRegistro" value="dd/mm/yyyy" />
+			</p:column>
+			<p:column headerText="Observación" style="width:110px">
+				<p:cellEditor>
+					<f:facet name="output">
+						<h:outputText value="#{e.observacion}" style="width:100px" />
+					</f:facet>
+
+					<f:facet name="input">
+						<h:inputText value="#{e.observacion}" size="200"
+							style="width:100px" />
+					</f:facet>
+				</p:cellEditor>
+			</p:column>
+		</p:dataTable>
+
+		<ui:include src="/pg/ent/consultasustancias.xhtml" />
+	</h:form>
+	<!-- Script de estilos para el contenido fel formulario-->
+	<h:outputStylesheet library="css" name="buscar.css" />
+	<h:outputStylesheet library="css" name="registroUsuario.css" />
+</h:body>
+</html>

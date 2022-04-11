@@ -206,7 +206,7 @@ public class UsuarioBean implements Serializable {
 				+ "MDG - Sistema SISCYF <br><br>" + "</body></html>";
 
 		Session session = Session.getInstance(props, null);
-		session.setDebug(true);
+//		session.setDebug(true);
 		try {
 			MimeBodyPart textoMensaje = new MimeBodyPart();
 			textoMensaje.setContent(cuerpoMensaje, "text/html");

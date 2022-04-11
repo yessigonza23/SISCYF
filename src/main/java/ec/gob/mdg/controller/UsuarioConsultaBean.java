@@ -99,8 +99,6 @@ public class UsuarioConsultaBean implements Serializable {
         FacesMessage msg = new FacesMessage("Usuario Seleccionado", String.valueOf(((Usuario) event.getObject()).getId()));
         FacesContext.getCurrentInstance().addMessage(null, msg);
         
-      //  List<Usuario> Lstusuario=serviceUsuario.listarPorId(String.valueOf(((Usuario) event.getObject()));
-        
     }
 
     public void onRowUnselect(UnselectEvent event) {

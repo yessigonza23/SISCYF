@@ -1,9 +1,9 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml"
-	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
-	xmlns:h="http://xmlns.jcp.org/jsf/html"
-	xmlns:p="http://primefaces.org/ui"
-	xmlns:f="http://xmlns.jcp.org/jsf/core">
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui">
 
 <h:body>
 	<h:form id="frmSus" enctype="multipart/form-data"
@@ -11,57 +11,76 @@
 		<p:growl id="mensaje" autoUpdate="false" showSummary="false"
 			showDetail="true" />
 		<br />
-		<p:panel>
-			<p:dataTable id="dt" resizableColumns="true" var="e"
-					value="#{consultaEntidadesBean.listaCalRenovaciones}" rows="15"
-					paginator="true" selectionMode="single"
-					selection="#{consultaEntidadesBean.calificacionesRenovaciones}" rowKey="#{calificacionesRenovaciones.id}"
-					paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
-					rowsPerPageTemplate="10,15,20" sortOrder="descending"
-					paginatorPosition="top"
-					emptyMessage="No hay ningún registro con esa opción">
 
-					
-					<p:column headerText="No.a" filterBy="#{e.id}"
-						filterMatchMode="contains" style="width:20px">
-						<p:outputLabel value="#{e.id}" />
-					</p:column>
+		<p:dataTable id="dt" resizableColumns="true" editable="true"
+			value="#{consultaEntidadesBean.listaSustancias}" var="e"
+			widgetVar="accionTabla" rows="15" paginator="true"
+			paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+			rowsPerPageTemplate="10,15,20" sortOrder="descending"
+			paginatorPosition="top"
+			emptyMessage="No hay ningún registro con esa opción"
+			rowIndexVar="index">
+			<p:column style="width:35px" headerText="Editar">
+				<p:rowEditor />
+			</p:column>
+			<p:ajax event="rowEdit"
+				listener="#{consultaEntidadesBean.operarSustancias(e)}"
+				update="frm:tabView:frmSus:dt" />
+			<p:column headerText="Sustancia" style="width:20px">
+				<p:outputLabel value="#{e.sustancias.nombre}" />
+			</p:column>
+			<p:column headerText="Unidad" style="width:100px">
+				<p:outputLabel value="#{e.unidad}" style="width:60px" />
+			</p:column>
+			<p:column headerText="Cupo Solicitado" style="width:50px">
+				<p:outputLabel value="#{e.cupo_solicitado}" />
+			</p:column>
+			<p:column headerText="Cupo Asignado" style="width:110px">
+				<p:cellEditor>
+					<f:facet name="output">
+						<h:outputText value="#{e.cupo_asignado}" style="width:100px" />
+					</f:facet>
 
-					<p:column headerText="Fecha Renovación"
-						filterBy="#{e.fecha_renovacion}" filterMatchMode="contains"
-						style="width:100px">
-						<p:outputLabel value="#{e.fecha_renovacion}" />
-					</p:column>
-					<p:column headerText="Fecha caducidad" filterBy="#{e.fecha_caducidad}"
-						filterMatchMode="contains" style="width:50px">
-						<p:outputLabel value="#{e.fecha_caducidad}" />
-					</p:column>
-					<p:column headerText="No. Informe" filterBy="#{e.numero_informe}"
-						filterMatchMode="contains" style="width:50px">
-						<p:outputLabel id="informe" value="#{e.numero_informe}">
-						</p:outputLabel>
-					</p:column>
-					<p:column headerText="Fecha Informe"
-						filterBy="#{e.fecha_informe}" filterMatchMode="contains"
-						style="width:120px">
-						<p:outputLabel id="fecinforme" value="#{e.fecha_informe}">
-						</p:outputLabel>
-					</p:column>
+					<f:facet name="input">
+						<h:inputText value="#{e.cupo_asignado}" size="200"
+							style="width:100px" />
+					</f:facet>
+				</p:cellEditor>
+			</p:column>
+			
+			<p:column headerText="Presentanción" style="width:50px">
+				<p:outputLabel id="presentacion" value="#{e.presentacion.nombre}"
+					style="width:20px">
+				</p:outputLabel>
+			</p:column>
+			<p:column headerText="Tipo de Cambio" style="width:110px">
+				<p:cellEditor>
+					<f:facet name="output">
+						<h:outputText value="#{e.tipo_cambio}" style="width:100px" />
+					</f:facet>
 
-					<p:column headerText="Aprobado" filterBy="#{e.aprobado}"
-						filterMatchMode="contains" style="width:50px">
-						<p:outputLabel id="estado" value="#{e.aprobado}" style="width:100px">
-							<f:converter converterId="estadoAprobados" />
-						</p:outputLabel>
-					</p:column>
+					<f:facet name="input">
+						<h:inputText value="#{e.tipo_cambio}" size="200"
+							style="width:100px" />
+					</f:facet>
+				</p:cellEditor>
+			</p:column>
+			<p:column headerText="Estado" style="width:110px">
+				<p:cellEditor>
+					<f:facet name="output">
+						<h:outputText value="#{e.estado}" style="width:100px" />
+					</f:facet>
 
-				</p:dataTable>
-		</p:panel>
+					<f:facet name="input">
+						<h:inputText value="#{e.estado}" size="200"
+							style="width:100px" />
+					</f:facet>
+				</p:cellEditor>
+			</p:column>
+		</p:dataTable>
 	</h:form>
-
 	<!-- Script de estilos para el contenido fel formulario-->
 	<h:outputStylesheet library="css" name="buscar.css" />
 	<h:outputStylesheet library="css" name="registroUsuario.css" />
-
 </h:body>
 </html>

@@ -18,20 +18,15 @@
 </h:head>
 
 <h:body class="resolucion">
-	<div id="header">
-
-		
-
+	<div id="header">		
 		<ui:insert name="header">
 			<p:idleMonitor timeout="666000">
 				<p:ajax event="idle" listener="#{masterBean.timeout()}"
 					oncomplete="alert('Sesión expirada')" />
 			</p:idleMonitor>
-
 			<p:growl id="mensaje" autoUpdate="false" severity="warn, fatal"
 				showSummary="true" showDetail="true" />
 			<h:form>
-
 				<p:menubar model="#{menuBean.model}" autoDisplay="false">
 					<f:facet name="options">
 						    Bienvenido(a): #{masterBean.mostrarUsuarioLogueado()}
@@ -43,22 +38,15 @@
 							trackMouse="true" />
 					</f:facet>
 				</p:menubar>
-
 			</h:form>
-
 		</ui:insert>
-
 	</div>
-
-
 	<div id="content" class="center_content">
 		<ui:insert name="content">
 			<p:growl id="mensaje2" autoUpdate="false" severity="warn, fatal"
 				showSummary="true" showDetail="true" />
 		</ui:insert>
 	</div>
-
-
 	<p:ajaxStatus onstart="PF('statusDialog').show()"
 		onsuccess="PF('statusDialog').hide()" />
 
@@ -68,14 +56,14 @@
 			style="width: 100%;"></p:graphicImage>
 	</p:dialog>
 
-	<p:ajaxStatus onstart="PF('statusDialog').show()"
-		onsuccess="PF('statusDialog').hide()" />
+<!-- 	<p:ajaxStatus onstart="PF('statusDialog').show()" -->
+<!-- 		onsuccess="PF('statusDialog').hide()" /> -->
 
-	<p:dialog widgetVar="statusDialog" modal="true" draggable="false"
-		closable="false" resizable="false" showHeader="false">
-		<p:graphicImage value="/resources/images/ajaxloadingbar.gif"
-			style="width: 100%;"></p:graphicImage>
-	</p:dialog>
+<!-- 	<p:dialog widgetVar="statusDialog" modal="true" draggable="false" -->
+<!-- 		closable="false" resizable="false" showHeader="false"> -->
+<!-- 		<p:graphicImage value="/resources/images/ajaxloadingbar.gif" -->
+<!-- 			style="width: 100%;"></p:graphicImage> -->
+<!-- 	</p:dialog> -->
 
 </h:body>
 </html>

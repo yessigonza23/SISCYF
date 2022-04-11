@@ -4,17 +4,25 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.annotation.PostConstruct;
+import javax.faces.application.FacesMessage;
+import javax.faces.context.FacesContext;
 import javax.faces.view.ViewScoped;
 import javax.inject.Inject;
 import javax.inject.Named;
 
-import ec.gob.mdg.control.ejb.dao.ICalificacionesRenovacionesDAO;
-import ec.gob.mdg.control.ejb.modelo.CalificacionesRenovaciones;
-import ec.gob.mdg.control.ejb.modelo.Empresa;
-import ec.gob.mdg.control.ejb.operaciones.OperacionesConEmpresas;
-import ec.gob.mdg.control.ejb.service.ICalificacionesRenovacionesService;
-import ec.gob.mdg.control.ejb.service.IEmpresaService;
+import org.primefaces.event.SelectEvent;
+import org.primefaces.event.UnselectEvent;
 
+import ec.gob.mdg.control.ejb.modelo.CalificacionesRenovaciones;
+import ec.gob.mdg.control.ejb.modelo.CalrenSustancias;
+import ec.gob.mdg.control.ejb.modelo.Empresa;
+import ec.gob.mdg.control.ejb.service.ICalificacionesRenovacionesService;
+import ec.gob.mdg.control.ejb.service.ICalrenSustanciasService;
+import ec.gob.mdg.control.ejb.service.IEmpresaService;
+import lombok.Data;
+
+@Data
 @Named
 @ViewScoped
 public class ConsultaEntidadesBean implements Serializable {
@@ -25,138 +33,142 @@ public class ConsultaEntidadesBean implements Serializable {
 	private IEmpresaService serviceEmpresa;
 
 	@Inject
-	private OperacionesConEmpresas serviceOperEmpresas;
-	
-	@Inject
 	private ICalificacionesRenovacionesService serviceCalRen;
 
-	@SuppressWarnings("unused")
-	private List<Empresa> listaEmpresas = new ArrayList<Empresa>();
-	private Empresa empresa = new Empresa();
-	
+	@Inject
+	private ICalrenSustanciasService serviceSustancias;
+
 	private List<CalificacionesRenovaciones> listaCalRenovaciones = new ArrayList<>();
+	private List<CalrenSustancias> listaSustancias = new ArrayList<>();
 	private CalificacionesRenovaciones calificacionesRenovaciones = new CalificacionesRenovaciones();
-	
+	private Empresa empresa = new Empresa();
+	private CalrenSustancias calrenSustancias= new CalrenSustancias();
+
 	Boolean render_n = false;
 	Boolean render_j = false;
 	Boolean render_o = false;
 	Boolean render_p = false;
 	Boolean render = false;
 
-	//CARGA DATOS GENERALES SEGUN EL TIPO DE EMPRESA
-	public Empresa cargaEmpresa(Integer id) throws Exception {
-		render_n = false;
-		render_o = false;
-		render_j = false;
-		render_p = false;
-		render = false;
-		if (id != null) {
-			render = true;
-			empresa = serviceEmpresa.listaEmpresas(id);
-			if (empresa.getTipo_empresa().equals("n")) {
-				render_n = true;
-			} else if (empresa.getTipo_empresa().equals("j")) {
-				render_j = true;
-			} else if (empresa.getTipo_empresa().equals("o")) {
-				render_o = true;
-			} else if (empresa.getTipo_empresa().equals("p")) {
-				render_p = true;
-			}
-		} else {
-			render = false;
+	String empresaS;
+	Integer empresaId;
+
+	@PostConstruct
+	public void init() {
+		cargarDatos();
+	}
+
+	public String getParam() {
+		return (String) FacesContext.getCurrentInstance().getExternalContext().getFlash().get("empresa");
+	}
+
+	/// DATOS DE LA EMPRESA DATOS GENERALES PRIMERA PESTAÑA
+	public Empresa cargarDatos() {
+		if (empresa != null) {
+			System.out.println("entra a cargar datos de empresa");
+			empresaS = (String) FacesContext.getCurrentInstance().getExternalContext().getFlash().get("empresa");
+			empresaId = Integer.parseInt(empresaS);
 			render_n = false;
 			render_o = false;
 			render_j = false;
 			render_p = false;
+			render = false;
+			if (empresaId != null) {
+				render = true;
+				empresa = serviceEmpresa.listarEmpresaPorId(empresaId);
+				cargarListaCalRen(empresa);
+				if (empresa.getTipo_empresa().equals("n")) {
+					render_n = true;
+				} else if (empresa.getTipo_empresa().equals("j")) {
+					render_j = true;
+				} else if (empresa.getTipo_empresa().equals("o")) {
+					render_o = true;
+				} else if (empresa.getTipo_empresa().equals("p")) {
+					render_p = true;
+				}
+			} else {
+				render = false;
+				render_n = false;
+				render_o = false;
+				render_j = false;
+				render_p = false;
+				empresa = null;
+			}
+		} else {
 			empresa = null;
 		}
 		return empresa;
 	}
-	
-	//CARGA CALIFICACIONES Y RENOVACIONES
-	
-	public List<CalificacionesRenovaciones> cargalista() {
-		System.out.println("entra a getlista" + empresa.getId());
-		listaCalRenovaciones = serviceCalRen.listaCalRenPorEmpresa(empresa);
-		for(CalificacionesRenovaciones c:listaCalRenovaciones) {
-			System.out.println(c.getId());
+
+	//////// CALIFICACIONES RENOVACIONES -
+	public List<CalificacionesRenovaciones> cargarListaCalRen(Empresa empr) {
+		if (empr != null) {
+			System.out.println("entra a cargar datos de calren");
+			this.listaCalRenovaciones = serviceCalRen.listarCalRenPorEmpresa(empr);
+		} else {
+			listaCalRenovaciones = null;
 		}
-		return serviceCalRen.listaCalRenPorEmpresa(empresa);
+		return listaCalRenovaciones;
 	}
 
-	
-	//////////////////////////////////////
-	
-	public List<Empresa> getListaEmpresas() throws Exception {
-		return serviceEmpresa.listar();
-	}	
-
-	public CalificacionesRenovaciones getCalificacionesRenovaciones() {
-		return calificacionesRenovaciones;
+	//// GRABAR OBSERVACIONES
+	public Integer operar(CalificacionesRenovaciones calren) {
+		System.out.println("entra a Accion : " + calificacionesRenovaciones.getObservacion() + "-" + calren.getId()
+				+ "-" + calren.getAprobado() + "-" + calren.getObservacion());
+		try {
+			if (calren != null) {
+				System.out.println("entra para modificar calren");
+				calren.setObservacion(calificacionesRenovaciones.getObservacion());
+				this.serviceCalRen.modificar(calren);
+			}
+		} catch (Exception e) {
+			System.out.println(e.getMessage());
+		}
+		return 1;
 	}
 
-	///////////////////////////GETERS
+	//////////////// SELECCIONAR LA CALIFICACION RENOVACIÓN
 
-	public void setListaCalRenovaciones(List<CalificacionesRenovaciones> listaCalRenovaciones) {
-		this.listaCalRenovaciones = listaCalRenovaciones;
-	}
-	public void setCalificacionesRenovaciones(CalificacionesRenovaciones calificacionesRenovaciones) {
-		this.calificacionesRenovaciones = calificacionesRenovaciones;
-	}
-
-	public void setListaEmpresas(List<Empresa> listaEmpresas) {
-		this.listaEmpresas = listaEmpresas;
-	}
-	
-	public Empresa getEmpresa() {
-		return empresa;
+	public void onRowSelect(SelectEvent event) {
+		FacesMessage msg = new FacesMessage("Calificacion/Renovacion: ",
+				String.valueOf(((CalificacionesRenovaciones) event.getObject()).getSecuencia()));
+		FacesContext.getCurrentInstance().addMessage(null, msg);
 	}
 
-	public void setEmpresa(Empresa empresa) {
-		this.empresa = empresa;
+	public void onRowUnselect(UnselectEvent event) {
+		FacesMessage msg = new FacesMessage("Calificacion/Renovacion quitar seleccion",
+				String.valueOf(((CalificacionesRenovaciones) event.getObject()).getSecuencia()));
+		FacesContext.getCurrentInstance().addMessage(null, msg);
 	}
 
-	public Boolean getRender_n() {
-		return render_n;
+	//////// SUSTANCIAS
+	public List<CalificacionesRenovaciones> cargarListaSustancias(Empresa empr, CalificacionesRenovaciones calren) {
+		if (empr != null && calren != null) {
+			System.out.println("entra a cargar sustancias");
+			this.listaSustancias = serviceSustancias.listarSustanciasEmpCalren(empr, calren);
+		} else {
+			listaCalRenovaciones = null;
+		}
+		return listaCalRenovaciones;
 	}
 
-	public void setRender_n(Boolean render_n) {
-		this.render_n = render_n;
+    ////GRABAR RAZON Y ESTADO
+	public Integer operarSustancias(CalrenSustancias calrenSus) {
+		System.out.println("entra a Accion Sustancias : "); 
+		try {
+			if (calrenSus != null) {
+				System.out.println("entra para modificar calren");
+				calrenSus.setEstado(calrenSustancias.getEstado());
+				calrenSus.setTipo_cambio(calrenSustancias.getTipo_cambio());
+				calrenSus.setCupo_asignado(calrenSustancias.getCupo_asignado());
+				this.serviceSustancias.modificar(calrenSus);
+			}
+		} catch (Exception e) {
+			System.out.println(e.getMessage());
+		}
+		return 1;
 	}
 
-	public Boolean getRender_j() {
-		return render_j;
-	}
-
-	public void setRender_j(Boolean render_j) {
-		this.render_j = render_j;
-	}
-
-	public Boolean getRender_o() {
-		return render_o;
-	}
-
-	public void setRender_o(Boolean render_o) {
-		this.render_o = render_o;
-	}
-
-	public Boolean getRender_p() {
-		return render_p;
-	}
-
-	public void setRender_p(Boolean render_p) {
-		this.render_p = render_p;
-	}
-
-	public Boolean getRender() {
-		return render;
-	}
-
-	public void setRender(Boolean render) {
-		this.render = render;
-	}
-
-
-	
+	////////
 
 }
