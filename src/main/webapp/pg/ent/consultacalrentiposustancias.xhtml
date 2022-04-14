@@ -1,0 +1,24 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui">
+
+
+<p:dataTable id="dt_tipo" resizableColumns="true" editable="true"
+	value="#{consultaEntidadesBean.listaCalrenTipoSustancia}" var="e"
+	widgetVar="accionTabla" rows="15" paginator="true"
+	paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+	rowsPerPageTemplate="10,15,20" sortOrder="descending"
+	paginatorPosition="top" showGridlines="true"
+	emptyMessage="No hay ningún registro con esa opción"
+	rowIndexVar="index">
+	
+	<p:column headerText="Tipo de Sustancia" style="width:20px">
+		<p:outputLabel value="#{e.tipoSustancia.nombre}" />
+	</p:column>
+	
+</p:dataTable>
+
+</html>

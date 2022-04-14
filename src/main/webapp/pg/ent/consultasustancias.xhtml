@@ -5,82 +5,70 @@
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:p="http://primefaces.org/ui">
 
-<h:body>
-	<h:form id="frmSus" enctype="multipart/form-data"
-		onkeypress="if (event.keyCode == 13) { return false; }">
-		<p:growl id="mensaje" autoUpdate="false" showSummary="false"
-			showDetail="true" />
-		<br />
 
-		<p:dataTable id="dt" resizableColumns="true" editable="true"
-			value="#{consultaEntidadesBean.listaSustancias}" var="e"
-			widgetVar="accionTabla" rows="15" paginator="true"
-			paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
-			rowsPerPageTemplate="10,15,20" sortOrder="descending"
-			paginatorPosition="top"
-			emptyMessage="No hay ningún registro con esa opción"
-			rowIndexVar="index">
-			<p:column style="width:35px" headerText="Editar">
-				<p:rowEditor />
-			</p:column>
-			<p:ajax event="rowEdit"
-				listener="#{consultaEntidadesBean.operarSustancias(e)}"
-				update="frm:tabView:frmSus:dt" />
-			<p:column headerText="Sustancia" style="width:20px">
-				<p:outputLabel value="#{e.sustancias.nombre}" />
-			</p:column>
-			<p:column headerText="Unidad" style="width:100px">
-				<p:outputLabel value="#{e.unidad}" style="width:60px" />
-			</p:column>
-			<p:column headerText="Cupo Solicitado" style="width:50px">
-				<p:outputLabel value="#{e.cupo_solicitado}" />
-			</p:column>
-			<p:column headerText="Cupo Asignado" style="width:110px">
-				<p:cellEditor>
-					<f:facet name="output">
-						<h:outputText value="#{e.cupo_asignado}" style="width:100px" />
-					</f:facet>
+<p:dataTable id="dt_sus" resizableColumns="true" editable="true"
+	value="#{consultaEntidadesBean.listaSustancias}" var="e"
+	widgetVar="accionTabla" rows="15" paginator="true" showGridlines="true"
+	paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+	rowsPerPageTemplate="10,15,20" sortOrder="descending"
+	paginatorPosition="top"
+	emptyMessage="No hay ningún registro con esa opción"
+	rowIndexVar="index">
+	<p:column style="width:35px" headerText="Editar" >
+		<p:rowEditor />
+	</p:column>
+	<p:ajax event="rowEdit"
+		listener="#{consultaEntidadesBean.operarSustancias(e)}" />
 
-					<f:facet name="input">
-						<h:inputText value="#{e.cupo_asignado}" size="200"
-							style="width:100px" />
-					</f:facet>
-				</p:cellEditor>
-			</p:column>
-			
-			<p:column headerText="Presentanción" style="width:50px">
-				<p:outputLabel id="presentacion" value="#{e.presentacion.nombre}"
-					style="width:20px">
-				</p:outputLabel>
-			</p:column>
-			<p:column headerText="Tipo de Cambio" style="width:110px">
-				<p:cellEditor>
-					<f:facet name="output">
-						<h:outputText value="#{e.tipo_cambio}" style="width:100px" />
-					</f:facet>
 
-					<f:facet name="input">
-						<h:inputText value="#{e.tipo_cambio}" size="200"
-							style="width:100px" />
-					</f:facet>
-				</p:cellEditor>
-			</p:column>
-			<p:column headerText="Estado" style="width:110px">
-				<p:cellEditor>
-					<f:facet name="output">
-						<h:outputText value="#{e.estado}" style="width:100px" />
-					</f:facet>
+	<p:column headerText="Sustancia" style="width:100px">
+		<p:outputLabel value="#{e.sustancias.nombre}" />
+	</p:column>
+	<p:column headerText="Unidad" style="width:50px">
+		<p:outputLabel value="#{e.unidad}" style="width:60px" />
+	</p:column>
+	<p:column headerText="Cupo Solicitado" style="width:50px">
+		<p:outputLabel value="#{e.cupo_solicitado}" />
+	</p:column>
+	<p:column headerText="Cupo Asignado" style="width:50px">
+		<p:cellEditor>
+			<f:facet name="output">
+				<h:outputText value="#{e.cupo_asignado}" style="width:50px" />
+			</f:facet>
 
-					<f:facet name="input">
-						<h:inputText value="#{e.estado}" size="200"
-							style="width:100px" />
-					</f:facet>
-				</p:cellEditor>
-			</p:column>
-		</p:dataTable>
-	</h:form>
-	<!-- Script de estilos para el contenido fel formulario-->
-	<h:outputStylesheet library="css" name="buscar.css" />
-	<h:outputStylesheet library="css" name="registroUsuario.css" />
-</h:body>
+			<f:facet name="input">
+				<h:inputText value="#{e.cupo_asignado}" size="200"
+					style="width:50px" />
+			</f:facet>
+		</p:cellEditor>
+	</p:column>
+	<p:column headerText="Presentanción" style="width:50px">
+		<p:outputLabel id="presentacion" value="#{e.presentacion.nombre}"
+			style="width:20px">
+		</p:outputLabel>
+	</p:column>
+	<p:column headerText="Tipo de Cambio" style="width:110px">
+		<p:cellEditor>
+			<f:facet name="output">
+				<h:outputText value="#{e.tipo_cambio}" style="width:100px" />
+			</f:facet>
+
+			<f:facet name="input">
+				<h:inputText value="#{e.tipo_cambio}" size="200" style="width:100px" />
+			</f:facet>
+		</p:cellEditor>
+	</p:column>
+	<p:column headerText="Estado" style="width:110px">
+		<p:cellEditor>
+			<f:facet name="output">
+				<h:outputText value="#{e.estado}" style="width:100px" />
+			</f:facet>
+
+			<f:facet name="input">
+				<h:inputText value="#{e.estado}" size="200" style="width:100px" />
+			</f:facet>
+		</p:cellEditor>
+	</p:column>
+</p:dataTable>
+
 </html>

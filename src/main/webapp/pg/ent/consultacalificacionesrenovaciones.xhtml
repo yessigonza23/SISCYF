@@ -4,101 +4,91 @@
 	xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:p="http://primefaces.org/ui">
+<p:growl id="mensaje" autoUpdate="false" showSummary="false"
+	showDetail="true" />
 
-<h:body>
-	<h:form id="frmSus" enctype="multipart/form-data"
-		onkeypress="if (event.keyCode == 13) { return false; }">
-		<p:growl id="mensaje" autoUpdate="false" showSummary="false"
-			showDetail="true" />
-		<br />
+<p:dataTable id="dt" var="e"
+	value="#{consultaEntidadesBean.listaCalRenovaciones}"
+	selectionMode="single"
+	selection="#{consultaEntidadesBean.calificacionesRenovaciones}"
+	rowKey="#{e.id}"  editable="true">
+	<p:column style="width:35px" headerText="Editar">
+		<p:rowEditor />
+	</p:column>
+	<p:ajax event="rowEdit" listener="#{consultaEntidadesBean.operar(e)}"
+		update=":frm:tabView:dt" />
+	<p:ajax event="rowEditCancel"
+		listener="#{consultaEntidadesBean.onRowCancel}"
+		update=":frm:tabView:dt" />
 
-		<p:dataTable id="dt" resizableColumns="true" editable="true"
-			value="#{consultaEntidadesBean.listaCalRenovaciones}" var="e"
-			widgetVar="accionTabla" rows="15" paginator="true"
-			paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
-			rowsPerPageTemplate="10,15,20" sortOrder="descending"
-			paginatorPosition="top"
-			emptyMessage="No hay ningún registro con esa opción"
-			rowIndexVar="index">
-			<p:column style="width:35px" headerText="Editar">
-				<p:rowEditor />
-			</p:column>
-			<p:ajax event="rowEdit" listener="#{consultaEntidadesBean.operar(e)}"
-				update="frm:tabView:frmSus:dt" />
-			<p:column headerText="No.a" style="width:20px">
-				<p:outputLabel value="#{e.secuencia}" />
-			</p:column>
-			<p:column headerText="Fecha Renovación" style="width:100px">
-				<p:outputLabel value="#{e.fecha_renovacion}" style="width:60px" />
-			</p:column>
-			<p:column headerText="Fecha caducidad" style="width:50px">
-				<p:outputLabel value="#{e.fecha_caducidad}" />
-			</p:column>
-			<p:column headerText="No. Informe" style="width:50px">
-				<p:outputLabel id="informe" value="#{e.numero_informe}">
-				</p:outputLabel>
-			</p:column>
-			<p:column headerText="Fecha Registro" style="width:60px">
-				<p:outputLabel id="fecreg" value="#{e.fecha_registro}">
-				</p:outputLabel>
-			</p:column>
-			<p:column headerText="Aprobado" style="width:50px">
-				<p:outputLabel id="aprobado" value="#{e.aprobado}"
-					style="width:30px">
-					<f:converter converterId="estadoAprobados" />
-				</p:outputLabel>
-			</p:column>
-			<p:column headerText="Categoría actual" style="width:50px">
-				<p:outputLabel id="categoriaActual" value="#{e.categoria_actual}"
-					style="width:20px">
-				</p:outputLabel>
-			</p:column>
-			<p:column headerText="Cupo kg actual" style="width:50px">
-				<p:outputLabel id="cupoKgActual" value="#{e.cupo_kg_actual}"
-					style="width:50px">
-				</p:outputLabel>
-			</p:column>
-			<p:column headerText="Estado Calif. Ren.">
-				<p:outputLabel id="txtEstadoCalren" disabled="true"
-					autocomplete="off" value="#{e.estado_calren}">
-					<f:converter converterId="estadoUsuarios" />
-				</p:outputLabel>
-			</p:column>
-			<p:column headerText="Factura:">
-				<p:inputText id="txtFactura" disabled="true" autocomplete="off"
-					value="#{e.factura}">
-				</p:inputText>
-			</p:column>
-			<p:column headerText="Fecha de pago">
-				<p:calendar id="txtFechaPago" pattern="dd/MM/yyyy" mask="true"
-					disabled="true" value="#{e.fecha_pago}">
-				</p:calendar>
-				<p:watermark for="txtFechaPago" value="dd/mm/yyyy" />
-			</p:column>
-			<p:column headerText="Fecha de registro:">
-				<p:calendar id="txtFechaRegistro" pattern="dd/MM/yyyy" mask="true"
-					disabled="true" value="#{e.fecha_registro}">
-				</p:calendar>
-				<p:watermark for="txtFechaRegistro" value="dd/mm/yyyy" />
-			</p:column>
-			<p:column headerText="Observación" style="width:110px">
-				<p:cellEditor>
-					<f:facet name="output">
-						<h:outputText value="#{e.observacion}" style="width:100px" />
-					</f:facet>
+	<p:ajax event="rowSelect"
+		listener="#{consultaEntidadesBean.onRowSelect}"
+		update=":frm:tabView:pn_actividades,:frm:tabView:pn_sustancias,:frm:tabView:pn_tiposustancia" />
+	<p:ajax event="rowUnselect"
+		listener="#{consultaEntidadesBean.onRowUnselect}"
+		update=":frm:tabView:pn_actividades,:frm:tabView:pn_sustancias,:frm:tabView:pn_tiposustancia" />
 
-					<f:facet name="input">
-						<h:inputText value="#{e.observacion}" size="200"
-							style="width:100px" />
-					</f:facet>
-				</p:cellEditor>
-			</p:column>
-		</p:dataTable>
 
-		<ui:include src="/pg/ent/consultasustancias.xhtml" />
-	</h:form>
-	<!-- Script de estilos para el contenido fel formulario-->
-	<h:outputStylesheet library="css" name="buscar.css" />
-	<h:outputStylesheet library="css" name="registroUsuario.css" />
-</h:body>
+	<p:column headerText="No.a" style="width:20px">
+		<p:outputLabel value="#{e.secuencia}" />
+	</p:column>
+	<p:column headerText="Fecha Renovación" style="width:100px">
+		<p:outputLabel value="#{e.fecha_renovacion}" />
+	</p:column>
+	<p:column headerText="Fecha caducidad" style="width:100px">
+		<p:outputLabel value="#{e.fecha_caducidad}" />
+	</p:column>
+	<p:column headerText="No. Informe" style="width:150px">
+		<p:outputLabel id="informe" value="#{e.numero_informe}">
+		</p:outputLabel>
+	</p:column>
+	<p:column headerText="Aprobado" style="width:80px">
+		<p:outputLabel id="aprobado" value="#{e.aprobado}">
+			<f:converter converterId="estadoAprobados" />
+		</p:outputLabel>
+	</p:column>
+	<p:column headerText="Categ.Actual" style="width:80px">
+		<p:outputLabel id="categoriaActual" value="#{e.categoria_actual}"
+			style="width:20px">
+		</p:outputLabel>
+	</p:column>
+	<p:column headerText="Cupo kg actual" style="width:80px">
+		<p:outputLabel id="cupoKgActual" value="#{e.cupo_kg_actual}"
+			style="width:50px">
+		</p:outputLabel>
+	</p:column>
+	<p:column headerText="Estado Cal/Ren." style="width:80px">
+		<p:outputLabel id="txtEstadoCalren" disabled="true" autocomplete="off"
+			value="#{e.estado_calren}">
+			<f:converter converterId="estadoUsuarios" />
+		</p:outputLabel>
+	</p:column>
+	<p:column headerText="Factura:" style="width:100px">
+		<p:outputLabel id="txtFactura" disabled="true" autocomplete="off"
+			value="#{e.factura}">
+		</p:outputLabel>
+	</p:column>
+	<p:column headerText="Observación" style="width:200px">
+		<p:cellEditor>
+			<f:facet name="output">
+				<h:outputText value="#{e.observacion}" style="width:100%" />
+			</f:facet>
+
+			<f:facet name="input">
+				<h:inputText value="#{e.observacion}" size="200" style="width:100%" />
+			</f:facet>
+		</p:cellEditor>
+	</p:column>
+
+</p:dataTable>
+
+<p:panel id="pn_actividades">
+	<ui:include src="/pg/ent/consultacalrenactividades.xhtml" />
+</p:panel>
+<p:panel id="pn_tiposustancia">
+	<ui:include src="/pg/ent/consultacalrentiposustancias.xhtml" />
+</p:panel>
+<p:panel id="pn_sustancias">
+	<ui:include src="/pg/ent/consultasustancias.xhtml" />
+</p:panel>
 </html>
