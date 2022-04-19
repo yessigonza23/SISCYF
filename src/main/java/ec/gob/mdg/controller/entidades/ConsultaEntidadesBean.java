@@ -20,11 +20,15 @@ import ec.gob.mdg.control.ejb.modelo.CalrenActividadesCalificacion;
 import ec.gob.mdg.control.ejb.modelo.CalrenSustancias;
 import ec.gob.mdg.control.ejb.modelo.CalrenTipoSustancia;
 import ec.gob.mdg.control.ejb.modelo.Empresa;
+import ec.gob.mdg.control.ejb.modelo.Presentacion;
+import ec.gob.mdg.control.ejb.modelo.TipoCambioSustancias;
 import ec.gob.mdg.control.ejb.service.ICalificacionesRenovacionesService;
 import ec.gob.mdg.control.ejb.service.ICalrenActividadesCalificacionService;
 import ec.gob.mdg.control.ejb.service.ICalrenSustanciasService;
 import ec.gob.mdg.control.ejb.service.ICalrenTipoSustanciasService;
 import ec.gob.mdg.control.ejb.service.IEmpresaService;
+import ec.gob.mdg.control.ejb.service.IPresentacionService;
+import ec.gob.mdg.control.ejb.service.ITipoCambioSustanciasService;
 import lombok.Data;
 
 @Data
@@ -42,21 +46,29 @@ public class ConsultaEntidadesBean implements Serializable {
 
 	@Inject
 	private ICalrenSustanciasService serviceSustancias;
-	
+
 	@Inject
 	private ICalrenActividadesCalificacionService serviceCalrenActividades;
-	
+
 	@Inject
 	private ICalrenTipoSustanciasService serviceCalrenTipoSustancia;
+
+	@Inject
+	private IPresentacionService servicePresentacion;
+
+	@Inject
+	private ITipoCambioSustanciasService serviceTipoCambio;
 
 	private List<CalificacionesRenovaciones> listaCalRenovaciones = new ArrayList<>();
 	private List<CalrenSustancias> listaSustancias = new ArrayList<>();
 	private List<CalrenActividadesCalificacion> listaCalrenActividadesCalificacion = new ArrayList<>();
 	private List<CalrenTipoSustancia> listaCalrenTipoSustancia = new ArrayList<>();
-	
+	private List<Presentacion> listaPresentacion = new ArrayList<>();
+	private List<TipoCambioSustancias> listaTipoCambio = new ArrayList<>();
+
 	private CalificacionesRenovaciones calificacionesRenovaciones = new CalificacionesRenovaciones();
 	private Empresa empresa = new Empresa();
-	private CalrenSustancias calrenSustancias= new CalrenSustancias();
+	private CalrenSustancias calrenSustancias = new CalrenSustancias();
 	private CalrenActividadesCalificacion calrenActividadesCalificacion = new CalrenActividadesCalificacion();
 	private CalrenTipoSustancia calrenTipoSustancia = new CalrenTipoSustancia();
 
@@ -65,14 +77,16 @@ public class ConsultaEntidadesBean implements Serializable {
 	Boolean render_o = false;
 	Boolean render_p = false;
 	Boolean render = false;
-	Boolean render_sus=false;
+	Boolean render_sus = false;
 
 	String empresaS;
 	Integer empresaId;
 
 	@PostConstruct
-	public void init() {
+	public void init() throws Exception {
 		cargarDatos();
+		cargarListaPresentacion();
+		cargarListaTipoCambio();
 	}
 
 	public String getParam() {
@@ -81,8 +95,7 @@ public class ConsultaEntidadesBean implements Serializable {
 
 	/// DATOS DE LA EMPRESA DATOS GENERALES PRIMERA PESTAÑA
 	public Empresa cargarDatos() {
-		if (empresa != null) {
-			System.out.println("entra a cargar datos de empresa");
+		if (empresa != null) {			
 			empresaS = (String) FacesContext.getCurrentInstance().getExternalContext().getFlash().get("empresa");
 			empresaId = Integer.parseInt(empresaS);
 			render_n = false;
@@ -116,36 +129,32 @@ public class ConsultaEntidadesBean implements Serializable {
 		}
 		return empresa;
 	}
-	
+
 	//////// CALIFICACIONES RENOVACIONES -
 	public List<CalificacionesRenovaciones> cargarListaCalRen(Empresa empr) {
-		if (empr != null ) {
-			System.out.println("entra a cargar datos de calren");
+		if (empr != null) {
+			
 			this.listaCalRenovaciones = serviceCalRen.listarCalRenPorEmpresa(empr);
-			if (listaCalRenovaciones!=null && !listaCalRenovaciones.isEmpty()) {
-				calificacionesRenovaciones=listaCalRenovaciones.get(0) ;//   listaCalRenovaciones.indexOf(0);;
-				System.out.println("calificaciones primera posicion "+calificacionesRenovaciones.getId());
-				
-				if (calificacionesRenovaciones!=null) {					
+			if (listaCalRenovaciones != null && !listaCalRenovaciones.isEmpty()) {
+				calificacionesRenovaciones = listaCalRenovaciones.get(0);
+				listaSustancias = null;
+				if (calificacionesRenovaciones != null) {
 					cargarListaActividades(calificacionesRenovaciones.getId());
 					cargarListaTipoSustancia(calificacionesRenovaciones.getId());
-					cargarListaSustancias(calificacionesRenovaciones.getId());
-				}				
-			}			
+				}
+			}
 		} else {
 			listaCalRenovaciones = null;
-			calificacionesRenovaciones=null;
-			listaSustancias=null;
-			listaCalrenActividadesCalificacion=null;
-			listaCalrenTipoSustancia=null;
+			calificacionesRenovaciones = null;
+			listaSustancias = null;
+			listaCalrenActividadesCalificacion = null;
+			listaCalrenTipoSustancia = null;
 		}
 		return listaCalRenovaciones;
 	}
 
 	//// Grabar observaciones para informe de calificacion
-	public Integer operar(CalificacionesRenovaciones calren) {
-		System.out.println("entra a Accion : " + calificacionesRenovaciones.getObservacion() + "-" + calren.getId()
-				+ "-" + calren.getAprobado() + "-" + calren.getObservacion());
+	public Integer operar(CalificacionesRenovaciones calren) {		
 		try {
 			if (calren != null) {
 				System.out.println("entra para modificar calren");
@@ -158,73 +167,91 @@ public class ConsultaEntidadesBean implements Serializable {
 		return 1;
 	}
 
-	//////////////// SELECCIONAR LA CALIFICACION RENOVACIÓN
+	//// Selecciona Calificaciones renovaciones
 
-	public void onRowSelect(SelectEvent event) {		
-		System.out.println("on row" );
+	public void onRowSelect(SelectEvent event) {
+		listaSustancias = null;
 		cargarListaActividades(((CalificacionesRenovaciones) event.getObject()).getId());
 		cargarListaTipoSustancia(((CalificacionesRenovaciones) event.getObject()).getId());
-		cargarListaSustancias(((CalificacionesRenovaciones) event.getObject()).getId());
-		FacesMessage msg = new FacesMessage("CalificacionesRenovaciones", String.valueOf(((CalificacionesRenovaciones) event.getObject()).getSecuencia()));
-        FacesContext.getCurrentInstance().addMessage(null, msg);
+		FacesMessage msg = new FacesMessage("CalificacionesRenovaciones",
+				String.valueOf(((CalificacionesRenovaciones) event.getObject()).getSecuencia()));
+		FacesContext.getCurrentInstance().addMessage(null, msg);
 	}
 
 	public void onRowUnselect(UnselectEvent event) {
-		System.out.println("deseon row" );
 		cargarListaActividades(((CalificacionesRenovaciones) event.getObject()).getId());
 		cargarListaTipoSustancia(((CalificacionesRenovaciones) event.getObject()).getId());
-		cargarListaSustancias(((CalificacionesRenovaciones) event.getObject()).getId());
-		FacesMessage msg = new FacesMessage("CalificacionesRenovaciones", String.valueOf(((CalificacionesRenovaciones) event.getObject()).getSecuencia()));
-        FacesContext.getCurrentInstance().addMessage(null, msg);
+		calrenTipoSustancia = null;
+		FacesMessage msg = new FacesMessage("CalificacionesRenovaciones",
+				String.valueOf(((CalificacionesRenovaciones) event.getObject()).getSecuencia()));
+		FacesContext.getCurrentInstance().addMessage(null, msg);
 	}
-	
-	 public void onRowCancel(RowEditEvent event) {
-	        FacesMessage msg = new FacesMessage("Cancelar", String.valueOf(((CalificacionesRenovaciones) event.getObject()).getSecuencia()));
-	        FacesContext.getCurrentInstance().addMessage(null, msg);
-	    }
-	
-	/////Calificaciones por actividad
+
+	public void onRowCancel(RowEditEvent event) {
+		FacesMessage msg = new FacesMessage("Cancelar",
+				String.valueOf(((CalificacionesRenovaciones) event.getObject()).getSecuencia()));
+		FacesContext.getCurrentInstance().addMessage(null, msg);
+	}
+
+	////////////////////////////////////// ACTIVIDADES
 	public void cargarListaActividades(Integer id_calren) {
-		System.out.println("antes del if actividades " + id_calren );
 		if (id_calren != null) {
 			this.listaCalrenActividadesCalificacion = serviceCalrenActividades.listaCalrenActividades(id_calren);
 		} else {
-			System.out.println("entra al else" );
 			listaCalrenActividadesCalificacion = null;
 		}
 	}
-	
-	/////Calificaciones por tipo de sustancias
+
+	//////////////////////////////////////// TIPO DE SUSTANCIA
 	public void cargarListaTipoSustancia(Integer id_calren) {
-		System.out.println("antes del iftipo de sustancia " + id_calren );
 		if (id_calren != null) {
 			this.listaCalrenTipoSustancia = serviceCalrenTipoSustancia.listaCalrenTipoSustancias(id_calren);
+			if (listaCalrenTipoSustancia != null && !listaCalrenTipoSustancia.isEmpty()) {
+				calrenTipoSustancia = listaCalrenTipoSustancia.get(0);
+				if (calrenTipoSustancia != null) {
+					cargarListaSustancias(calificacionesRenovaciones.getId(),
+							calrenTipoSustancia.getTipoSustancia().getId());
+				}
+			}
 		} else {
-			System.out.println("entra al else" );
 			listaCalrenTipoSustancia = null;
 		}
 	}
-	
-	//////// SUSTANCIAS
-	public void cargarListaSustancias(Integer id_calren) {
-		System.out.println("antes del carga lista sustancias " + id_calren );
+
+	public void onRowSelectTipo(SelectEvent event) {
+		cargarListaSustancias(((CalrenTipoSustancia) event.getObject()).getId(),
+				((CalrenTipoSustancia) event.getObject()).getTipoSustancia().getId());
+		FacesMessage msg = new FacesMessage("CalrenTipoSustancia",
+				String.valueOf(((CalrenTipoSustancia) event.getObject()).getTipoSustancia().getNombre()));
+		FacesContext.getCurrentInstance().addMessage(null, msg);
+	}
+
+	public void onRowUnselectTipo(UnselectEvent event) {
+		cargarListaSustancias(((CalrenTipoSustancia) event.getObject()).getId(),
+				((CalrenTipoSustancia) event.getObject()).getTipoSustancia().getId());
+		FacesMessage msg = new FacesMessage("CalrenTipoSustancia",
+				String.valueOf(((CalrenTipoSustancia) event.getObject()).getTipoSustancia().getNombre()));
+		FacesContext.getCurrentInstance().addMessage(null, msg);
+	}
+
+	///////////////////////////////////// SUSTANCIAS
+	public void cargarListaSustancias(Integer id_calren, Integer id_tiposus) {
 		if (id_calren != null) {
-			this.listaSustancias = serviceSustancias.listarSustanciasEmpCalren(id_calren);
+			this.listaSustancias = serviceSustancias.listarSustanciasEmpCalren(id_calren, id_tiposus);
 		} else {
-			System.out.println("entra al else" );
 			listaSustancias = null;
 		}
 	}
 
-    ////GRABAR RAZON Y ESTADO
+	//// Grabar razon y estado
 	public Integer operarSustancias(CalrenSustancias calrenSus) {
-		System.out.println("entra a Accion Sustancias : "); 
+		
 		try {
 			if (calrenSus != null) {
-				System.out.println("entra para modificar calren");
 				calrenSus.setEstado(calrenSustancias.getEstado());
-				calrenSus.setTipo_cambio(calrenSustancias.getTipo_cambio());
+				calrenSus.setTipoCambioSustancias(calrenSustancias.getTipoCambioSustancias());
 				calrenSus.setCupo_asignado(calrenSustancias.getCupo_asignado());
+				calrenSus.setPresentacion(calrenSustancias.getPresentacion());
 				this.serviceSustancias.modificar(calrenSus);
 			}
 		} catch (Exception e) {
@@ -233,6 +260,15 @@ public class ConsultaEntidadesBean implements Serializable {
 		return 1;
 	}
 
-	////////
+
+	//////// LISTAR PRESENTACION
+	public void cargarListaPresentacion() throws Exception {
+		this.listaPresentacion = servicePresentacion.listar();
+	}
+
+	//////// LISTAR TIPO CAMBIOS
+	public void cargarListaTipoCambio() throws Exception {
+		this.listaTipoCambio = serviceTipoCambio.listar();
+	}
 
 }

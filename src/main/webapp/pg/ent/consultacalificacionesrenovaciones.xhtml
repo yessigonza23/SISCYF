@@ -11,7 +11,7 @@
 	value="#{consultaEntidadesBean.listaCalRenovaciones}"
 	selectionMode="single"
 	selection="#{consultaEntidadesBean.calificacionesRenovaciones}"
-	rowKey="#{e.id}"  editable="true">
+	rowKey="#{e.id}" editable="true">
 	<p:column style="width:35px" headerText="Editar">
 		<p:rowEditor />
 	</p:column>
@@ -82,12 +82,16 @@
 
 </p:dataTable>
 
-<p:panel id="pn_actividades">
-	<ui:include src="/pg/ent/consultacalrenactividades.xhtml" />
-</p:panel>
-<p:panel id="pn_tiposustancia">
-	<ui:include src="/pg/ent/consultacalrentiposustancias.xhtml" />
-</p:panel>
+
+<h:panelGrid columns="2" columnClasses="topAligned">
+	<p:panel id="pn_actividades" style="width:100%">
+		<ui:include src="/pg/ent/consultacalrenactividades.xhtml" />
+	</p:panel>
+	<p:panel id="pn_tiposustancia" style="width:100%">
+		<ui:include src="/pg/ent/consultacalrentiposustancias.xhtml" />
+	</p:panel>
+</h:panelGrid>
+
 <p:panel id="pn_sustancias">
 	<ui:include src="/pg/ent/consultasustancias.xhtml" />
 </p:panel>

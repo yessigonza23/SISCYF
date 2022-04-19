@@ -6,19 +6,23 @@
 	xmlns:p="http://primefaces.org/ui">
 
 
-<p:dataTable id="dt_tipo" resizableColumns="true" editable="true"
+<p:dataTable id="dt_tipo"
 	value="#{consultaEntidadesBean.listaCalrenTipoSustancia}" var="e"
-	widgetVar="accionTabla" rows="15" paginator="true"
-	paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
-	rowsPerPageTemplate="10,15,20" sortOrder="descending"
-	paginatorPosition="top" showGridlines="true"
-	emptyMessage="No hay ningún registro con esa opción"
-	rowIndexVar="index">
-	
+	selectionMode="single"
+	selection="#{consultaEntidadesBean.calrenTipoSustancia}"
+	rowKey="#{e.id}" editable="true">
+
+	<p:ajax event="rowSelect"
+		listener="#{consultaEntidadesBean.onRowSelectTipo}"
+		update=":frm:tabView:pn_sustancias" />
+	<p:ajax event="rowUnselect"
+		listener="#{consultaEntidadesBean.onRowUnselectTipo}"
+		update=":frm:tabView:pn_sustancias" />
+
 	<p:column headerText="Tipo de Sustancia" style="width:20px">
 		<p:outputLabel value="#{e.tipoSustancia.nombre}" />
 	</p:column>
-	
+
 </p:dataTable>
 
 </html>

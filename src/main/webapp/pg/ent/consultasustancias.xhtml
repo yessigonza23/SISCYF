@@ -6,15 +6,12 @@
 	xmlns:p="http://primefaces.org/ui">
 
 
-<p:dataTable id="dt_sus" resizableColumns="true" editable="true"
-	value="#{consultaEntidadesBean.listaSustancias}" var="e"
-	widgetVar="accionTabla" rows="15" paginator="true" showGridlines="true"
-	paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
-	rowsPerPageTemplate="10,15,20" sortOrder="descending"
-	paginatorPosition="top"
-	emptyMessage="No hay ningún registro con esa opción"
-	rowIndexVar="index">
-	<p:column style="width:35px" headerText="Editar" >
+<p:dataTable id="dt_sus" var="e"
+	value="#{consultaEntidadesBean.listaSustancias}" 
+	selectionMode="single"
+	selection="#{consultaEntidadesBean.calrenSustancias}"
+	rowKey="#{e.id}" editable="true">
+	<p:column style="width:35px" headerText="Editar">
 		<p:rowEditor />
 	</p:column>
 	<p:ajax event="rowEdit"
@@ -33,39 +30,60 @@
 	<p:column headerText="Cupo Asignado" style="width:50px">
 		<p:cellEditor>
 			<f:facet name="output">
-				<h:outputText value="#{e.cupo_asignado}" style="width:50px" />
+				<h:outputText value="#{e.cupo_asignado}" style="width:60px" />
 			</f:facet>
 
 			<f:facet name="input">
-				<h:inputText value="#{e.cupo_asignado}" size="200"
-					style="width:50px" />
+				<h:inputText value="#{e.cupo_asignado}" size="50" style="width:50px" />
 			</f:facet>
 		</p:cellEditor>
 	</p:column>
 	<p:column headerText="Presentanción" style="width:50px">
-		<p:outputLabel id="presentacion" value="#{e.presentacion.nombre}"
-			style="width:20px">
-		</p:outputLabel>
+		<p:cellEditor>
+			<f:facet name="output">
+				<h:outputText value="#{e.presentacion.nombre}" style="width:60px" />
+			</f:facet>
+
+			<f:facet name="input">
+				<p:selectOneMenu id="slcPresentacion" value="#{e.presentacion}"
+					effect="fade" converter="omnifaces.SelectItemsConverter"
+					filter="true" filterMatchMode="startsWith" tyle="width:100px">
+					<f:selectItem itemLabel="Select One" noSelectionOption="true" />
+					<f:selectItems value="#{consultaEntidadesBean.listaPresentacion}"
+						var="p" itemLabel="#{p.nombre}" itemValue="#{p}" />
+					<f:ajax render="selected_item" />
+				</p:selectOneMenu>
+			</f:facet>
+		</p:cellEditor>
 	</p:column>
 	<p:column headerText="Tipo de Cambio" style="width:110px">
 		<p:cellEditor>
 			<f:facet name="output">
-				<h:outputText value="#{e.tipo_cambio}" style="width:100px" />
+				<h:outputText value="#{e.tipoCambioSustancias.nombre}" style="width:100px" />
 			</f:facet>
 
 			<f:facet name="input">
-				<h:inputText value="#{e.tipo_cambio}" size="200" style="width:100px" />
+				<p:selectOneMenu id="slcTipoCambio" value="#{e.tipoCambioSustancias}"
+					effect="fade" converter="omnifaces.SelectItemsConverter"
+					filter="true" filterMatchMode="startsWith" tyle="width:100px">
+					<f:selectItem itemLabel="Select One" noSelectionOption="true" />
+					<f:selectItems value="#{consultaEntidadesBean.listaTipoCambio}"
+						var="p" itemLabel="#{p.nombre}" itemValue="#{p}" />
+					<f:ajax render="selected_item" />
+				</p:selectOneMenu>
 			</f:facet>
 		</p:cellEditor>
 	</p:column>
-	<p:column headerText="Estado" style="width:110px">
+	<p:column headerText="Activo" style="width:10px">
 		<p:cellEditor>
 			<f:facet name="output">
-				<h:outputText value="#{e.estado}" style="width:100px" />
+				<p:selectBooleanCheckbox  value="#{e.estado}" />
 			</f:facet>
 
 			<f:facet name="input">
-				<h:inputText value="#{e.estado}" size="200" style="width:100px" />
+				 <p:selectBooleanCheckbox value="#{e.estado}" />
+
+				
 			</f:facet>
 		</p:cellEditor>
 	</p:column>
