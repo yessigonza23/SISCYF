@@ -13,8 +13,8 @@
 					#{consultaEntidadesBean.empresa.nombre}</h3>
 				<p:growl id="mensaje" autoUpdate="false" showSummary="false"
 					showDetail="true" />
-					<p:commandButton id="btnRegresar" value="Principal"
-							icon="fa fa-fw fa-hand-o-left" />
+					<p:commandButton id="btnRegresar" value="Regresar"
+							icon="fa fa-fw fa-hand-o-left" action="#{navegarVistasBean.principalConsultaEmpresas()}"/>
 				<p:panel>
 					<p:tabView id="tabView">
 						<p:tab title="Información General" id="tab1">
@@ -23,6 +23,11 @@
 						<p:tab title="Sustancias" id="tab2">
 							<ui:include
 								src="/pg/ent/consultacalificacionesrenovaciones.xhtml" />
+						</p:tab>
+						<p:tab title="Representantes" id="tab3">
+							<ui:include
+								src="/pg/ent/consultacalificacionesrepresentantes.xhtml" />
+
 						</p:tab>
 					</p:tabView>
 				</p:panel>

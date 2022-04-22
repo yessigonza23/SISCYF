@@ -7,34 +7,34 @@
 
 
 <p:dataTable id="dt_sus" var="e"
-	value="#{consultaEntidadesBean.listaSustancias}" 
-	selectionMode="single"
-	selection="#{consultaEntidadesBean.calrenSustancias}"
-	rowKey="#{e.id}" editable="true">
-	<p:column style="width:35px" headerText="Editar">
+	value="#{consultaEntidadesBean.listaSustancias}" selectionMode="single"
+	selection="#{consultaEntidadesBean.calrenSustancias}" rowKey="#{e.id}"
+	editable="true">
+	<p:column style="width:10px" headerText="Editar">
 		<p:rowEditor />
 	</p:column>
 	<p:ajax event="rowEdit"
-		listener="#{consultaEntidadesBean.operarSustancias(e)}" />
+		listener="#{consultaEntidadesBean.operarSustancias(e)}"
+		update=":frm:tabView:dt" />
 
 
 	<p:column headerText="Sustancia" style="width:100px">
 		<p:outputLabel value="#{e.sustancias.nombre}" />
 	</p:column>
 	<p:column headerText="Unidad" style="width:50px">
-		<p:outputLabel value="#{e.unidad}" style="width:60px" />
+		<p:outputLabel value="#{e.unidad}" style="width:40px" />
 	</p:column>
-	<p:column headerText="Cupo Solicitado" style="width:50px">
+	<p:column headerText="Cupo Solicitado" style="width:40px">
 		<p:outputLabel value="#{e.cupo_solicitado}" />
 	</p:column>
-	<p:column headerText="Cupo Asignado" style="width:50px">
+	<p:column headerText="Cupo Asignado" style="width:40px">
 		<p:cellEditor>
 			<f:facet name="output">
-				<h:outputText value="#{e.cupo_asignado}" style="width:60px" />
+				<h:outputText value="#{e.cupo_asignado}" style="width:40px" />
 			</f:facet>
 
 			<f:facet name="input">
-				<h:inputText value="#{e.cupo_asignado}" size="50" style="width:50px" />
+				<h:inputText value="#{e.cupo_asignado}" size="50" style="width:39px" />
 			</f:facet>
 		</p:cellEditor>
 	</p:column>
@@ -56,16 +56,18 @@
 			</f:facet>
 		</p:cellEditor>
 	</p:column>
-	<p:column headerText="Tipo de Cambio" style="width:110px">
+	<p:column headerText="Tipo de Cambio" style="width:60px">
 		<p:cellEditor>
 			<f:facet name="output">
-				<h:outputText value="#{e.tipoCambioSustancias.nombre}" style="width:100px" />
+				<h:outputText value="#{e.tipoCambioSustancias.nombre}"
+					style="width:60px" />
 			</f:facet>
 
 			<f:facet name="input">
-				<p:selectOneMenu id="slcTipoCambio" value="#{e.tipoCambioSustancias}"
-					effect="fade" converter="omnifaces.SelectItemsConverter"
-					filter="true" filterMatchMode="startsWith" tyle="width:100px">
+				<p:selectOneMenu id="slcTipoCambio"
+					value="#{e.tipoCambioSustancias}" effect="fade"
+					converter="omnifaces.SelectItemsConverter" filter="true"
+					filterMatchMode="startsWith" style="width:60px">
 					<f:selectItem itemLabel="Select One" noSelectionOption="true" />
 					<f:selectItems value="#{consultaEntidadesBean.listaTipoCambio}"
 						var="p" itemLabel="#{p.nombre}" itemValue="#{p}" />
@@ -77,16 +79,47 @@
 	<p:column headerText="Activo" style="width:10px">
 		<p:cellEditor>
 			<f:facet name="output">
-				<p:selectBooleanCheckbox  value="#{e.estado}" />
+				<p:selectBooleanCheckbox value="#{e.estado}" />
 			</f:facet>
 
 			<f:facet name="input">
-				 <p:selectBooleanCheckbox value="#{e.estado}" />
+				<p:selectBooleanCheckbox value="#{e.estado}" />
 
-				
+
 			</f:facet>
 		</p:cellEditor>
 	</p:column>
+	<p:column headerText="Acción" style="width:50px">
+		<p:commandButton value="Actividades" id="btnActividades"
+			actionListener="#{consultaEntidadesBean.cargarListaSustanciasActividades(e.id)}"
+			process="@this" oncomplete="PF('wdgact').show();" update=":frm:tabView:dialogoAct"
+			icon="ui-icon-tasks">
+			<p:ajax event="click"
+				listener="#{consultaEntidadesBean.cargarListaSustanciasActividades(e.id)}" />
+		</p:commandButton>
+	</p:column>
 </p:dataTable>
+
+<!-- DIALOGO PARA ACTIVIDADES POR SUSTANCAI -->
+<p:dialog id="dialogoAct" widgetVar="wdgact" resizable="false"
+	width="300" draggable="false" modal="true" position="center"
+	closeOnEscape="true">
+	<h2 style="color: #003778; text-align: center">Actividades por
+		sustancia</h2>
+
+	<p:dataTable id="dt_actividades" var="e"
+		value="#{consultaEntidadesBean.listaSustanciasActividades}"
+		selectionMode="single"
+		selection="#{consultaEntidadesBean.calrenSustanciasActividades}"
+		rowKey="#{e.id}" editable="true">
+
+		<p:column headerText="Detalle" style="width:100px">
+			<p:outputLabel
+				value="#{e.calrenActividadesCalificacion.actividadCalificacion.nombre}" />
+		</p:column>
+
+	</p:dataTable>
+
+</p:dialog>
 
 </html>

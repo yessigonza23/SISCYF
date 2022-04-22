@@ -23,10 +23,10 @@
 
 	<p:ajax event="rowSelect"
 		listener="#{consultaEntidadesBean.onRowSelect}"
-		update=":frm:tabView:pn_actividades,:frm:tabView:pn_sustancias,:frm:tabView:pn_tiposustancia" />
+		update=":frm:tabView:pn_actividades,:frm:tabView:pn_sustancias,:frm:tabView:pn_tiposustancia,:frm:tabView:menReq" />
 	<p:ajax event="rowUnselect"
 		listener="#{consultaEntidadesBean.onRowUnselect}"
-		update=":frm:tabView:pn_actividades,:frm:tabView:pn_sustancias,:frm:tabView:pn_tiposustancia" />
+		update=":frm:tabView:pn_actividades,:frm:tabView:pn_sustancias,:frm:tabView:pn_tiposustancia,:frm:tabView:menReq" />
 
 
 	<p:column headerText="No.a" style="width:20px">
@@ -42,25 +42,22 @@
 		<p:outputLabel id="informe" value="#{e.numero_informe}">
 		</p:outputLabel>
 	</p:column>
-	<p:column headerText="Aprobado" style="width:80px">
+	<p:column headerText="Estado" style="width:80px">
 		<p:outputLabel id="aprobado" value="#{e.aprobado}">
 			<f:converter converterId="estadoAprobados" />
 		</p:outputLabel>
 	</p:column>
-	<p:column headerText="Categ.Actual" style="width:80px">
+	<p:column headerText="Categ.Actual"
+		style="width:80px;text-align:center">
 		<p:outputLabel id="categoriaActual" value="#{e.categoria_actual}"
-			style="width:20px">
+			style="width:20px;color:coral;font-weight:bold">
 		</p:outputLabel>
 	</p:column>
 	<p:column headerText="Cupo kg actual" style="width:80px">
 		<p:outputLabel id="cupoKgActual" value="#{e.cupo_kg_actual}"
-			style="width:50px">
-		</p:outputLabel>
-	</p:column>
-	<p:column headerText="Estado Cal/Ren." style="width:80px">
-		<p:outputLabel id="txtEstadoCalren" disabled="true" autocomplete="off"
-			value="#{e.estado_calren}">
-			<f:converter converterId="estadoUsuarios" />
+			style="width:50px;color:coral;font-weight:bold">
+			<f:convertNumber type="number" groupingUsed="true"
+				minFractionDigits="4" pattern="#0.0000" />
 		</p:outputLabel>
 	</p:column>
 	<p:column headerText="Factura:" style="width:100px">
@@ -81,8 +78,9 @@
 	</p:column>
 
 </p:dataTable>
-
-
+<p:panel id="menReq" style="width:100%">
+	<p:outputLabel value="#{consultaEntidadesBean.mensajeReqRT}" style="width:20px;color:coral;font-weight:bold"/>
+</p:panel>
 <h:panelGrid columns="2" columnClasses="topAligned">
 	<p:panel id="pn_actividades" style="width:100%">
 		<ui:include src="/pg/ent/consultacalrenactividades.xhtml" />
@@ -95,4 +93,6 @@
 <p:panel id="pn_sustancias">
 	<ui:include src="/pg/ent/consultasustancias.xhtml" />
 </p:panel>
+
+
 </html>
