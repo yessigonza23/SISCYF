@@ -8,7 +8,7 @@
 	showDetail="true" />
 
 <p:dataTable id="dt" var="e"
-	value="#{consultaEntidadesBean.listaCalRenovaciones}"
+	value="#{consultaEntidadesBean.listaCalRenovaciones1}"
 	selectionMode="single"
 	selection="#{consultaEntidadesBean.calificacionesRenovaciones}"
 	rowKey="#{e.id}" editable="true">
@@ -16,18 +16,16 @@
 		<p:rowEditor />
 	</p:column>
 	<p:ajax event="rowEdit" listener="#{consultaEntidadesBean.operar(e)}"
-		update=":frm:tabView:dt" />
+		update=":frm:tabView:tabViewCalRen:dt" />
 	<p:ajax event="rowEditCancel"
 		listener="#{consultaEntidadesBean.onRowCancel}"
-		update=":frm:tabView:dt" />
-
+		update=":frm:tabView:tabViewCalRen:dt" />
 	<p:ajax event="rowSelect"
 		listener="#{consultaEntidadesBean.onRowSelect}"
-		update=":frm:tabView:pn_actividades,:frm:tabView:pn_sustancias,:frm:tabView:pn_tiposustancia,:frm:tabView:menReq" />
+		update=":frm:tabView:tabViewCalRen:pn_actividades,:frm:tabView:tabViewCalRen:pn_sustancias,:frm:tabView:tabViewCalRen:pn_tiposustancia,:frm:tabView:tabViewCalRen:menReq" />
 	<p:ajax event="rowUnselect"
 		listener="#{consultaEntidadesBean.onRowUnselect}"
-		update=":frm:tabView:pn_actividades,:frm:tabView:pn_sustancias,:frm:tabView:pn_tiposustancia,:frm:tabView:menReq" />
-
+		update=":frm:tabView:tabViewCalRen:pn_actividades,:frm:tabView:tabViewCalRen:pn_sustancias,:frm:tabView:tabViewCalRen:pn_tiposustancia,:frm:tabView:tabViewCalRen:menReq" />
 
 	<p:column headerText="No.a" style="width:20px">
 		<p:outputLabel value="#{e.secuencia}" />
@@ -79,7 +77,8 @@
 
 </p:dataTable>
 <p:panel id="menReq" style="width:100%">
-	<p:outputLabel value="#{consultaEntidadesBean.mensajeReqRT}" style="width:20px;color:coral;font-weight:bold"/>
+	<p:outputLabel value="#{consultaEntidadesBean.mensajeReqRT}"
+		style="width:20px;color:coral;font-weight:bold" />
 </p:panel>
 <h:panelGrid columns="2" columnClasses="topAligned">
 	<p:panel id="pn_actividades" style="width:100%">
@@ -93,6 +92,5 @@
 <p:panel id="pn_sustancias">
 	<ui:include src="/pg/ent/consultasustancias.xhtml" />
 </p:panel>
-
 
 </html>

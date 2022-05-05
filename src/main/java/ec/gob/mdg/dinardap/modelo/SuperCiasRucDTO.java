@@ -32,14 +32,6 @@ public class SuperCiasRucDTO implements Serializable{
 	private String celular;
 	private String email2;
 	private String sitio_web;
-	private String ubicacion_referencia;
-
-	
-	
-	
-	
-	
-
-	
+	private String ubicacion_referencia;	
 
 }

@@ -1,0 +1,140 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui">
+
+
+<p:dataTable id="dt_vehiculos" var="e"
+	value="#{consultaEntidadesBean.listaCalrenVehiculos}"
+	selectionMode="single"
+	selection="#{consultaEntidadesBean.calrenVehiculos}" rowKey="#{e.id}"
+	editable="true">
+
+	<p:column headerText="Placa" style="width:100px">
+		<p:outputLabel value="#{e.vehiculos.placa}" />
+	</p:column>
+	<p:column headerText="Capacidad de Carga" style="width:50px">
+		<p:outputLabel value="#{e.vehiculos.capacidad_carga}"
+			style="width:40px" />
+	</p:column>
+	<p:column headerText="Estado" style="width:40px">
+		<p:outputLabel value="#{e.estado}" />
+	</p:column>
+	<p:column headerText="Factura" style="width:40px">
+		<p:outputLabel value="#{e.factura}" />
+	</p:column>
+	<p:column headerText="No. Informe" style="width:40px">
+		<p:outputLabel value="#{e.informe}" />
+	</p:column>
+	<p:column headerText="Tipo de Dato" style="width:40px">
+		<p:outputLabel value="#{e.tipoCambio.nombre}" />
+	</p:column>
+	<p:column headerText="Tipo Sustancia" style="width:40px">
+		<p:outputLabel value="#{e.tipo_sustancia}" />
+	</p:column>
+
+	<p:column headerText="Acción" style="width:50px">
+		<p:commandButton value="Detalle" id="btnDetalleVeh" process="@this"
+			oncomplete="PF('wdgvehi').show();"
+			update=":frm:tabView:tabViewCalRen:dialogoVehi" icon="ui-icon-tasks">
+			<p:ajax event="click"
+				listener="#{consultaEntidadesBean.mostrarDataVehi(e)}" />
+		</p:commandButton>
+	</p:column>
+</p:dataTable>
+
+<!-- DIALOGO PARA DETALLE DE VEHICULOS -->
+<p:dialog id="dialogoVehi" widgetVar="wdgvehi" resizable="false"
+	width="300" draggable="false" modal="true" position="center"
+	closeOnEscape="true">
+	<h2 style="color: #003778; text-align: center">Detalle por
+		vehículo</h2>
+
+	<p:panelGrid id="pg" columns="6" tyle="margin-left: 50%">
+		<p:column style="border-style: hidden; width:130px;">
+			<strong>Placa:</strong>
+		</p:column>
+		<p:column style="border-style: hidden;">
+			<p:outputLabel id="txtPlaca"
+				style="border-style: hidden; width:130px;"
+				value="#{consultaEntidadesBean.calrenVehiculos.vehiculos.placa}" />
+		</p:column>
+		<p:column style="border-style: hidden; width:130px;">
+			<strong>Capacidad de Carga:</strong>
+		</p:column>
+		<p:column style="border-style: hidden;">
+			<p:outputLabel id="txtCapacidad"
+				style="border-style: hidden; width:130px;"
+				value="#{consultaEntidadesBean.calrenVehiculos.vehiculos.capacidad_carga}" />
+		</p:column>
+		<p:column style="border-style: hidden; width:130px;">
+			<strong>Estado:</strong>
+		</p:column>
+		<p:column style="border-style: hidden;">
+			<p:outputLabel id="txtEstado"
+				style="border-style: hidden; width:130px;"
+				value="#{consultaEntidadesBean.calrenVehiculos.estado}" />
+		</p:column>
+		<p:column style="border-style: hidden; width:130px;">
+			<strong>Factura:</strong>
+		</p:column>
+		<p:column style="border-style: hidden;">
+			<p:outputLabel id="txtFactura"
+				style="border-style: hidden; width:130px;"
+				value="#{consultaEntidadesBean.calrenVehiculos.factura}" />
+		</p:column>
+		<p:column style="border-style: hidden; width:130px;">
+			<strong>Estado:</strong>
+		</p:column>
+		<p:column style="border-style: hidden;">
+			<p:outputLabel id="txtEstado"
+				style="border-style: hidden; width:130px;"
+				value="#{consultaEntidadesBean.calrenVehiculos.estado}" />
+		</p:column>
+		<p:column style="border-style: hidden; width:130px;">
+			<strong>No. Informe:</strong>
+		</p:column>
+		<p:column style="border-style: hidden;">
+			<p:outputLabel id="txtInforme"
+				style="border-style: hidden; width:130px;"
+				value="#{consultaEntidadesBean.calrenVehiculos.informe}" />
+		</p:column>
+		<p:column style="border-style: hidden; width:130px;">
+			<strong>Tipo de Dato/tipo de Cambio:</strong>
+		</p:column>
+		<p:column style="border-style: hidden;">
+			<p:outputLabel id="txtTipoCambio"
+				style="border-style: hidden; width:130px;"
+				value="#{consultaEntidadesBean.calrenVehiculos.tipoCambio.nombre}" />
+		</p:column>
+		<p:column style="border-style: hidden; width:130px;">
+			<strong>Link de rastreo:</strong>
+		</p:column>
+		<p:column style="border-style: hidden;">
+			<p:outputLabel id="txtLink"
+				style="border-style: hidden; width:130px;"
+				value="#{consultaEntidadesBean.calrenVehiculos.link_rastreo}" />
+		</p:column>
+		<p:column style="border-style: hidden; width:130px;">
+			<strong>Usuario rastreo:</strong>
+		</p:column>
+		<p:column style="border-style: hidden;">
+			<p:outputLabel id="txtUsuarioRastreo"
+				style="border-style: hidden; width:130px;"
+				value="#{consultaEntidadesBean.calrenVehiculos.usuario_rastreo}" />
+		</p:column>
+		<p:column style="border-style: hidden; width:130px;">
+			<strong>Clave de rastreo:</strong>
+		</p:column>
+		<p:column style="border-style: hidden;">
+			<p:outputLabel id="txtClaveRastreo" rendered="false"
+				style="border-style: hidden; width:130px;"
+				value="#{consultaEntidadesBean.calrenVehiculos.clave_rastreo}" />
+		</p:column>
+	</p:panelGrid>
+
+</p:dialog>
+
+</html>

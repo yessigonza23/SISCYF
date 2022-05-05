@@ -27,6 +27,7 @@ import ec.gob.mdg.dinardap.modelo.AntPlacaDTO;
 import ec.gob.mdg.dinardap.modelo.RegistroCivilCedulaDTO;
 import ec.gob.mdg.dinardap.modelo.SriRucDTO;
 import ec.gob.mdg.dinardap.modelo.SriRucDetalleDTO;
+import ec.gob.mdg.dinardap.modelo.SuperCiasRepresentantesRucDTO;
 import ec.gob.mdg.dinardap.modelo.SuperCiasRucDTO;
 
 public class ServiciosWeb {
@@ -43,8 +44,8 @@ public class ServiciosWeb {
 	static AntPlacaDTO el_vehiculo = new AntPlacaDTO();
 	static AntLicenciaDTO la_licencia = new AntLicenciaDTO();
 	static SuperCiasRucDTO la_persona_cias = new SuperCiasRucDTO();
-	
-	
+	static List<SuperCiasRepresentantesRucDTO> los_representantes = new ArrayList<SuperCiasRepresentantesRucDTO>();
+		
 	public static String obtenerToken(Form forma) throws UnsupportedEncodingException {
 		
 		Form form = new Form();
@@ -75,8 +76,6 @@ public class ServiciosWeb {
 		}
         return token;
 	}
-
-	
 	
 	public static RegistroCivilCedulaDTO consultarCiudadanoRegistroCivil(String cedula) {
 		Client client = ClientBuilder.newClient();
@@ -136,6 +135,16 @@ public class ServiciosWeb {
 		Gson g = new Gson();
 		la_persona_cias = g.fromJson(response, SuperCiasRucDTO.class);
 		return la_persona_cias;
+	}
+	
+	public static List<SuperCiasRepresentantesRucDTO> consultarRepresentantesSupercias(String ruc) {
+		Client client = ClientBuilder.newClient();
+		WebTarget target = client.target(REST_SERVICE_URL + "superciasrepresentantes/{ruc}").resolveTemplate("ruc", ruc);
+		String response = target.request(MediaType.APPLICATION_JSON_TYPE).header("X-API-KEY","ministeriodegobierno.gob.ec_ecuador").get(String.class);
+		
+		Gson g = new Gson();
+		los_representantes = g.fromJson(response, new TypeToken<ArrayList<SuperCiasRepresentantesRucDTO>>() {}.getType());
+		return los_representantes;
 	}
 
 }

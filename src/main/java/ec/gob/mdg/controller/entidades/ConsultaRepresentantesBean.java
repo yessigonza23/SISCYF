@@ -14,6 +14,8 @@ import ec.gob.mdg.control.ejb.modelo.Empresa;
 import ec.gob.mdg.control.ejb.modelo.EmpresaRepresentantes;
 import ec.gob.mdg.control.ejb.service.IEmpresaRepresentantesService;
 import ec.gob.mdg.control.ejb.service.IEmpresaService;
+import ec.gob.mdg.dinardap.modelo.SuperCiasRepresentantesRucDTO;
+import ec.gob.mdg.dinardap.servicios.ServiciosWeb;
 import lombok.Data;
 
 @Data
@@ -33,14 +35,17 @@ public class ConsultaRepresentantesBean implements Serializable {
 	private List<EmpresaRepresentantes> listaEmpresaRepresentantesRL = new ArrayList<>();
 	private List<EmpresaRepresentantes> listaEmpresaRepresentantesRB = new ArrayList<>();
 	private List<EmpresaRepresentantes> listaEmpresaRepresentantesRLo = new ArrayList<>();
+	private List<SuperCiasRepresentantesRucDTO> listaEmpresaRepresentantesSCias = new ArrayList<>();
 
 	private EmpresaRepresentantes empresaRepresentantes = new EmpresaRepresentantes();
 	private Empresa empresa = new Empresa();
+	private SuperCiasRepresentantesRucDTO ciasRepresentantesRucDTO = new SuperCiasRepresentantesRucDTO();
 
 	Boolean render_rt;
 	Boolean render_rl;
 	Boolean render_rb;
 	Boolean render_rlo;
+	Boolean render_rcias;
 	String empresaS;
 	Integer empresaId;
 
@@ -66,6 +71,7 @@ public class ConsultaRepresentantesBean implements Serializable {
 			render_rl = false;
 			render_rb = false;
 			render_rlo = false;
+			render_rcias = false;
 			if (empresaId != null) {
 				empresa = serviceEmpresa.listarEmpresaPorId(empresaId);
 				if (empresa != null) {
@@ -73,6 +79,7 @@ public class ConsultaRepresentantesBean implements Serializable {
 					listaEmpresaRepresentantesRL = serviceEmpresaRepresentantes.listarRepLegales(empresa);
 					listaEmpresaRepresentantesRB = serviceEmpresaRepresentantes.listarRepBodegueros(empresa);
 					listaEmpresaRepresentantesRLo = serviceEmpresaRepresentantes.listarRepLogisticos(empresa);
+					listaEmpresaRepresentantesSCias = ServiciosWeb.consultarRepresentantesSupercias(empresa.getRuc());
 
 					if (listaEmpresaRepresentantesRT.size() > 0) {
 						render_rt = true;
@@ -85,6 +92,9 @@ public class ConsultaRepresentantesBean implements Serializable {
 					}
 					if (listaEmpresaRepresentantesRLo.size() > 0) {
 						render_rlo = true;
+					}
+					if (listaEmpresaRepresentantesSCias.size() > 0) {
+						render_rcias = true;
 					}
 				}
 			}

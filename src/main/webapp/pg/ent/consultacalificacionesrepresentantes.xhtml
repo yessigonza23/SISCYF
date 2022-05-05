@@ -27,7 +27,7 @@
 		<p:outputLabel value="#{e.representantes.nombre}" />
 	</p:column>
 	<p:column headerText="Nacionalidad" style="width:80px">
-		<p:outputLabel value="#{e.representantes.nacionalidades.nombre}">
+		<p:outputLabel value="#{e.representantes.pais.nacionalidad}">
 		</p:outputLabel>
 	</p:column>
 	<p:column headerText="Correo electrónico" style="width:100px">
@@ -52,6 +52,32 @@
 
 </p:dataTable>
 
+<p:dataTable id="dt_repcias" var="e"
+	value="#{consultaRepresentantesBean.listaEmpresaRepresentantesSCias}"
+	rendered="#{consultaRepresentantesBean.render_rcias}">
+
+	<f:facet name="header">
+		<h:outputText value="REPRESENTANTE(S) LEGALES(S) SUPERCIAS" />
+	</f:facet>
+	<p:column headerText="Identificacion" style="width:30px">
+		<p:outputLabel value="#{e.cedula_administrador}" />
+	</p:column>
+	<p:column headerText="Nombres" style="width:100px">
+		<p:outputLabel value="#{e.nombre}" />
+	</p:column>
+	<p:column headerText="Fecha de nombramiento" style="width:80px">
+		<p:outputLabel value="#{e.fecha_nombramiento}">
+			<f:convertDateTime pattern="dd/MM/yyyy" />
+		</p:outputLabel>
+	</p:column>
+	<p:column headerText="Nombres" style="width:100px">
+		<p:outputLabel value="#{e.nombre}" />
+	</p:column>
+	<p:column headerText="No. registro mercantil" style="width:80px">
+		<p:outputLabel value="#{e.numero_registro_mercantil}">
+		</p:outputLabel>
+	</p:column>
+</p:dataTable>
 <p:dataTable id="dt_repleg" var="e"
 	value="#{consultaRepresentantesBean.listaEmpresaRepresentantesRL}"
 	rendered="#{consultaRepresentantesBean.render_rl}">
@@ -70,7 +96,7 @@
 		<p:outputLabel value="#{e.representantes.nombre}" />
 	</p:column>
 	<p:column headerText="Nacionalidad" style="width:80px">
-		<p:outputLabel value="#{e.representantes.nacionalidades.nombre}">
+		<p:outputLabel value="#{e.representantes.pais.nacionalidad}">
 		</p:outputLabel>
 	</p:column>
 	<p:column headerText="Correo electrónico" style="width:100px">
@@ -113,7 +139,7 @@
 		<p:outputLabel value="#{e.representantes.nombre}" />
 	</p:column>
 	<p:column headerText="Nacionalidad" style="width:80px">
-		<p:outputLabel value="#{e.representantes.nacionalidades.nombre}">
+		<p:outputLabel value="#{e.representantes.pais.nacionalidad}">
 		</p:outputLabel>
 	</p:column>
 	<p:column headerText="Correo electrónico" style="width:100px">
@@ -149,15 +175,15 @@
 	<p:column headerText="Identificacion" style="width:30px">
 		<p:outputLabel value="#{e.representantes.identificacion}" />
 	</p:column>
-	<p:column headerText="No.Registro" style="width:80px">
-		<p:outputLabel value="#{e.representantes.num_calificacion}" />
-	</p:column>
 	<p:column headerText="Nombres" style="width:100px">
 		<p:outputLabel value="#{e.representantes.nombre}" />
 	</p:column>
 	<p:column headerText="Nacionalidad" style="width:80px">
-		<p:outputLabel value="#{e.representantes.nacionalidades.nombre}">
+		<p:outputLabel value="#{e.representantes.pais.nacionalidad}">
 		</p:outputLabel>
+	</p:column>
+	<p:column headerText="No.Registro" style="width:80px">
+		<p:outputLabel value="#{e.representantes.registro_contrato}" />
 	</p:column>
 	<p:column headerText="Correo electrónico" style="width:100px">
 		<p:outputLabel id="correo"
@@ -169,7 +195,6 @@
 			value="#{e.representantes.telefono_celular}">
 		</p:outputLabel>
 	</p:column>
-
 	<p:column headerText="Acción" style="width:50px">
 		<p:commandButton value="Detalle" id="btnDetalle" process="@this"
 			oncomplete="PF('wdgrep').show();" update=":frm:tabView:dialogoRep"
@@ -184,98 +209,131 @@
 
 <!-- DIALOGO PARA DETALLE DE REPRESENTANTES -->
 <p:dialog id="dialogoRep" widgetVar="wdgrep" resizable="false"
-	width="500" draggable="false" modal="true" position="center"
-	closeOnEscape="true">
+	width="500" draggable="true" modal="true" position="center"
+	closeOnEscape="true" positionType="absolute">
 	<h2 style="color: #003778; text-align: center">Detalle de
 		Información</h2>
-	<p:panel>
-		<p:panelGrid id="pg" columns="3" tyle="margin-left: 35%">
-			
-				<p:column style="border-style: hidden;width:50px;"></p:column>
-				<p:column style="border-style: hidden; width:130px;">Nombre: </p:column>
-				<p:column style="border-style: hidden;">
-					<p:outputLabel id="txtNombre"
-						style="border-style: hidden; width:130px;"
-						value="#{consultaRepresentantesBean.empresaRepresentantes.representantes.nombre}" />
-				</p:column>
-			<p:row>
-				<p:column style="border-style: hidden;width:50px;"></p:column>
-				<p:column style="border-style: hidden; width:130px;">Identificación: </p:column>
-				<p:column style="border-style: hidden;">
-					<p:outputLabel id="txtIdentificacion"
-						value="#{consultaRepresentantesBean.empresaRepresentantes.representantes.identificacion}" />
-				</p:column>
-			</p:row>
-			<p:row>
-				<p:column style="border-style: hidden;width:50px;"></p:column>
-				<p:column style="border-style: hidden; width:130px;">Tipo Identificación: </p:column>
-				<p:column style="border-style: hidden;">
-					<p:outputLabel id="txtTipoIdentificacion"
-						value="#{consultaRepresentantesBean.empresaRepresentantes.representantes.tipo_identificacion}" />
-				</p:column>
-			</p:row>
-			<p:row>
-				<p:column style="border-style: hidden;width:100px;"></p:column>
-				<p:column style="border-style: hidden; width:130px;">Dirección: </p:column>
-				<p:column style="border-style: hidden;">
-					<p:outputLabel id="txtDireccion"
-						value="#{consultaRepresentantesBean.empresaRepresentantes.representantes.direccion}" />
-				</p:column>
-			</p:row>
-			<p:row>
-				<p:column style="border-style: hidden;width:100px;"></p:column>
-				<p:column style="border-style: hidden; width:130px;">Referencia domicilio: </p:column>
-				<p:column style="border-style: hidden;">
-					<p:outputLabel id="txtReferencia"
-						value="#{consultaRepresentantesBean.empresaRepresentantes.representantes.referencia}" />
-				</p:column>
-			</p:row>
-			<p:row>
-				<p:column style="border-style: hidden;width:100px;"></p:column>
-				<p:column style="border-style: hidden; width:130px;">Teléfono domicilio: </p:column>
-				<p:column style="border-style: hidden;">
-					<p:outputLabel id="txtTelDom"
-						value="#{consultaRepresentantesBean.empresaRepresentantes.representantes.telefono_domicilio}" />
-				</p:column>
-			</p:row>
-			<p:column style="border-style: hidden;width:100px;"></p:column>
-			<p:column style="border-style: hidden; width:130px;">Nombramiento: </p:column>
-			<p:column style="border-style: hidden;">
-				<p:outputLabel id="txtNombramiento"
-					value="#{consultaRepresentantesBean.empresaRepresentantes.representantes.nombramiento}" />
-			</p:column>
-			<p:column style="border-style: hidden;width:100px;"></p:column>
-			<p:column style="border-style: hidden; width:130px;">Fecha Nombramiento: </p:column>
-			<p:column style="border-style: hidden;">
-				<p:outputLabel id="txtFechaNombramiento"
-					value="#{consultaRepresentantesBean.empresaRepresentantes.representantes.fecha_nombramiento}" />
-			</p:column>
 
-			<p:column style="border-style: hidden;width:100px;"></p:column>
-			<p:column style="border-style: hidden; width:130px;">Estado: </p:column>
-			<p:column style="border-style: hidden;">
-				<p:outputLabel id="txtEstado1"
-					value="#{consultaRepresentantesBean.empresaRepresentantes.representantes.estado}" />
-			</p:column>
-			<p:column style="border-style: hidden;width:100px;"></p:column>
-			<p:column style="border-style: hidden; width:130px;">Estado Registro: </p:column>
-			<p:column style="border-style: hidden;">
-				<p:outputLabel id="txtEstadoRegistro"
-					value="#{consultaRepresentantesBean.empresaRepresentantes.representantes.estado_registro}" />
-			</p:column>
-			<p:column style="border-style: hidden;width:100px;"></p:column>
-			<p:column style="border-style: hidden; width:130px;">Fecha Activa: </p:column>
-			<p:column style="border-style: hidden;">
-				<p:outputLabel id="txtFechaActiva"
-					value="#{consultaRepresentantesBean.empresaRepresentantes.representantes.fecha_activa}" />
-			</p:column>
-			<p:column style="border-style: hidden;width:100px;"></p:column>
-			<p:column style="border-style: hidden; width:130px;">Fecha Desactiva: </p:column>
-			<p:column style="border-style: hidden;">
-				<p:outputLabel id="txtFechaDeActiva"
-					value="#{consultaRepresentantesBean.empresaRepresentantes.representantes.fecha_noactiva}" />
-			</p:column>
-		</p:panelGrid>
-	</p:panel>
+	<p:panelGrid id="pg" columns="3" tyle="margin-left: 50%">
+		<p:column style="border-style: hidden;width:50px;"></p:column>
+		<p:column style="border-style: hidden; width:130px;">
+			<strong>Nombre:</strong>
+		</p:column>
+		<p:column style="border-style: hidden;">
+			<p:outputLabel id="txtNombre"
+				style="border-style: hidden; width:130px;"
+				value="#{consultaRepresentantesBean.empresaRepresentantes.representantes.nombre}" />
+		</p:column>
+
+		<p:column style="border-style: hidden;width:50px;"></p:column>
+		<p:column style="border-style: hidden; width:130px;">
+			<strong>Identificación:</strong>
+		</p:column>
+		<p:column style="border-style: hidden;">
+			<p:outputLabel id="txtIdentificacion"
+				value="#{consultaRepresentantesBean.empresaRepresentantes.representantes.identificacion}" />
+		</p:column>
+
+
+		<p:column style="border-style: hidden;width:50px;"></p:column>
+		<p:column style="border-style: hidden; width:130px;">
+			<strong>Tipo Identificación:</strong>
+		</p:column>
+		<p:column style="border-style: hidden;">
+			<p:outputLabel id="txtTipoIdentificacion"
+				value="#{consultaRepresentantesBean.empresaRepresentantes.representantes.tipo_identificacion}">
+				<f:converter converterId="tipoIdentificacion" />
+			</p:outputLabel>
+		</p:column>
+
+
+		<p:column style="border-style: hidden;width:100px;"></p:column>
+		<p:column style="border-style: hidden; width:130px;">
+			<strong>Dirección:</strong>
+		</p:column>
+		<p:column style="border-style: hidden;">
+			<p:outputLabel id="txtDireccion"
+				value="#{consultaRepresentantesBean.empresaRepresentantes.representantes.direccion}" />
+		</p:column>
+
+
+		<p:column style="border-style: hidden;width:100px;"></p:column>
+		<p:column style="border-style: hidden; width:130px;">
+			<strong>Referencia domicilio:</strong>
+		</p:column>
+		<p:column style="border-style: hidden;">
+			<p:outputLabel id="txtReferencia"
+				value="#{consultaRepresentantesBean.empresaRepresentantes.representantes.referencia}" />
+		</p:column>
+
+		<p:column style="border-style: hidden;width:100px;"></p:column>
+		<p:column style="border-style: hidden; width:130px;">
+			<strong>Teléfono domicilio:</strong>
+		</p:column>
+		<p:column style="border-style: hidden;">
+			<p:outputLabel id="txtTelDom"
+				value="#{consultaRepresentantesBean.empresaRepresentantes.representantes.telefono_domicilio}" />
+		</p:column>
+
+		<p:column style="border-style: hidden;width:100px;"></p:column>
+		<p:column style="border-style: hidden; width:130px;">
+			<strong>Nombramiento:</strong>
+		</p:column>
+		<p:column style="border-style: hidden;">
+			<p:outputLabel id="txtNombramiento"
+				value="#{consultaRepresentantesBean.empresaRepresentantes.representantes.nombramiento}" />
+		</p:column>
+		<p:column style="border-style: hidden;width:100px;"></p:column>
+		<p:column style="border-style: hidden; width:130px;">
+			<strong>Fecha Nombramiento:</strong>
+		</p:column>
+		<p:column style="border-style: hidden;">
+			<p:outputLabel id="txtFechaNombramiento"
+				value="#{consultaRepresentantesBean.empresaRepresentantes.representantes.fecha_nombramiento}" />
+		</p:column>
+		<p:column style="border-style: hidden;width:100px;"></p:column>
+		<p:column style="border-style: hidden; width:130px;">
+			<strong>Registro Contrato:</strong>
+		</p:column>
+		<p:column style="border-style: hidden;">
+			<p:outputLabel id="txtNombramiento"
+				value="#{consultaRepresentantesBean.empresaRepresentantes.representantes.registro_contrato}" />
+		</p:column>
+		<p:column style="border-style: hidden;width:100px;"></p:column>
+		<p:column style="border-style: hidden; width:130px;">
+			<strong>Estado:</strong>
+		</p:column>
+		<p:column style="border-style: hidden;">
+			<p:outputLabel id="txtEstado1"
+				value="#{consultaRepresentantesBean.empresaRepresentantes.representantes.estado}">
+				<f:converter converterId="estadoUsuarios" />
+			</p:outputLabel>
+		</p:column>
+		<p:column style="border-style: hidden;width:100px;"></p:column>
+		<p:column style="border-style: hidden; width:130px;">
+			<strong>Estado Registro:</strong>
+		</p:column>
+		<p:column style="border-style: hidden;">
+			<p:outputLabel id="txtEstadoRegistro"
+				value="#{consultaRepresentantesBean.empresaRepresentantes.representantes.estado_registro}" />
+		</p:column>
+		<p:column style="border-style: hidden;width:100px;"></p:column>
+		<p:column style="border-style: hidden; width:130px;">
+			<strong>Fecha Activa:</strong>
+		</p:column>
+		<p:column style="border-style: hidden;">
+			<p:outputLabel id="txtFechaActiva"
+				value="#{consultaRepresentantesBean.empresaRepresentantes.representantes.fecha_activa}" />
+		</p:column>
+		<p:column style="border-style: hidden;width:100px;"></p:column>
+		<p:column style="border-style: hidden; width:130px;">
+			<strong>Fecha Desactiva:</strong>
+		</p:column>
+		<p:column style="border-style: hidden;">
+			<p:outputLabel id="txtFechaDeActiva"
+				value="#{consultaRepresentantesBean.empresaRepresentantes.representantes.fecha_noactiva}" />
+		</p:column>
+	</p:panelGrid>
+
 </p:dialog>
 </html>

@@ -15,8 +15,7 @@
 	</p:column>
 	<p:ajax event="rowEdit"
 		listener="#{consultaEntidadesBean.operarSustancias(e)}"
-		update=":frm:tabView:dt" />
-
+		update=":frm:tabView:tabViewCalRen:dt_sus" />
 
 	<p:column headerText="Sustancia" style="width:100px">
 		<p:outputLabel value="#{e.sustancias.nombre}" />
@@ -59,13 +58,13 @@
 	<p:column headerText="Tipo de Cambio" style="width:60px">
 		<p:cellEditor>
 			<f:facet name="output">
-				<h:outputText value="#{e.tipoCambioSustancias.nombre}"
+				<h:outputText value="#{e.tipoCambio.nombre}"
 					style="width:60px" />
 			</f:facet>
 
 			<f:facet name="input">
 				<p:selectOneMenu id="slcTipoCambio"
-					value="#{e.tipoCambioSustancias}" effect="fade"
+					value="#{e.tipoCambio}" effect="fade"
 					converter="omnifaces.SelectItemsConverter" filter="true"
 					filterMatchMode="startsWith" style="width:60px">
 					<f:selectItem itemLabel="Select One" noSelectionOption="true" />
@@ -92,7 +91,7 @@
 	<p:column headerText="Acción" style="width:50px">
 		<p:commandButton value="Actividades" id="btnActividades"
 			actionListener="#{consultaEntidadesBean.cargarListaSustanciasActividades(e.id)}"
-			process="@this" oncomplete="PF('wdgact').show();" update=":frm:tabView:dialogoAct"
+			process="@this" oncomplete="PF('wdgact').show();" update=":frm:tabView:tabViewCalRen:dialogoAct"
 			icon="ui-icon-tasks">
 			<p:ajax event="click"
 				listener="#{consultaEntidadesBean.cargarListaSustanciasActividades(e.id)}" />
