@@ -1,10 +1,24 @@
-.colorDeCampo{
+.colorDeCampo {
 	background-color: #6aba77;
 	font-weight: bolder;
 }
 
- .cheap {
-        background-color: #54a90a !important;
-        background-image: none !important;
-        color: #ffffff !important;
-    }
+.cheap {
+	background-color: #54a90a !important;
+	background-image: none !important;
+	color: #ffffff !important;
+}
+
+.em {
+	font-weight: bold;
+	font-style: italic;
+	text-decoration: underline;
+}
+
+.mark {
+	background-color: lightgrey;
+}
+
+.negrita {
+	text-decoration: underline;
+}

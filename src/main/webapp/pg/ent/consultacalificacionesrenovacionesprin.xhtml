@@ -46,11 +46,11 @@
 		<p:tab title="Sitios" id="tabSitios">
 			<ui:include src="/pg/ent/consultacalificacionessitios.xhtml" />
 		</p:tab>
-  		<p:tab title="Vehiculos" id="tabVehiculos" rendered="consultaEntidadesBean.render_tra">
-			<ui:include src="/pg/ent/consultacalificacionesvehiculos.xhtml" />
+  		<p:tab title="Vehiculos" id="tabVehiculos" rendered="#{consultaEntidadesBean.render_tra}">
+			<ui:include src="/pg/ent/consultacalrenvehiculos.xhtml" />
 		</p:tab>
-		<p:tab title="Conductores" id="tabConductores" rendered="consultaEntidadesBean.render_tra">
-			<ui:include src="/pg/ent/consultacalificacionesconductores.xhtml" />
+		<p:tab title="Conductores" id="tabConductores" rendered="#{consultaEntidadesBean.render_tra}">
+			<ui:include src="/pg/ent/consultacalrenconductores.xhtml" />
 		</p:tab>
 	</p:tabView>
 </p:panel>

@@ -222,7 +222,9 @@ public class ConsultaEntidadesBean implements Serializable {
 					System.out.println("terminad e cargar listas");
 
 					for (CalrenActividadesCalificacion c : listaCalrenActividadesCalificacion) {
-						if (c.getActividadCalificacion().getSi_sustancia() == false) {
+						System.out.println("entra a ver la actividad: " + c.getActividadCalificacion().getNombre());
+						if (c.getActividadCalificacion().getSi_sustancia() != true) {
+							System.out.println("entra a diferente de false");
 							cargarListaVehiculos(calificacionesRenovaciones.getId());
 							cargarListaConductores(calificacionesRenovaciones.getId());
 							render_tra = true;
@@ -454,7 +456,7 @@ public class ConsultaEntidadesBean implements Serializable {
 	}
 
 	public void cargarListaPesaje(Integer id_sitios) {
-		System.out.println("entra a pesaje " + id_sitios);
+	
 		if (id_sitios != null) {
 			listaPesaje = servicePesaje.listaPesajeIdSitio(id_sitios);
 			System.out.println("carga pesaje " + listaPesaje);
@@ -462,7 +464,7 @@ public class ConsultaEntidadesBean implements Serializable {
 	}
 
 	public void cargarListaMedicionVolumetrica(Integer id_sitios) {
-		System.out.println("entra a medicion " + id_sitios);
+		
 		if (id_sitios != null) {
 			listaMedicionVolumetrica = serviceMedicionVolumetrica.listaMedicionVolumetricaIdSitio(id_sitios);
 			System.out.println("carga medición " + listaMedicionVolumetrica);
@@ -470,11 +472,11 @@ public class ConsultaEntidadesBean implements Serializable {
 	}
 
 	public void cargarListaOtrosInstrumentos(Integer id_sitios) {
-		System.out.println("entra a otros" + id_sitios);
+		
 		if (id_sitios != null) {
 			listaOtrosInstrumentosMedicion = serviceOtrosInstrumentosMedicion
 					.listaOtrosInstrumentosMedicionIdSitio(id_sitios);
-			System.out.println("carga otros " + listaOtrosInstrumentosMedicion);
+			
 
 		}
 	}
@@ -503,6 +505,8 @@ public class ConsultaEntidadesBean implements Serializable {
 	public void mostrarDataCond(CalrenConductores i) {
 		this.calrenConductores = i;
 	}
+	
+	//////////////////////////////
 	//////// LISTAR PRESENTACION
 	public void cargarListaPresentacion() throws Exception {
 		this.listaPresentacion = servicePresentacion.listar();

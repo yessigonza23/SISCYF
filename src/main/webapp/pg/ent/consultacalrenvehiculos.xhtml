@@ -52,7 +52,7 @@
 	<h2 style="color: #003778; text-align: center">Detalle por
 		vehículo</h2>
 
-	<p:panelGrid id="pg" columns="6" tyle="margin-left: 50%">
+	<p:panelGrid id="pg_vehiculos" columns="6" tyle="margin-left: 50%">
 		<p:column style="border-style: hidden; width:130px;">
 			<strong>Placa:</strong>
 		</p:column>
@@ -85,14 +85,7 @@
 				style="border-style: hidden; width:130px;"
 				value="#{consultaEntidadesBean.calrenVehiculos.factura}" />
 		</p:column>
-		<p:column style="border-style: hidden; width:130px;">
-			<strong>Estado:</strong>
-		</p:column>
-		<p:column style="border-style: hidden;">
-			<p:outputLabel id="txtEstado"
-				style="border-style: hidden; width:130px;"
-				value="#{consultaEntidadesBean.calrenVehiculos.estado}" />
-		</p:column>
+	
 		<p:column style="border-style: hidden; width:130px;">
 			<strong>No. Informe:</strong>
 		</p:column>
