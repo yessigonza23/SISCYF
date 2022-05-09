@@ -7,8 +7,8 @@
 
 <p:panelGrid id="pg_opciones" style="text-align: left" columns="1">
 
-	<p:commandButton value="Calificación/Renovación" type="button"
-		icon="fa fa-fw fa-building">
+	<p:commandButton value="Calificación/Renovación" ajax="false"
+		icon="fa fa-fw fa-building" action="#{consultaEntidadesCalBean.irCalRen()}">
 	</p:commandButton>
 	<p:commandButton value="Representantes" type="button"
 		icon="fa fa-fw fa-group">

@@ -24,6 +24,7 @@ public class ConsultaEntidadesCalBean implements Serializable {
 	private IEmpresaService serviceEmpresa;
 
 	private Empresa empresa = new Empresa();
+	private Empresa empresa_calren = new Empresa();
 
 	String empresaS;
 	Integer empresaId;
@@ -36,7 +37,7 @@ public class ConsultaEntidadesCalBean implements Serializable {
 	@PostConstruct
 	public void init() {
 		try {
-
+           System.out.println("entra a init");
 			cargarDatos();
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
@@ -47,18 +48,29 @@ public class ConsultaEntidadesCalBean implements Serializable {
 	public String getParam() {
 		return (String) FacesContext.getCurrentInstance().getExternalContext().getFlash().get("empresa");
 	}
+	public String getParamCalren() {
+		return (String) FacesContext.getCurrentInstance().getExternalContext().getFlash().get("empresa_calren");
+	}
 
 	/// DATOS DE LA EMPRESA DATOS GENERALES PRIMERA PESTAÑA
 	public Empresa cargarDatos() {
-
+		render_n = false;
+		render_o = false;
+		render_j = false;
+		render_p = false;
+		render = false;
+		System.out.println("empresa " + empresa);
 		if (empresa != null) {
+			System.out.println("entra en empresa");
 			empresaS = (String) FacesContext.getCurrentInstance().getExternalContext().getFlash().get("empresa");
+			
+		} else if (empresa_calren != null) {
+			System.out.println("entra en empresa calren");
+			empresaS = (String) FacesContext.getCurrentInstance().getExternalContext().getFlash().get("empresa_calren");
+		}
+		if (empresaS!=null) {
 			empresaId = Integer.parseInt(empresaS);
-			render_n = false;
-			render_o = false;
-			render_j = false;
-			render_p = false;
-			render = false;
+			
 			if (empresaId != null) {
 				render = true;
 				empresa = serviceEmpresa.listarEmpresaPorId(empresaId);
@@ -79,17 +91,25 @@ public class ConsultaEntidadesCalBean implements Serializable {
 				render_p = false;
 				empresa = null;
 			}
-		} else {
-			empresa = null;
 		}
+		
 		return empresa;
 	}
 
 	/// Ir a detalle de empresa
-	public String irCalRen(String codigo) {
+	public String irCalRen() {// String irCalRen(String codigo) {
+//		getParam();
+		System.out.println("empresa para detalle calren " + empresa.getId());
+//		if (empresa != null) {
+//			System.out.println("entra a diferente de null");
+//			empresaS = (String) FacesContext.getCurrentInstance().getExternalContext().getFlash().get("empresa");
+//			empresaId = Integer.parseInt(empresaS);
+//			System.out.println("entra a ir a detalle " + empresa.getId());
+//		}
+		empresaS = String.valueOf(empresa.getId());
 		final FacesContext context = FacesContext.getCurrentInstance();
 		final Flash flash = context.getExternalContext().getFlash();
-		flash.put("empresa", codigo);
+		flash.put("empresa_calren", empresaS);
 
 		return "/pg/cal/calrenconsultacal?faces-redirect=true";
 	}

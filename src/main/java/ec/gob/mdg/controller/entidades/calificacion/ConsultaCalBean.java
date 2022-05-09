@@ -27,6 +27,7 @@ public class ConsultaCalBean implements Serializable {
 	private Empresa empresa = new Empresa();
 
 	String nombre_emp;
+	String id_emp;
 
 	public void consultarListaEmpresas(String nombre) {
 		if (nombre != null) {
@@ -42,4 +43,6 @@ public class ConsultaCalBean implements Serializable {
 		
 		return "/pg/cal/entprincipalcal?faces-redirect=true";
 	}
+	
+
 }

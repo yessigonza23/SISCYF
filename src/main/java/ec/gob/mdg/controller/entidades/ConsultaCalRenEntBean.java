@@ -25,7 +25,7 @@ import lombok.Data;
 @Data
 @Named
 @ViewScoped
-public class ConsultaCalRenBean implements Serializable {
+public class ConsultaCalRenEntBean implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 

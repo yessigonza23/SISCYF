@@ -6,38 +6,54 @@
 	xmlns:p="http://primefaces.org/ui">
 <p:growl id="mensaje" autoUpdate="false" showSummary="false"
 	showDetail="true" />
+<h:body>
+	<ui:composition template="/WEB-INF/templates/master.xhtml">
+		<ui:define name="content">
+			<h:form id="frm">
+				<h3 style="color: #003778; text-align: center">EMPRESA:
+					#{consultaCalRenBean.empresa.nombre}</h3>
+				<p:growl id="mensaje" autoUpdate="false" showSummary="false"
+					showDetail="true" />
+				<p:commandButton id="btnRegresar" value="Regresar"
+					icon="fa fa-fw fa-hand-o-left"
+					actionListener="#{consultaCalRenBean.irDetalleEmpresa()}" />
+				<p:dataTable id="dtcalren" var="e"
+					value="#{consultaCalRenBean.listaCalRenovaciones}"
+					selectionMode="single"
+					selection="#{consultaCalRenBean.calificacionesRenovaciones}"
+					rowKey="#{e.id}" editable="true" rowIndexVar="index">
 
-<p:dataTable id="dtprin" var="e"
-	value="#{consultaCalRenBean.listaCalRenovaciones}"
-	selectionMode="single"
-	selection="#{consultaCalRenBean.calificacionesRenovaciones}"
-	rowKey="#{e.id}" editable="true" rowIndexVar="index">
+					<p:ajax event="rowSelect"
+						listener="#{consultaCalRenBean.onRowSelect}" update="dtcalren" />
+					<p:ajax event="rowUnselect"
+						listener="#{consultaCalRenBean.onRowUnselect}" update="dtcalren" />
 
-	<p:ajax event="rowSelect"
-		listener="#{consultaCalRenBean.onRowSelect}"
-		update=":frm:tabView:dtprin,:frm:tabView:tabViewCalRen:dt,:frm:tabView:tabViewCalRen:pn_actividades,:frm:tabView:tabViewCalRen:pn_sustancias,:frm:tabView:tabViewCalRen:pn_tiposustancia,:frm:tabView:tabViewCalRen:menReq,:frm:tabView:tabViewCalRen:dt_sitio" />
-	<p:ajax event="rowUnselect"
-		listener="#{consultaCalRenBean.onRowUnselect}"
-		update=":frm:tabView:dtprin,:frm:tabView:tabViewCalRen:dt,:frm:tabView:tabViewCalRen:pn_actividades,:frm:tabView:tabViewCalRen:pn_sustancias,:frm:tabView:tabViewCalRen:pn_tiposustancia,:frm:tabView:tabViewCalRen:menReq,:frm:tabView:tabViewCalRen:dt_sitio" />
+					<p:column headerText="No.a" style="width:20px">
+						<p:outputLabel value="#{index + 1}" />
+					</p:column>
+					<p:column headerText="Fecha Renovación" style="width:100px">
+						<p:outputLabel value="#{e.fecha_renovacion}" />
+					</p:column>
+					<p:column headerText="Fecha caducidad" style="width:100px">
+						<p:outputLabel value="#{e.fecha_caducidad}" />
+					</p:column>
 
-	<p:column headerText="No.a" style="width:20px">
-		<p:outputLabel value="#{index + 1}" />
-	</p:column>
-	<p:column headerText="Fecha Renovación" style="width:100px">
-		<p:outputLabel value="#{e.fecha_renovacion}" />
-	</p:column>
-	<p:column headerText="Fecha caducidad" style="width:100px">
-		<p:outputLabel value="#{e.fecha_caducidad}" />
-	</p:column>
-
-	<p:column headerText="Estado" style="width:80px">
-		<p:outputLabel id="aprobado" value="#{e.aprobado}">
-			<f:converter converterId="estadoAprobados" />
-		</p:outputLabel>
-	</p:column>
+					<p:column headerText="Estado" style="width:80px">
+						<p:outputLabel id="aprobado" value="#{e.aprobado}">
+							<f:converter converterId="estadoAprobados" />
+						</p:outputLabel>
+					</p:column>
 
 
-</p:dataTable>
+				</p:dataTable>
+			</h:form>
+			<!-- Script de estilos para el contenido fel formulario-->
+			<h:outputStylesheet library="css" name="buscar.css" />
+			<h:outputStylesheet library="css" name="registroUsuario.css" />
+		</ui:define>
+
+	</ui:composition>
+</h:body>
 
 
 </html>

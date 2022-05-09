@@ -7,6 +7,7 @@ import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
+import javax.faces.context.Flash;
 import javax.faces.view.ViewScoped;
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -46,6 +47,7 @@ public class ConsultaCalRenBean implements Serializable {
 	@PostConstruct
 	public void init() {
 		try {
+			System.out.println("entra a init");
 			cargarDatos();
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
@@ -54,17 +56,21 @@ public class ConsultaCalRenBean implements Serializable {
 	}
 
 	public String getParam() {
-		return (String) FacesContext.getCurrentInstance().getExternalContext().getFlash().get("empresa");
+		return (String) FacesContext.getCurrentInstance().getExternalContext().getFlash().get("empresa_calren");
 	}
 
 	/// DATOS DE LA EMPRESA DATOS GENERALES PRIMERA PESTAÑA
 	public void cargarDatos() {
+		System.out.println("entra a cargar datos: "+empresa);
 		if (empresa != null) {
-			empresaS = (String) FacesContext.getCurrentInstance().getExternalContext().getFlash().get("empresa");
+			System.out.println("entra a diferente de null");
+			empresaS = (String) FacesContext.getCurrentInstance().getExternalContext().getFlash().get("empresa_calren");
 			empresaId = Integer.parseInt(empresaS);
+			System.out.println("empresaID: " + empresaId);
 			if (empresaId != null) {
 				empresa = serviceEmpresa.listarEmpresaPorId(empresaId);
 				cargarListaCalRen(empresa);
+				System.out.println("imprime lista " + listaCalRenovaciones);
 			}
 		}
 	}
@@ -121,4 +127,23 @@ public class ConsultaCalRenBean implements Serializable {
 	public void onRowUnselect(UnselectEvent event) {
 		cargarListaCalRen(((CalificacionesRenovaciones) event.getObject()).getId());		
 	}
+	
+	
+	/// Ir a detalle de empresa
+		public String irDetalleEmpresa() {
+			System.out.println("entra a regresar" + calificacionesRenovaciones.getId());
+			if (calificacionesRenovaciones !=null) {
+				empresaS=String.valueOf(calificacionesRenovaciones.getEmpresa().getId());
+				System.out.println("imprime al reggresa empreas:" + empresa);
+				final FacesContext context = FacesContext.getCurrentInstance();
+				final Flash flash = context.getExternalContext().getFlash();
+				flash.put("empresa_calren", empresaS);
+				System.out.println("pasa el parametro "+calificacionesRenovaciones.getEmpresa().getId()+" - " + empresaS);
+				
+				return "/pg/cal/entprincipalcal?faces-redirect=true";
+			}else {             
+				return null;
+			}
+			
+		}
 }
