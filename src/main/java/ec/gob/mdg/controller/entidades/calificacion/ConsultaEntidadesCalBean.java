@@ -4,6 +4,7 @@ import java.io.Serializable;
 
 import javax.annotation.PostConstruct;
 import javax.faces.context.FacesContext;
+import javax.faces.context.Flash;
 import javax.faces.view.ViewScoped;
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -31,10 +32,11 @@ public class ConsultaEntidadesCalBean implements Serializable {
 	Boolean render_o = false;
 	Boolean render_p = false;
 	Boolean render = false;
+
 	@PostConstruct
 	public void init() {
 		try {
-			
+
 			cargarDatos();
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
@@ -48,7 +50,7 @@ public class ConsultaEntidadesCalBean implements Serializable {
 
 	/// DATOS DE LA EMPRESA DATOS GENERALES PRIMERA PESTAÑA
 	public Empresa cargarDatos() {
-		
+
 		if (empresa != null) {
 			empresaS = (String) FacesContext.getCurrentInstance().getExternalContext().getFlash().get("empresa");
 			empresaId = Integer.parseInt(empresaS);
@@ -56,8 +58,8 @@ public class ConsultaEntidadesCalBean implements Serializable {
 			render_o = false;
 			render_j = false;
 			render_p = false;
-		 	render = false;
-			if (empresaId != null){
+			render = false;
+			if (empresaId != null) {
 				render = true;
 				empresa = serviceEmpresa.listarEmpresaPorId(empresaId);
 				if (empresa.getTipo_empresa().equals("n")) {
@@ -83,6 +85,13 @@ public class ConsultaEntidadesCalBean implements Serializable {
 		return empresa;
 	}
 
-	
+	/// Ir a detalle de empresa
+	public String irCalRen(String codigo) {
+		final FacesContext context = FacesContext.getCurrentInstance();
+		final Flash flash = context.getExternalContext().getFlash();
+		flash.put("empresa", codigo);
+
+		return "/pg/cal/calrenconsultacal?faces-redirect=true";
+	}
 
 }

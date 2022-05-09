@@ -9,8 +9,9 @@
 	color: #ffffff !important;
 }
 
-.em {
-	font-weight: bold;
+.em{
+	
+	color: blue;
 	font-style: italic;
 	text-decoration: underline;
 }
@@ -19,6 +20,19 @@
 	background-color: lightgrey;
 }
 
+
 .negrita {
 	text-decoration: underline;
+	color: blue;
+}
+
+.rojastrong {
+	color: #CC0000;
+}
+
+
+.especialstrong {
+  font-weight: bold;
+  color: #000066;
+  padding: 2px;
 }

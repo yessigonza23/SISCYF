@@ -63,18 +63,12 @@
 			<artifactId>jbcrypt</artifactId>
 			<version>0.4</version>
 		</dependency>
-		<dependency>
-			<groupId>org.primefaces.themes</groupId>
-			<artifactId>ui-lightness</artifactId>
-			<version>1.0.10</version>
-		</dependency>
 
 		<dependency>
 			<groupId>org.primefaces.themes</groupId>
 			<artifactId>all-themes</artifactId>
 			<version>1.0.10</version>
 		</dependency>
-
 
 		<dependency>
 			<groupId>net.sf.jasperreports</groupId>
@@ -307,9 +301,6 @@
 			<version>2.8.6</version>
 		</dependency>
 	</dependencies>
-
-
-
 
 	<repositories>
 		<repository>

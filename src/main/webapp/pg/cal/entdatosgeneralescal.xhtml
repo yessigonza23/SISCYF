@@ -1,0 +1,197 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+<p:panelGrid id="pg_datosnombres" style="text-align: left;width:100%"
+	columns="2" rendered="#{consultaEntidadesCalBean.render}">
+	<p:outputLabel styleClass="especialstrong" value="Nombre comercial:" />
+	<p:outputLabel
+		value="#{consultaEntidadesCalBean.empresa.nombre_comercial}" />
+
+	<p:outputLabel styleClass="especialstrong"
+		value="Actividad Económica Principal:" />
+	<p:outputLabel
+		value="#{consultaEntidadesCalBean.empresa.actividad_principal}" />
+
+	<p:outputLabel styleClass="especialstrong"
+		value="Actividad Económica Secundaria:" />
+	<p:outputLabel
+		value="#{consultaEntidadesCalBean.empresa.actividad_secundaria}" />
+
+	<p:outputLabel styleClass="especialstrong"
+		value="Clasificación Actividad Industrial:" />
+	<p:outputLabel
+		value="#{consultaEntidadesCalBean.empresa.actividadEmpresa.nombre}" />
+	<p:outputLabel styleClass="especialstrong" value="Tipo Empresa:" />
+	<p:outputLabel value="#{consultaEntidadesCalBean.empresa.tipo_empresa}">
+		<f:converter converterId="tipoEmpresas" />
+	</p:outputLabel>
+</p:panelGrid>
+<p:panelGrid id="pg_datos2" style="text-align: left;width:100%"
+	columns="6" rendered="#{consultaEntidadesCalBean.render}">
+
+	<p:outputLabel styleClass="especialstrong" value="Tipo Persona:" />
+	<p:outputLabel value="#{consultaEntidadesCalBean.empresa.tipo_persona}"
+		style="text-transform: uppercase" />
+
+	<p:outputLabel styleClass="especialstrong" value="RUC:" />
+	<p:outputLabel value="#{consultaEntidadesCalBean.empresa.ruc}"
+		styleClass="rojastrong" />
+
+	<p:outputLabel value="Fecha de calificación:"
+		styleClass="especialstrong" />
+	<p:outputLabel
+		value="#{consultaEntidadesCalBean.empresa.fecha_calificacion}"
+		styleClass="rojastrong">
+		<f:convertDateTime pattern="dd/MM/yyyy" />
+	</p:outputLabel>
+
+	<p:outputLabel styleClass="especialstrong" value="No. Calificación:" />
+	<p:outputLabel
+		value="#{consultaEntidadesCalBean.empresa.numero_calificacion}"
+		styleClass="rojastrong" />
+
+	<p:outputLabel value="Estado:" styleClass="especialstrong" />
+	<p:outputLabel value="#{consultaEntidadesCalBean.empresa.estado}"
+		style="text-transform: uppercase" styleClass="rojastrong">
+	</p:outputLabel>
+
+	<p:outputLabel styleClass="especialstrong" value="Teléfono Principal:" />
+	<p:outputLabel
+		value="#{consultaEntidadesCalBean.empresa.telefono_principal}" />
+
+	<p:outputLabel styleClass="especialstrong" value="Teléfono alterno:" />
+	<p:outputLabel
+		value="#{consultaEntidadesCalBean.empresa.telefono_alterno}" />
+
+	<p:outputLabel styleClass="especialstrong" value="Teléfono celular:" />
+	<p:outputLabel
+		value="#{consultaEntidadesCalBean.empresa.telefono_celular}" />
+	<p:outputLabel styleClass="especialstrong" value="Correo electrónico:" />
+	<p:outputLabel
+		value="#{consultaEntidadesCalBean.empresa.correo_electronico}" />
+
+	<p:outputLabel styleClass="especialstrong" value="Coordinación:" />
+	<p:outputLabel
+		value="#{consultaEntidadesCalBean.empresa.parroquia.canton.provincia.coordinacion.nombre}">
+	</p:outputLabel>
+
+	<p:outputLabel styleClass="especialstrong" value="Provincia" />
+	<p:outputLabel
+		value="#{consultaEntidadesCalBean.empresa.parroquia.canton.provincia.nombre}" />
+
+	<p:outputLabel styleClass="especialstrong" value="Cantón:" />
+	<p:outputLabel
+		value="#{consultaEntidadesCalBean.empresa.parroquia.canton.nombre}" />
+	<p:outputLabel styleClass="especialstrong" value="Parroquia:" />
+	<p:outputLabel
+		value="#{consultaEntidadesCalBean.empresa.parroquia.nombre}" />
+
+	<p:outputLabel value="Fecha de registro:" styleClass="especialstrong" />
+	<p:outputLabel
+		value="#{consultaEntidadesCalBean.empresa.fecha_registro}">
+		<f:convertDateTime pattern="dd/MM/yyyy" />
+	</p:outputLabel>
+
+	<p:outputLabel></p:outputLabel>
+	<p:outputLabel></p:outputLabel>
+	<p:outputLabel styleClass="especialstrong" value="Causa de Anulación:" />
+	<p:outputLabel
+		value="#{consultaEntidadesCalBean.empresa.causa_anulacion}">
+	</p:outputLabel>
+
+	<p:outputLabel styleClass="especialstrong" value="Fecha de anulación:" />
+	<p:outputLabel
+		value="#{consultaEntidadesCalBean.empresa.fecha_anulacion}">
+		<f:convertDateTime pattern="dd/MM/yyyy" />
+	</p:outputLabel>
+
+</p:panelGrid>
+
+<!-- 					JURIDICAS					 -->
+<p:panel>
+	<p:panelGrid id="emp_det_j" style="text-align:left;width:100%"
+		columns="4" rendered="#{consultaEntidadesCalBean.render_j}">
+
+		<p:outputLabel styleClass="especialstrong"
+			value="Fecha de constitución de la compañia:" />
+		<p:outputLabel
+			value="#{consultaEntidadesCalBean.empresa.j_fecha_constitucion}" />
+
+		<p:outputLabel styleClass="especialstrong"
+			value="Nro. Expediente Superintendencia de Compañías:" />
+		<p:outputLabel
+			value="#{consultaEntidadesCalBean.empresa.j_numero_expediente}" />
+
+		<p:outputLabel styleClass="especialstrong"
+			value="Fecha de expediente Superintendencia de Compañías:" />
+		<p:outputLabel
+			value="#{consultaEntidadesCalBean.empresa.j_fecha_expediente}" />
+
+		<p:outputLabel value="Situación Legal:" styleClass="especialstrong" />
+		<p:outputLabel
+			value="#{consultaEntidadesCalBean.empresa.j_situacion_legal}" />
+
+	</p:panelGrid>
+	<!-- 					ONGS     				 -->
+	<p:panelGrid id="emp_det_o" style="text-align: left;width:100%"
+		columns="4" rendered="#{consultaEntidadesCalBean.render_o}">
+		<p:outputLabel styleClass="especialstrong"
+			value="Fecha de acta constitutiva:" />
+		<p:outputLabel
+			value="#{consultaEntidadesCalBean.empresa.o_fecha_acta_constitutiva}" />
+
+		<p:outputLabel styleClass="especialstrong"
+			value="No. Resolución del Ministerio o Entidad competente:" />
+		<p:outputLabel
+			value="#{consultaEntidadesCalBean.empresa.o_numero_resolucon}" />
+
+		<p:outputLabel styleClass="especialstrong"
+			value="Fecha de resolución:" />
+		<p:outputLabel
+			value="#{consultaEntidadesCalBean.empresa.p_registro_oficial}" />
+
+		<p:outputLabel styleClass="especialstrong"
+			value="Estado del Contribuyente en el RUC:" />
+		<p:outputLabel
+			value="#{consultaEntidadesCalBean.empresa.o_estado_contribuyentes}" />
+	</p:panelGrid>
+
+	<!-- 					PUBLICAS     				 -->
+	<p:panelGrid id="emp_det_p" style="text-align: leftr;width:100%"
+		columns="2" rendered="#{consultaEntidadesCalBean.render_p}">
+
+		<p:outputLabel styleClass="especialstrong"
+			value="Acto de creación institucional:" />
+		<p:outputLabel
+			value="#{consultaEntidadesCalBean.empresa.p_acto_creacion}" />
+
+		<p:outputLabel styleClass="especialstrong"
+			value="Fecha de creación institucional:" />
+		<p:outputLabel
+			value="#{consultaEntidadesCalBean.empresa.p_fecha_creacion}" />
+
+		<p:outputLabel styleClass="especialstrong"
+			value="Número de Registro Oficial:" />
+		<p:outputLabel
+			value="#{consultaEntidadesCalBean.empresa.p_registro_oficial}" />
+
+		<p:outputLabel styleClass="especialstrong"
+			value="Fecha de Registro Oficial:" />
+		<p:outputLabel
+			value="#{consultaEntidadesCalBean.empresa.p_fecha_registro_oficial}" />
+
+	</p:panelGrid>
+
+	<!-- INFORMACIÓN GENERAL -->
+
+	<p:panelGrid id="emp_det" style="text-align: center" columns="4"
+		rendered="#{consultaEntidadesBean.render}">
+
+	</p:panelGrid>
+</p:panel>
+
+</html>

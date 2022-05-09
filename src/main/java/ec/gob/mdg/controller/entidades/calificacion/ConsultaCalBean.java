@@ -40,6 +40,6 @@ public class ConsultaCalBean implements Serializable {
 		final Flash flash = context.getExternalContext().getFlash();
 		flash.put("empresa", codigo);
 		
-		return "/pg/cal/entidadescalprincipal?faces-redirect=true";
+		return "/pg/cal/entprincipalcal?faces-redirect=true";
 	}
 }
