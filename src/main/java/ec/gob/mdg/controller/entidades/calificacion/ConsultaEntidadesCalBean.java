@@ -11,6 +11,7 @@ import javax.inject.Named;
 
 import ec.gob.mdg.control.ejb.modelo.Empresa;
 import ec.gob.mdg.control.ejb.service.IEmpresaService;
+import ec.gob.mdg.control.ejb.utils.Utilitario;
 import lombok.Data;
 
 @Data
@@ -24,7 +25,6 @@ public class ConsultaEntidadesCalBean implements Serializable {
 	private IEmpresaService serviceEmpresa;
 
 	private Empresa empresa = new Empresa();
-	private Empresa empresa_calren = new Empresa();
 
 	String empresaS;
 	Integer empresaId;
@@ -37,7 +37,6 @@ public class ConsultaEntidadesCalBean implements Serializable {
 	@PostConstruct
 	public void init() {
 		try {
-           System.out.println("entra a init");
 			cargarDatos();
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
@@ -48,9 +47,6 @@ public class ConsultaEntidadesCalBean implements Serializable {
 	public String getParam() {
 		return (String) FacesContext.getCurrentInstance().getExternalContext().getFlash().get("empresa");
 	}
-	public String getParamCalren() {
-		return (String) FacesContext.getCurrentInstance().getExternalContext().getFlash().get("empresa_calren");
-	}
 
 	/// DATOS DE LA EMPRESA DATOS GENERALES PRIMERA PESTAÑA
 	public Empresa cargarDatos() {
@@ -59,18 +55,12 @@ public class ConsultaEntidadesCalBean implements Serializable {
 		render_j = false;
 		render_p = false;
 		render = false;
-		System.out.println("empresa " + empresa);
+	
 		if (empresa != null) {
-			System.out.println("entra en empresa");
 			empresaS = (String) FacesContext.getCurrentInstance().getExternalContext().getFlash().get("empresa");
-			
-		} else if (empresa_calren != null) {
-			System.out.println("entra en empresa calren");
-			empresaS = (String) FacesContext.getCurrentInstance().getExternalContext().getFlash().get("empresa_calren");
 		}
-		if (empresaS!=null) {
+		if (empresaS != null) {
 			empresaId = Integer.parseInt(empresaS);
-			
 			if (empresaId != null) {
 				render = true;
 				empresa = serviceEmpresa.listarEmpresaPorId(empresaId);
@@ -83,35 +73,28 @@ public class ConsultaEntidadesCalBean implements Serializable {
 				} else if (empresa.getTipo_empresa().equals("p")) {
 					render_p = true;
 				}
-			} else {
-				render = false;
-				render_n = false;
-				render_o = false;
-				render_j = false;
-				render_p = false;
-				empresa = null;
 			}
 		}
-		
 		return empresa;
 	}
 
-	/// Ir a detalle de empresa
-	public String irCalRen() {// String irCalRen(String codigo) {
-//		getParam();
-		System.out.println("empresa para detalle calren " + empresa.getId());
-//		if (empresa != null) {
-//			System.out.println("entra a diferente de null");
-//			empresaS = (String) FacesContext.getCurrentInstance().getExternalContext().getFlash().get("empresa");
-//			empresaId = Integer.parseInt(empresaS);
-//			System.out.println("entra a ir a detalle " + empresa.getId());
-//		}
+	/// Ir a detalle calificaciones
+	public void irCalRen() {
 		empresaS = String.valueOf(empresa.getId());
 		final FacesContext context = FacesContext.getCurrentInstance();
 		final Flash flash = context.getExternalContext().getFlash();
-		flash.put("empresa_calren", empresaS);
-
-		return "/pg/cal/calrenconsultacal?faces-redirect=true";
+		flash.put("empresa", empresaS);
+		Utilitario.irAPagina("/pg/cal/calrenconsultacal");
+	}
+	
+	/// Ir a representantes
+	public void irRepresentantes() {
+		System.out.println("entra a ir a representantes: "+ empresa.getId());
+		empresaS = String.valueOf(empresa.getId());
+		final FacesContext context = FacesContext.getCurrentInstance();
+		final Flash flash = context.getExternalContext().getFlash();
+		flash.put("empresa", empresaS);
+		Utilitario.irAPagina("/pg/cal/representantescal");
 	}
 
 }

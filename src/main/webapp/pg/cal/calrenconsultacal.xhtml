@@ -17,19 +17,20 @@
 				<p:commandButton id="btnRegresar" value="Regresar"
 					icon="fa fa-fw fa-hand-o-left"
 					actionListener="#{consultaCalRenBean.irDetalleEmpresa()}" />
+				
 				<p:dataTable id="dtcalren" var="e"
 					value="#{consultaCalRenBean.listaCalRenovaciones}"
 					selectionMode="single"
 					selection="#{consultaCalRenBean.calificacionesRenovaciones}"
-					rowKey="#{e.id}" editable="true" rowIndexVar="index">
+					rowKey="#{e.id}" editable="true">
 
 					<p:ajax event="rowSelect"
 						listener="#{consultaCalRenBean.onRowSelect}" update="dtcalren" />
 					<p:ajax event="rowUnselect"
 						listener="#{consultaCalRenBean.onRowUnselect}" update="dtcalren" />
 
-					<p:column headerText="No.a" style="width:20px">
-						<p:outputLabel value="#{index + 1}" />
+					<p:column headerText="Secuencia" style="width:100px">
+						<p:outputLabel value="#{e.secuencia}" />
 					</p:column>
 					<p:column headerText="Fecha Renovación" style="width:100px">
 						<p:outputLabel value="#{e.fecha_renovacion}" />

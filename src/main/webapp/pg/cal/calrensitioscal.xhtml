@@ -1,0 +1,457 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui">
+
+
+<p:growl id="mensajeSit" autoUpdate="false" showSummary="false"
+	showDetail="true" />
+
+
+<p:dataTable id="dt_sitio" var="e"
+	value="#{consultaCalRenSitiosBean.listaSitios}" selectionMode="single"
+	selection="#{consultaCalRenSitiosBean.sitios}" rowKey="#{e.id}"
+	rowIndexVar="index">
+
+	<p:ajax event="rowSelect"
+		listener="#{consultaCalRenSitiosBean.onRowSelectSitio}"
+		update=":frm:tabView:tabViewCalRen:dt_sitio,:frm:tabView:tabViewCalRen:pn_sitios_sistemas" />
+	<p:ajax event="rowUnselect"
+		listener="#{consultaCalRenSitiosBean.onRowUnselectSitio}"
+		update=":frm:tabView:tabViewCalRen:dt_sitio,:frm:tabView:tabViewCalRen:pn_sitios_sistemas" />
+
+	<f:facet name="header">
+		<h:outputText value="SITIOS AUTORIZADOS" />
+	</f:facet>
+
+	<p:column style="text-align: justify;width:15px;">
+		<f:facet name="header">
+			<h:outputText value="No." />
+		</f:facet>
+		<h:outputText value="#{index + 1}" />
+	</p:column>
+
+	<p:column headerText="Coordinación" style="width:80px">
+		<p:outputLabel id="txtcoor"
+			value="#{e.parroquia.canton.provincia.coordinacion.nombre}">
+		</p:outputLabel>
+	</p:column>
+	<p:column headerText="Provincia" style="width:70px">
+		<p:outputLabel id="txtProvincia"
+			value="#{e.parroquia.canton.provincia.nombre}">
+		</p:outputLabel>
+	</p:column>
+
+	<p:column headerText="Cantón" style="width:70px">
+		<p:outputLabel id="txtCanton" value="#{e.parroquia.canton.nombre}">
+		</p:outputLabel>
+	</p:column>
+
+	<p:column headerText="Parroquia" style="width:70px">
+		<p:outputLabel id="txtParroquia" value="#{e.parroquia.nombre}">
+		</p:outputLabel>
+	</p:column>
+
+	<p:column headerText="Oficina" style="width:50px">
+		<p:selectBooleanCheckbox value="#{e.oficina}" />
+	</p:column>
+	<p:column headerText="Bodega" style="width:50px">
+		<p:selectBooleanCheckbox value="#{e.bodega}" />
+	</p:column>
+	<p:column headerText="Planta" style="width:50px">
+		<p:selectBooleanCheckbox value="#{e.planta}" />
+	</p:column>
+	<p:column headerText="Sucursal" style="width:50px">
+		<p:selectBooleanCheckbox value="#{e.sucursal}" />
+	</p:column>
+	<p:column headerText="Latitud" style="width:50px">
+		<p:outputLabel id="txtLatitud" value="#{e.latitud}">
+		</p:outputLabel>
+	</p:column>
+	<p:column headerText="Longitud" style="width:50px">
+		<p:outputLabel id="txtLongitud" value="#{e.longitud}">
+		</p:outputLabel>
+	</p:column>
+	<p:column headerText="Mayor Actividad" style="width:50px">
+		<p:selectBooleanCheckbox value="#{e.mayor_actividad}" />
+	</p:column>
+	<p:column headerText="Detalle" style="width:50px">
+		<p:commandButton value="Inf." id="btnDetalle" process="@this"
+			oncomplete="PF('wdgsit').show();"
+			update=":frm:tabView:tabViewCalRen:dialogoSit" icon="ui-icon-tasks">
+			<p:ajax event="click"
+				listener="#{consultaCalRenSitiosBean.mostrarData(e)}" />
+		</p:commandButton>
+	</p:column>
+
+	<p:column headerText="Actividades" style="width:50px">
+		<p:commandButton value="Ver" id="btnActividades" process="@this"
+			oncomplete="PF('wdgSitact').show();"
+			update=":frm:tabView:tabViewCalRen:dialogoSitAct"
+			icon="ui-icon-tasks">
+			<p:ajax event="click"
+				listener="#{consultaCalRenSitiosBean.cargarListaSitiosActividades(e.id)}" />
+		</p:commandButton>
+
+	</p:column>
+
+</p:dataTable>
+
+<p:panel id="pn_sitios_sistemas">
+	<ui:include src="/pg/ent/calrensitiossistemasmedicioncal.xhtml" />
+</p:panel>
+
+<!-- DIALOGO PARA ACTIVIDADES POR Sitios -->
+<p:dialog id="dialogoSitAct" widgetVar="wdgSitact" resizable="false"
+	width="300" draggable="true" modal="true" position="center"
+	closeOnEscape="true" positionType="absolute">
+
+	<h2 style="color: #003778; text-align: center">Actividades por
+		Sitio</h2>
+
+	<p:dataTable id="dt_SitiosActividades" var="e"
+		value="#{consultaCalRenSitiosBean.listaSitiosActividades}">
+
+		<p:column headerText="Detalle" style="width:100px">
+			<p:outputLabel
+				value="#{e.calrenActividadesCalificacion.actividadCalificacion.nombre}" />
+		</p:column>
+
+	</p:dataTable>
+
+</p:dialog>
+
+<!-- DIALOGO PARA DETALLE DE SITIOS -->
+<p:dialog id="dialogoSit" widgetVar="wdgsit" resizable="false"
+	width="850" draggable="true" modal="true" position="center"
+	closeOnEscape="true" positionType="absolute">
+
+	<h2 style="color: #003778; text-align: center">Detalle de
+		Información</h2>
+	<p:commandButton value="Ver" ajax="false"
+		actionListener="#{consultaCalRenSitiosBean.verPDF(consultaCalRenSitiosBean.sitios.ruta_archivo)}"
+		target="_blank">
+	</p:commandButton>
+
+	<p:commandButton value="VerSeg" ajax="false"
+		actionListener="#{consultaCalRenSitiosBean.verPDF(consultaCalRenSitiosBean.sitios.ruta_archivo_seguridad)}"
+		target="_blank">
+	</p:commandButton>
+	<p:panelGrid id="pg" columns="6" tyle="margin-left: 50%">
+		<p:column style="border-style: hidden; width:130px;">
+			<strong>Coordinación:</strong>
+		</p:column>
+		<p:column style="border-style: hidden;">
+			<p:outputLabel id="txtCoordinacion"
+				style="border-style: hidden; width:130px;"
+				value="#{consultaCalRenSitiosBean.sitios.parroquia.canton.provincia.coordinacion.nombre}" />
+		</p:column>
+
+		<p:column style="border-style: hidden; width:130px;">
+			<strong>Provincia:</strong>
+		</p:column>
+		<p:column style="border-style: hidden;">
+			<p:outputLabel id="txtProvincia"
+				style="border-style: hidden; width:130px;"
+				value="#{consultaCalRenSitiosBean.sitios.parroquia.canton.provincia.nombre}" />
+		</p:column>
+		<p:column style="border-style: hidden; width:130px;">
+			<strong>Cantón:</strong>
+		</p:column>
+		<p:column style="border-style: hidden;">
+			<p:outputLabel id="txtCanton"
+				style="border-style: hidden; width:130px;"
+				value="#{consultaCalRenSitiosBean.sitios.parroquia.canton.nombre}" />
+		</p:column>
+		<p:column style="border-style: hidden; width:130px;">
+			<strong>Parroquia:</strong>
+		</p:column>
+		<p:column style="border-style: hidden;">
+			<p:outputLabel id="txtParroquia"
+				style="border-style: hidden; width:130px;"
+				value="#{consultaCalRenSitiosBean.sitios.parroquia.nombre}" />
+		</p:column>
+		<p:column style="border-style: hidden; width:130px;">
+			<strong>Calle:</strong>
+		</p:column>
+		<p:column style="border-style: hidden;">
+			<p:outputLabel id="txtCalle"
+				style="border-style: hidden; width:130px;"
+				value="#{consultaCalRenSitiosBean.sitios.calle}" />
+		</p:column>
+		<p:column style="border-style: hidden; width:130px;">
+			<strong>Número:</strong>
+		</p:column>
+		<p:column style="border-style: hidden;">
+			<p:outputLabel id="txtNumero"
+				style="border-style: hidden; width:130px;"
+				value="#{consultaCalRenSitiosBean.sitios.numero}" />
+		</p:column>
+		<p:column style="border-style: hidden; width:130px;">
+			<strong>Referencia:</strong>
+		</p:column>
+		<p:column style="border-style: hidden;">
+			<p:outputLabel id="txtIntersección"
+				style="border-style: hidden; width:130px;"
+				value="#{consultaCalRenSitiosBean.sitios.interseccion}" />
+		</p:column>
+		<p:column style="border-style: hidden; width:130px;">
+			<strong>Longitud:</strong>
+		</p:column>
+		<p:column style="border-style: hidden;">
+			<p:outputLabel id="txtLongitud"
+				style="border-style: hidden; width:130px;"
+				value="#{consultaCalRenSitiosBean.sitios.longitud}" />
+		</p:column>
+		<p:column style="border-style: hidden; width:130px;">
+			<strong>Latitud:</strong>
+		</p:column>
+		<p:column style="border-style: hidden;">
+			<p:outputLabel id="txtLatitud"
+				style="border-style: hidden; width:130px;"
+				value="#{consultaCalRenSitiosBean.sitios.latitud}" />
+		</p:column>
+		<p:column style="border-style: hidden; width:130px;">
+			<strong>Instalaciones:</strong>
+		</p:column>
+		<p:column style="border-style: hidden;">
+			<p:outputLabel id="txtInstalaciones"
+				style="border-style: hidden; width:130px;"
+				value="#{consultaCalRenSitiosBean.sitios.instalacion}" />
+		</p:column>
+		<p:column style="border-style: hidden; width:130px;">
+			<strong>Teléfono:</strong>
+		</p:column>
+		<p:column style="border-style: hidden;">
+			<p:outputLabel id="txtTelefono"
+				style="border-style: hidden; width:130px;"
+				value="#{consultaCalRenSitiosBean.sitios.telefono}" />
+		</p:column>
+		<p:column style="border-style: hidden; width:130px;">
+			<strong>Oficina:</strong>
+		</p:column>
+		<p:column style="border-style: hidden;">
+			<p:selectBooleanCheckbox
+				value="#{consultaCalRenSitiosBean.sitios.oficina}" />
+		</p:column>
+		<p:column style="border-style: hidden; width:130px;">
+			<strong>Bodega:</strong>
+		</p:column>
+		<p:column style="border-style: hidden;">
+			<p:selectBooleanCheckbox
+				value="#{consultaCalRenSitiosBean.sitios.bodega}" />
+		</p:column>
+		<p:column style="border-style: hidden; width:130px;">
+			<strong>Bodeguero:</strong>
+		</p:column>
+		<p:column style="border-style: hidden;">
+			<p:outputLabel id="txtBodeguerro"
+				style="border-style: hidden; width:130px;"
+				value="#{consultaCalRenSitiosBean.sitios.representantes.nombre}" />
+		</p:column>
+		<p:column style="border-style: hidden; width:130px;">
+			<strong>Planta:</strong>
+		</p:column>
+		<p:column style="border-style: hidden;">
+			<p:selectBooleanCheckbox
+				value="#{consultaCalRenSitiosBean.sitios.planta}" />
+		</p:column>
+		<p:column style="border-style: hidden; width:130px;">
+			<strong>Sucursal:</strong>
+		</p:column>
+		<p:column style="border-style: hidden;">
+			<p:selectBooleanCheckbox
+				value="#{consultaCalRenSitiosBean.sitios.sucursal}" />
+		</p:column>
+
+		<p:column style="border-style: hidden; width:130px;">
+			<strong>Mayor Actividad:</strong>
+		</p:column>
+		<p:column style="border-style: hidden;">
+			<p:selectBooleanCheckbox
+				value="#{consultaCalRenSitiosBean.sitios.mayor_actividad}" />
+		</p:column>
+		<p:column style="border-style: hidden; width:130px;">
+			<strong>Control de Ingreso Manual:</strong>
+		</p:column>
+		<p:column style="border-style: hidden;">
+			<p:outputLabel id="txtControlIngreso"
+				style="border-style: hidden; width:130px;"
+				value="#{consultaCalRenSitiosBean.sitios.control_ingreso_manual}">
+			</p:outputLabel>
+		</p:column>
+		<p:column style="border-style: hidden; width:130px;">
+			<strong>Control de Ingreso Computarizado:</strong>
+		</p:column>
+		<p:column style="border-style: hidden;">
+			<p:outputLabel id="txtControlIngresoComp"
+				style="border-style: hidden; width:130px;"
+				value="#{consultaCalRenSitiosBean.sitios.control_ingreso_computarizado}">
+			</p:outputLabel>
+		</p:column>
+		<p:column style="border-style: hidden; width:130px;">
+			<strong>Kardex:</strong>
+		</p:column>
+		<p:column style="border-style: hidden;">
+			<p:selectBooleanCheckbox
+				value="#{consultaCalRenSitiosBean.sitios.kardex}" />
+		</p:column>
+		<p:column style="border-style: hidden; width:130px;">
+			<strong>Bitacora:</strong>
+		</p:column>
+		<p:column style="border-style: hidden;">
+			<p:selectBooleanCheckbox
+				value="#{consultaCalRenSitiosBean.sitios.bitacora}" />
+		</p:column>
+		<p:column style="border-style: hidden; width:130px;">
+			<strong>Otros:</strong>
+		</p:column>
+		<p:column style="border-style: hidden;">
+			<p:selectBooleanCheckbox
+				value="#{consultaCalRenSitiosBean.sitios.otros}" />
+		</p:column>
+		<p:column style="border-style: hidden; width:130px;">
+			<strong>Descripción Otros:</strong>
+		</p:column>
+		<p:column style="border-style: hidden;">
+			<p:outputLabel id="txtDescOtros"
+				style="border-style: hidden; width:130px;"
+				value="#{consultaCalRenSitiosBean.sitios.otros_descripcion}">
+			</p:outputLabel>
+		</p:column>
+		<!-- 		SEGURIDAD FISICA E INTEGRAL -->
+		<p:column></p:column>
+		<p:column style="border-style: hidden; width:130px;">
+			<strong>Cerramiento:</strong>
+		</p:column>
+		<p:column style="border-style: hidden;">
+			<p:selectBooleanCheckbox
+				value="#{consultaCalRenSitiosBean.sitios.cerramiento}" />
+		</p:column>
+		<p:column style="border-style: hidden; width:130px;">
+			<strong>Cerca Eléctrica:</strong>
+		</p:column>
+		<p:column style="border-style: hidden;">
+			<p:selectBooleanCheckbox
+				value="#{consultaCalRenSitiosBean.sitios.cerca_electrica}" />
+		</p:column>
+		<p:column style="border-style: hidden; width:130px;">
+			<strong>Guardiania:</strong>
+		</p:column>
+		<p:column style="border-style: hidden;">
+			<p:selectBooleanCheckbox
+				value="#{consultaCalRenSitiosBean.sitios.guardiania}" />
+		</p:column>
+		<p:column style="border-style: hidden; width:130px;">
+			<strong>Alarmas:</strong>
+		</p:column>
+		<p:column style="border-style: hidden;">
+			<p:selectBooleanCheckbox
+				value="#{consultaCalRenSitiosBean.sitios.alarmas}" />
+		</p:column>
+		<p:column style="border-style: hidden; width:130px;">
+			<strong>Sensores de movimientos:</strong>
+		</p:column>
+		<p:column style="border-style: hidden;">
+			<p:selectBooleanCheckbox
+				value="#{consultaCalRenSitiosBean.sitios.sensores_movimiento}" />
+		</p:column>
+		<p:column style="border-style: hidden; width:130px;">
+			<strong>Circuito cerrado:</strong>
+		</p:column>
+		<p:column style="border-style: hidden;">
+			<p:selectBooleanCheckbox
+				value="#{consultaCalRenSitiosBean.sitios.circuito_cerrado}" />
+		</p:column>
+		<p:column style="border-style: hidden; width:130px;">
+			<strong>Hojas de seguridad:</strong>
+		</p:column>
+		<p:column style="border-style: hidden;">
+			<p:selectBooleanCheckbox
+				value="#{consultaCalRenSitiosBean.sitios.hojas_seguridad}" />
+		</p:column>
+		<p:column style="border-style: hidden; width:130px;">
+			<strong>Plan contigencia:</strong>
+		</p:column>
+		<p:column style="border-style: hidden;">
+			<p:selectBooleanCheckbox
+				value="#{consultaCalRenSitiosBean.sitios.plan_contigencia}" />
+		</p:column>
+		<p:column style="border-style: hidden; width:130px;">
+			<strong>Kit derrames:</strong>
+		</p:column>
+		<p:column style="border-style: hidden;">
+			<p:selectBooleanCheckbox
+				value="#{consultaCalRenSitiosBean.sitios.kit_derrames}" />
+		</p:column>
+		<p:column style="border-style: hidden; width:130px;">
+			<strong>Dique contencion:</strong>
+		</p:column>
+		<p:column style="border-style: hidden;">
+			<p:selectBooleanCheckbox
+				value="#{consultaCalRenSitiosBean.sitios.dique_contencion}" />
+		</p:column>
+		<p:column style="border-style: hidden; width:130px;">
+			<strong>Equipos de protección:</strong>
+		</p:column>
+		<p:column style="border-style: hidden;">
+			<p:selectBooleanCheckbox
+				value="#{consultaCalRenSitiosBean.sitios.equipos_proteccion}" />
+		</p:column>
+		<p:column style="border-style: hidden; width:130px;">
+			<strong>Permiso bomberos:</strong>
+		</p:column>
+		<p:column style="border-style: hidden;">
+			<p:selectBooleanCheckbox
+				value="#{consultaCalRenSitiosBean.sitios.permiso_bomberos}" />
+		</p:column>
+		<p:column style="border-style: hidden; width:130px;">
+			<strong>No. permiso bomberos:</strong>
+		</p:column>
+		<p:column style="border-style: hidden;">
+			<p:outputLabel id="txtBomberosNumero"
+				style="border-style: hidden; width:130px;"
+				value="#{consultaCalRenSitiosBean.sitios.num_permiso_bomberos}">
+			</p:outputLabel>
+		</p:column>
+		<p:column style="border-style: hidden; width:130px;">
+			<strong>Vigencia permiso bomberos:</strong>
+		</p:column>
+		<p:column style="border-style: hidden;">
+			<p:outputLabel id="txtBomberosVigencia"
+				style="border-style: hidden; width:130px;"
+				value="#{consultaCalRenSitiosBean.sitios.vigencia_permiso_bomberos}">
+			</p:outputLabel>
+		</p:column>
+		<p:column style="border-style: hidden; width:130px;">
+			<strong>Ducha Emergencia:</strong>
+		</p:column>
+		<p:column style="border-style: hidden;">
+			<p:selectBooleanCheckbox
+				value="#{consultaCalRenSitiosBean.sitios.ducha_emergencia}" />
+		</p:column>
+		<p:column style="border-style: hidden; width:130px;">
+			<strong>Lavatorio de ojos:</strong>
+		</p:column>
+		<p:column style="border-style: hidden;">
+			<p:selectBooleanCheckbox
+				value="#{consultaCalRenSitiosBean.sitios.lavatorio_ojos}" />
+		</p:column>
+		<p:column style="border-style: hidden; width:130px;">
+			<strong>Sistema contra incendios:</strong>
+		</p:column>
+		<p:column style="border-style: hidden;">
+			<p:selectBooleanCheckbox
+				value="#{consultaCalRenSitiosBean.sitios.sistema_contra_incendios}" />
+		</p:column>
+
+
+	</p:panelGrid>
+
+</p:dialog>
+
+
+
+</html>

@@ -1,0 +1,28 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui">
+
+
+<p:dataTable id="dt_tipo"
+	value="#{consultaCalRenTipoSustBean.listaCalrenTipoSustancia}" var="e"
+	selectionMode="single"
+	selection="#{consultaCalRenTipoSustBean.calrenTipoSustancia}"
+	rowKey="#{e.id}" editable="true">
+
+	<p:ajax event="rowSelect"
+		listener="#{consultaCalRenTipoSustBean.onRowSelectTipo}"
+		update=":frm_calren:dt_tipo,:frm_calren:dt_sus" />
+	<p:ajax event="rowUnselect"
+		listener="#{consultaCalRenTipoSustBean.onRowUnselectTipo}"
+		update=":frm_calren:dt_tipo,:frm_calren:dt_sus" />
+
+	<p:column headerText="Tipo de Sustancia" style="width:20px">
+		<p:outputLabel value="#{e.tipoSustancia.nombre}" />
+	</p:column>
+
+</p:dataTable>
+
+</html>

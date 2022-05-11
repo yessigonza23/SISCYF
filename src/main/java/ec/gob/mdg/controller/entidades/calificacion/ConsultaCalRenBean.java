@@ -19,6 +19,7 @@ import ec.gob.mdg.control.ejb.modelo.CalificacionesRenovaciones;
 import ec.gob.mdg.control.ejb.modelo.Empresa;
 import ec.gob.mdg.control.ejb.service.ICalificacionesRenovacionesService;
 import ec.gob.mdg.control.ejb.service.IEmpresaService;
+import ec.gob.mdg.control.ejb.utils.Utilitario;
 import lombok.Data;
 
 @Data
@@ -43,11 +44,11 @@ public class ConsultaCalRenBean implements Serializable {
 
 	String empresaS;
 	Integer empresaId;
+	String calrenS;
 
 	@PostConstruct
 	public void init() {
 		try {
-			System.out.println("entra a init");
 			cargarDatos();
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
@@ -56,21 +57,17 @@ public class ConsultaCalRenBean implements Serializable {
 	}
 
 	public String getParam() {
-		return (String) FacesContext.getCurrentInstance().getExternalContext().getFlash().get("empresa_calren");
+		return (String) FacesContext.getCurrentInstance().getExternalContext().getFlash().get("empresa");
 	}
 
 	/// DATOS DE LA EMPRESA DATOS GENERALES PRIMERA PESTAÑA
 	public void cargarDatos() {
-		System.out.println("entra a cargar datos: "+empresa);
 		if (empresa != null) {
-			System.out.println("entra a diferente de null");
-			empresaS = (String) FacesContext.getCurrentInstance().getExternalContext().getFlash().get("empresa_calren");
+			empresaS = (String) FacesContext.getCurrentInstance().getExternalContext().getFlash().get("empresa");
 			empresaId = Integer.parseInt(empresaS);
-			System.out.println("empresaID: " + empresaId);
 			if (empresaId != null) {
 				empresa = serviceEmpresa.listarEmpresaPorId(empresaId);
 				cargarListaCalRen(empresa);
-				System.out.println("imprime lista " + listaCalRenovaciones);
 			}
 		}
 	}
@@ -118,32 +115,58 @@ public class ConsultaCalRenBean implements Serializable {
 			listaCalRenovaciones1 = null;
 		}
 	}
-	
+
 ////Selecciona Calificaciones renovaciones
-	public void onRowSelect(SelectEvent event) {		
-		cargarListaCalRen(((CalificacionesRenovaciones) event.getObject()).getId());		
+
+	public void onRowSelect(SelectEvent event) {
+		System.out.println("selecciona fila " + ((CalificacionesRenovaciones) event.getObject()).getId());
+		cargarSustancias(((CalificacionesRenovaciones) event.getObject()).getId());
 	}
 
 	public void onRowUnselect(UnselectEvent event) {
-		cargarListaCalRen(((CalificacionesRenovaciones) event.getObject()).getId());		
+		System.out.println("deselecciona fila " + ((CalificacionesRenovaciones) event.getObject()).getId());
+		cargarSustancias(((CalificacionesRenovaciones) event.getObject()).getId());
 	}
-	
-	
-	/// Ir a detalle de empresa
-		public String irDetalleEmpresa() {
-			System.out.println("entra a regresar" + calificacionesRenovaciones.getId());
-			if (calificacionesRenovaciones !=null) {
-				empresaS=String.valueOf(calificacionesRenovaciones.getEmpresa().getId());
-				System.out.println("imprime al reggresa empreas:" + empresa);
+
+	/// Cargar sustancias
+		public void cargarSustancias(Integer id_calren) {
+			if (id_calren != null) {
+				calrenS=String.valueOf(id_calren);
 				final FacesContext context = FacesContext.getCurrentInstance();
 				final Flash flash = context.getExternalContext().getFlash();
-				flash.put("empresa_calren", empresaS);
-				System.out.println("pasa el parametro "+calificacionesRenovaciones.getEmpresa().getId()+" - " + empresaS);
-				
-				return "/pg/cal/entprincipalcal?faces-redirect=true";
-			}else {             
-				return null;
+				flash.put("calren", calrenS);
+				Utilitario.irAPagina("/pg/cal/calrenprincipalcal");
+			} else {
+				FacesContext.getCurrentInstance().addMessage(null,
+						new FacesMessage(FacesMessage.SEVERITY_ERROR, "No hay datos no puede continuar", "Sin datos"));
 			}
-			
+		}
+	
+	/// Regresar a detalle de empresa
+	public void irDetalleEmpresa() {
+		if (calificacionesRenovaciones != null) {
+			empresaS = String.valueOf(calificacionesRenovaciones.getEmpresa().getId());
+			final FacesContext context = FacesContext.getCurrentInstance();
+			final Flash flash = context.getExternalContext().getFlash();
+			flash.put("empresa", empresaS);
+			Utilitario.irAPagina("/pg/cal/entprincipalcal");
+		} else {
+			FacesContext.getCurrentInstance().addMessage(null,
+					new FacesMessage(FacesMessage.SEVERITY_ERROR, "No hay datos o No puede regresar", "Sin datos"));
+		}
+	}
+	
+	/// Ir a Sitios
+		public void irSitios(Integer id_calren) {
+			if (id_calren != null) {
+				calrenS=String.valueOf(id_calren);
+				final FacesContext context = FacesContext.getCurrentInstance();
+				final Flash flash = context.getExternalContext().getFlash();
+				flash.put("calren", calrenS);
+				Utilitario.irAPagina("/pg/cal/calrenprincipalcal");
+			} else {
+				FacesContext.getCurrentInstance().addMessage(null,
+						new FacesMessage(FacesMessage.SEVERITY_ERROR, "No hay datos no puede continualr", "Sin datos"));
+			}
 		}
 }

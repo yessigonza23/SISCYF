@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
 import javax.faces.context.Flash;
 import javax.faces.view.ViewScoped;
@@ -12,6 +13,7 @@ import javax.inject.Named;
 
 import ec.gob.mdg.control.ejb.modelo.Empresa;
 import ec.gob.mdg.control.ejb.service.IEmpresaService;
+import ec.gob.mdg.control.ejb.utils.Utilitario;
 import lombok.Data;
 
 @Data
@@ -36,12 +38,17 @@ public class ConsultaCalBean implements Serializable {
 	}
 
 	/// Ir a detalle de empresa
-	public String irDetalleEmpresa(String codigo) {
-		final FacesContext context = FacesContext.getCurrentInstance();
-		final Flash flash = context.getExternalContext().getFlash();
-		flash.put("empresa", codigo);
+	public void irDetalleEmpresa(String codigo) {
+		if (codigo!=null) {
+			final FacesContext context = FacesContext.getCurrentInstance();
+			final Flash flash = context.getExternalContext().getFlash();
+			flash.put("empresa", codigo);
+			Utilitario.irAPagina("/pg/cal/entprincipalcal");
+		}else {
+			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,
+					"No hay datos o No puede regresar", "Sin datos"));
+		}
 		
-		return "/pg/cal/entprincipalcal?faces-redirect=true";
 	}
 	
 

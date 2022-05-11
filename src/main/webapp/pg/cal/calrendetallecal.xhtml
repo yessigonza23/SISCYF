@@ -1,0 +1,88 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui">
+
+<p:fieldset legend="Información de la Calificación" tyle="width:60%">
+	<p:panelGrid id="calren_det" style="text-align:left;width:100%"
+		columns="6">
+
+		<p:outputLabel styleClass="especialstrong" value="Secuencia:" />
+		<p:outputLabel value="#{consultaCalRenTipoSustBean.calren.secuencia}" />
+
+		<p:outputLabel styleClass="especialstrong"
+			value="Fecha de Renovación:" />
+		<p:outputLabel
+			value="#{consultaCalRenTipoSustBean.calren.fecha_renovacion}" />
+
+		<p:outputLabel styleClass="especialstrong" value="Fecha de Caducidad:" />
+		<p:outputLabel
+			value="#{consultaCalRenTipoSustBean.calren.fecha_caducidad}" />
+
+		<p:outputLabel styleClass="especialstrong" value="Aprobado:" />
+		<p:outputLabel value="#{consultaCalRenTipoSustBean.calren.aprobado}" />
+
+		<p:outputLabel styleClass="especialstrong" value="Categoria Actual:" />
+		<p:outputLabel
+			value="#{consultaCalRenTipoSustBean.calren.categoria_actual}" />
+
+		<p:outputLabel styleClass="especialstrong" value="Cupo en Kg Actual:" />
+		<p:outputLabel
+			value="#{consultaCalRenTipoSustBean.calren.cupo_kg_actual}" />
+
+		<p:outputLabel styleClass="especialstrong" value="Fecha de Registro:" />
+		<p:outputLabel
+			value="#{consultaCalRenTipoSustBean.calren.fecha_registro}" />
+
+	</p:panelGrid>
+
+	<p:panelGrid id="calren_obs" style="text-align:left;width:100%"
+		columns="1">
+		<p:outputLabel styleClass="especialstrong" value="Observación:" />
+		<p:inputText value="#{consultaCalRenTipoSustBean.calren.observacion}"
+			style="width:300px;" />
+	</p:panelGrid>
+	<p:panelGrid id="calren_inf" style="text-align:left;width:100%"
+		columns="6">
+		<p:outputLabel styleClass="especialstrong" value="No. Informe:" />
+		<p:outputLabel
+			value="#{consultaCalRenTipoSustBean.calren.numero_informe}" />
+
+		<p:outputLabel styleClass="especialstrong" value="Fecha Informe:" />
+		<p:outputLabel
+			value="#{consultaCalRenTipoSustBean.calren.numero_informe}" />
+
+		<p:outputLabel styleClass="especialstrong" value="Fecha Nota de Pago:" />
+		<p:outputLabel
+			value="#{consultaCalRenTipoSustBean.calren.fecha_notapago}" />
+
+		<p:outputLabel styleClass="especialstrong" value="Factura:" />
+		<p:outputLabel value="#{consultaCalRenTipoSustBean.calren.factura}" />
+
+		<p:outputLabel styleClass="especialstrong" value="Fecha de pago:" />
+		<p:outputLabel value="#{consultaCalRenTipoSustBean.calren.fecha_pago}" />
+	</p:panelGrid>
+</p:fieldset>
+<p:panel id="menReq" style="width:100%">
+	<p:outputLabel value="#{consultaCalRenTipoSustBean.mensajeReqRT}"
+		style="width:20px;color:coral;font-weight:bold" />
+</p:panel>
+<h:panelGrid columns="2" columnClasses="topAligned">
+	<p:panel id="pn_actividades" style="width:100%">
+		<ui:include src="/pg/cal/calrenactividadescal.xhtml" />
+	</p:panel>
+	<p:panel id="pn_tiposustancia" style="width:100%">
+		<ui:include src="/pg/cal/calrentiposustanciascal.xhtml" />
+	</p:panel>
+</h:panelGrid>
+
+<p:panel id="pn_sustancias">
+	<ui:include src="/pg/cal/calrensustanciascal.xhtml" />
+</p:panel>
+
+
+
+
+</html>

@@ -7,17 +7,16 @@
 
 <p:panelGrid id="pg_opciones" style="text-align: left" columns="1">
 
-	<p:commandButton value="Calificación/Renovación" ajax="false"
+	<p:commandButton value="Sitios" ajax="false"
 		icon="fa fa-fw fa-building"
-		action="#{consultaEntidadesCalBean.irCalRen()}">
+		action="#{consultaCalRenTipoSustBean.irSitios()}">
 	</p:commandButton>
-	<p:commandButton value="Representantes" ajax="false"
-		icon="fa fa-fw fa-group"
-		action="#{consultaEntidadesCalBean.irRepresentantes()}">		
+	<p:commandButton value="Intervenciones" type="button"
+		icon="fa fa-fw fa-group">
 	</p:commandButton>
-	<br />
+	<br/>
 	<p:commandButton id="btnRegresar" value="Regresar"
 		icon="fa fa-fw fa-hand-o-left"
-		action="#{navegarVistasBean.principalConsultaEmpresas()}" />
+		action="#{consultaCalRenTipoSustBean.irCalRen()}" />
 </p:panelGrid>
 </html>
