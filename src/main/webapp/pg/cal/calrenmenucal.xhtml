@@ -7,16 +7,17 @@
 
 <p:panelGrid id="pg_opciones" style="text-align: left" columns="1">
 
-	<p:commandButton value="Sitios" ajax="false"
-		icon="fa fa-fw fa-building"
-		action="#{consultaCalRenTipoSustBean.irSitios()}">
+	<p:commandButton value="Sitios" ajax="false" icon="ui-icon-home"
+		style="width:120px;" action="#{consultaCalRenTipoSustBean.irSitios()}">
 	</p:commandButton>
-	<p:commandButton value="Intervenciones" type="button"
-		icon="fa fa-fw fa-group">
+	<p:commandButton value="Actividades" ajax="false" icon="ui-icon-clipboard"
+		style="width:120px;" 
+		action="#{consultaCalRenTipoSustBean.irFormularios()}">
 	</p:commandButton>
-	<br/>
+	
+	<br />
 	<p:commandButton id="btnRegresar" value="Regresar"
-		icon="fa fa-fw fa-hand-o-left"
+		icon="ui-icon-circle-arrow-w" style="width:120px"
 		action="#{consultaCalRenTipoSustBean.irCalRen()}" />
 </p:panelGrid>
 </html>

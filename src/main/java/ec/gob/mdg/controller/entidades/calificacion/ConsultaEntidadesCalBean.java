@@ -49,13 +49,12 @@ public class ConsultaEntidadesCalBean implements Serializable {
 	}
 
 	/// DATOS DE LA EMPRESA DATOS GENERALES PRIMERA PESTAÑA
-	public Empresa cargarDatos() {
+	public void cargarDatos() {
 		render_n = false;
 		render_o = false;
 		render_j = false;
 		render_p = false;
 		render = false;
-	
 		if (empresa != null) {
 			empresaS = (String) FacesContext.getCurrentInstance().getExternalContext().getFlash().get("empresa");
 		}
@@ -74,8 +73,8 @@ public class ConsultaEntidadesCalBean implements Serializable {
 					render_p = true;
 				}
 			}
-		}
-		return empresa;
+		}		
+		
 	}
 
 	/// Ir a detalle calificaciones
@@ -88,8 +87,7 @@ public class ConsultaEntidadesCalBean implements Serializable {
 	}
 	
 	/// Ir a representantes
-	public void irRepresentantes() {
-		System.out.println("entra a ir a representantes: "+ empresa.getId());
+	public void irRepresentantes() {		
 		empresaS = String.valueOf(empresa.getId());
 		final FacesContext context = FacesContext.getCurrentInstance();
 		final Flash flash = context.getExternalContext().getFlash();

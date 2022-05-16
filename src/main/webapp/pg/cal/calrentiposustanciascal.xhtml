@@ -19,7 +19,11 @@
 		listener="#{consultaCalRenTipoSustBean.onRowUnselectTipo}"
 		update=":frm_calren:dt_tipo,:frm_calren:dt_sus" />
 
-	<p:column headerText="Tipo de Sustancia" style="width:20px">
+	<f:facet name="header">
+		<h:outputText value="TIPO DE SUSTANCIAS" />
+	</f:facet>
+
+	<p:column headerText="Detalle" style="width:20px">
 		<p:outputLabel value="#{e.tipoSustancia.nombre}" />
 	</p:column>
 

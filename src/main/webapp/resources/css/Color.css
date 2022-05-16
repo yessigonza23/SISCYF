@@ -36,3 +36,9 @@
   color: #003778;
   padding: 2px;
 }
+.centered {
+position: relative;
+height: 500px;
+margin:auto;
+}
+

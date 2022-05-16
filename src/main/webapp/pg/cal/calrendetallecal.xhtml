@@ -10,59 +10,64 @@
 		columns="6">
 
 		<p:outputLabel styleClass="especialstrong" value="Secuencia:" />
-		<p:outputLabel value="#{consultaCalRenTipoSustBean.calren.secuencia}" />
+		<p:outputLabel value="#{consultaCalRenTipoSustBean.calRen.secuencia}" />
 
 		<p:outputLabel styleClass="especialstrong"
 			value="Fecha de Renovación:" />
 		<p:outputLabel
-			value="#{consultaCalRenTipoSustBean.calren.fecha_renovacion}" />
+			value="#{consultaCalRenTipoSustBean.calRen.fecha_renovacion}" />
 
 		<p:outputLabel styleClass="especialstrong" value="Fecha de Caducidad:" />
 		<p:outputLabel
-			value="#{consultaCalRenTipoSustBean.calren.fecha_caducidad}" />
+			value="#{consultaCalRenTipoSustBean.calRen.fecha_caducidad}" />
 
 		<p:outputLabel styleClass="especialstrong" value="Aprobado:" />
-		<p:outputLabel value="#{consultaCalRenTipoSustBean.calren.aprobado}" />
+		<p:outputLabel value="#{consultaCalRenTipoSustBean.calRen.aprobado}">
+			<f:converter converterId="estadoAprobados" />
+		</p:outputLabel>
 
 		<p:outputLabel styleClass="especialstrong" value="Categoria Actual:" />
 		<p:outputLabel
-			value="#{consultaCalRenTipoSustBean.calren.categoria_actual}" />
+			value="#{consultaCalRenTipoSustBean.calRen.categoria_actual}" />
 
 		<p:outputLabel styleClass="especialstrong" value="Cupo en Kg Actual:" />
 		<p:outputLabel
-			value="#{consultaCalRenTipoSustBean.calren.cupo_kg_actual}" />
+			value="#{consultaCalRenTipoSustBean.calRen.cupo_kg_actual}">
+			<f:convertNumber type="number" groupingUsed="true"
+				minFractionDigits="4" pattern="#0.0000" />
+		</p:outputLabel>
 
 		<p:outputLabel styleClass="especialstrong" value="Fecha de Registro:" />
 		<p:outputLabel
-			value="#{consultaCalRenTipoSustBean.calren.fecha_registro}" />
+			value="#{consultaCalRenTipoSustBean.calRen.fecha_registro}" />
 
 	</p:panelGrid>
 
 	<p:panelGrid id="calren_obs" style="text-align:left;width:100%"
 		columns="1">
 		<p:outputLabel styleClass="especialstrong" value="Observación:" />
-		<p:inputText value="#{consultaCalRenTipoSustBean.calren.observacion}"
+		<p:inputText value="#{consultaCalRenTipoSustBean.calRen.observacion}"
 			style="width:300px;" />
 	</p:panelGrid>
 	<p:panelGrid id="calren_inf" style="text-align:left;width:100%"
 		columns="6">
 		<p:outputLabel styleClass="especialstrong" value="No. Informe:" />
 		<p:outputLabel
-			value="#{consultaCalRenTipoSustBean.calren.numero_informe}" />
+			value="#{consultaCalRenTipoSustBean.calRen.numero_informe}" />
 
 		<p:outputLabel styleClass="especialstrong" value="Fecha Informe:" />
 		<p:outputLabel
-			value="#{consultaCalRenTipoSustBean.calren.numero_informe}" />
+			value="#{consultaCalRenTipoSustBean.calRen.numero_informe}" />
 
 		<p:outputLabel styleClass="especialstrong" value="Fecha Nota de Pago:" />
 		<p:outputLabel
-			value="#{consultaCalRenTipoSustBean.calren.fecha_notapago}" />
+			value="#{consultaCalRenTipoSustBean.calRen.fecha_notapago}" />
 
 		<p:outputLabel styleClass="especialstrong" value="Factura:" />
-		<p:outputLabel value="#{consultaCalRenTipoSustBean.calren.factura}" />
+		<p:outputLabel value="#{consultaCalRenTipoSustBean.calRen.factura}" />
 
 		<p:outputLabel styleClass="especialstrong" value="Fecha de pago:" />
-		<p:outputLabel value="#{consultaCalRenTipoSustBean.calren.fecha_pago}" />
+		<p:outputLabel value="#{consultaCalRenTipoSustBean.calRen.fecha_pago}" />
 	</p:panelGrid>
 </p:fieldset>
 <p:panel id="menReq" style="width:100%">

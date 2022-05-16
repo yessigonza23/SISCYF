@@ -79,14 +79,14 @@ public class ConsultaCalRenTipoSustBean implements Serializable {
 	private List<TipoCambio> listaTipoCambio = new ArrayList<>();
 	private List<CalrenSustanciasActividades> listaSustanciasActividades = new ArrayList<>();
 
-	private CalificacionesRenovaciones calren = new CalificacionesRenovaciones();
+	private CalificacionesRenovaciones calRen = new CalificacionesRenovaciones();
 	private Empresa empresa = new Empresa();
 	private CalrenSustancias calrenSustancias = new CalrenSustancias();
 	private CalrenActividadesCalificacion calrenActividadesCalificacion = new CalrenActividadesCalificacion();
 	private CalrenTipoSustancia calrenTipoSustancia = new CalrenTipoSustancia();
 	private CalrenSustanciasActividades calrenSustanciasActividades = new CalrenSustanciasActividades();
 
-	Integer categoria = 0;
+	Integer categoria;
 	Double valorKilos;
 	String mensajeReqRT;
 
@@ -113,28 +113,25 @@ public class ConsultaCalRenTipoSustBean implements Serializable {
 	public CalificacionesRenovaciones cargarDatos() {		
 		calrenS = (String) FacesContext.getCurrentInstance().getExternalContext().getFlash().get("calren");
 		calrenId = Integer.parseInt(calrenS);
-		System.out.println("calrenS codigo de parametro " + calrenS);
-
 		if (calrenId != null) {
-			calren = serviceCalRen.calrenPorId(calrenId);
-			System.out.println("calren " + calren);
-			empresa = serviceEmpresa.listarEmpresaPorId(calren.getEmpresa().getId());
-			cargarListaActividades(calren.getId());
-			cargarListaTipoSustancia(calren.getId());
+			calRen = serviceCalRen.calrenPorId(calrenId);			
+			empresa = serviceEmpresa.listarEmpresaPorId(calRen.getEmpresa().getId());
+			cargarListaActividades(calRen.getId());
+			cargarListaTipoSustancia(calRen.getId());
 		} else {
-			System.out.println("entra anull");
-			calren = null;
+			
+			calRen = null;
 		}
 
-		return calren;
+		return calRen;
 	}
 
 	//// Grabar observaciones para informe de calificacion
-	public Integer operar(CalificacionesRenovaciones calren) {
+	public Integer operar(CalificacionesRenovaciones calrenovaciones) {
 		try {
-			if (calren != null && calren.getAprobado().equals("N")) {
-				calren.setObservacion(calren.getObservacion());
-				this.serviceCalRen.modificar(calren);
+			if (calrenovaciones != null && calrenovaciones.getAprobado().equals("N")) {
+				calrenovaciones.setObservacion(calrenovaciones.getObservacion());
+				this.serviceCalRen.modificar(calrenovaciones);
 				FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO,
 						"Se ha grabado la observación", "Actualización Realizada"));
 			} else {
@@ -165,16 +162,16 @@ public class ConsultaCalRenTipoSustBean implements Serializable {
 	//////////////////////////////////////// TIPO DE SUSTANCIA
 	public void cargarListaTipoSustancia(Integer id_calren) {
 		if (id_calren != null) {
-			System.out.println("entra a cargar lista de tipo de sustancias");
+			;
 			this.listaCalrenTipoSustancia = serviceCalrenTipoSustancia.listaCalrenTipoSustancias(id_calren);
-			System.out.println("listaCalrenTipoSustancia :" + listaCalrenTipoSustancia);
+			
 			if (listaCalrenTipoSustancia != null && !listaCalrenTipoSustancia.isEmpty()) {
 				
 				calrenTipoSustancia = listaCalrenTipoSustancia.get(0);
-				System.out.println("calrenTipoSust: " + calrenTipoSustancia);
+				
 				if (calrenTipoSustancia != null) {
-					cargarListaSustancias(calren.getId(), calrenTipoSustancia.getTipoSustancia().getId());
-					requiereRT(calren.getId());
+					cargarListaSustancias(calRen.getId(), calrenTipoSustancia.getTipoSustancia().getId());
+					requiereRT(calRen.getId());
 				}
 			}
 		} else {
@@ -206,17 +203,17 @@ public class ConsultaCalRenTipoSustBean implements Serializable {
 	public Integer operarSustancias(CalrenSustancias calrenSus) {
 		try {
 			if (calrenSus != null) {
-				calren = serviceCalRen.calrenPorId(calrenSus.getCalificacionesRenovaciones().getId());
-				if (calren.getAprobado().equals("N")) {
+				calRen = serviceCalRen.calrenPorId(calrenSus.getCalificacionesRenovaciones().getId());
+				if (calRen.getAprobado().equals("N")) {
 					calrenSus.setEstado(calrenSustancias.getEstado());
 					calrenSus.setTipoCambio(calrenSustancias.getTipoCambio());
 					calrenSus.setCupo_asignado(calrenSustancias.getCupo_asignado());
 					calrenSus.setPresentacion(calrenSustancias.getPresentacion());
 					this.serviceSustancias.modificar(calrenSus);
-//					actualizaCalren(calrenSus.getCalificacionesRenovaciones().getId());
+					actualizaCalren(calrenSus.getCalificacionesRenovaciones().getId());
 					FacesContext.getCurrentInstance().addMessage(null,
 							new FacesMessage(FacesMessage.SEVERITY_INFO, "Cambio Exitoso", "Actualización completa"));
-				} else if (calren.getAprobado().equals("S")) {
+				} else if (calRen.getAprobado().equals("S")) {
 					calrenSus.setEstado(calrenSustancias.getEstado());
 					calrenSus.setTipoCambio(calrenSustancias.getTipoCambio());
 					this.serviceSustancias.modificar(calrenSus);
@@ -231,16 +228,16 @@ public class ConsultaCalRenTipoSustBean implements Serializable {
 		return 1;
 	}
 
-//	public void actualizaCalren(Integer calren) throws Exception {
-//		if (calren != null) {
-//			valorKilos = serviceCalculos.ValorKilosEntidad(calren);
-//			valorKilos = Conversiones.formatearDecimales(valorKilos, 4);
-//			categoria = serviceCalculos.ValorCategoria(valorKilos);
-//			calren.setCategoria_actual(categoria);
-//			calren.setCupo_kg_actual(valorKilos);
-//			this.serviceCalRen.modificar(calificacionesRenovaciones);
-//		}
-//	}
+	public void actualizaCalren(Integer calren) throws Exception {
+		if (calren != null) {
+			valorKilos = serviceCalculos.ValorKilosEntidad(calren);
+			valorKilos = Conversiones.formatearDecimales(valorKilos, 4);
+			categoria = serviceCalculos.ValorCategoria(valorKilos);
+			calRen.setCategoria_actual(categoria);
+			calRen.setCupo_kg_actual(valorKilos);
+			this.serviceCalRen.modificar(calRen);
+		}
+	}
 
 	// LISTAR ACTIVIDADES POR SUSTANCIAS
 	public void cargarListaSustanciasActividades(Integer id_calrensustancias) throws Exception {
@@ -271,7 +268,7 @@ public class ConsultaCalRenTipoSustBean implements Serializable {
 	}
 
 	public String requiereRT(Integer id_calren) {
-		if (calren != null) {
+		if (id_calren != null) {
 			valorKilos = serviceCalculos.ValorKilosEntidad(id_calren);
 			valorKilos = Conversiones.formatearDecimales(valorKilos, 4);
 			categoria = serviceCalculos.ValorCategoria(valorKilos);
@@ -293,8 +290,8 @@ public class ConsultaCalRenTipoSustBean implements Serializable {
 	
 	/// Ir a Calificaciones
 	public void irCalRen() {
-		if (calren.getEmpresa().getId()!=null) {
-			empresaS = String.valueOf(calren.getEmpresa().getId());
+		if (calRen.getEmpresa().getId()!=null) {
+			empresaS = String.valueOf(calRen.getEmpresa().getId());
 			final FacesContext context = FacesContext.getCurrentInstance();
 			final Flash flash = context.getExternalContext().getFlash();
 			flash.put("empresa", empresaS);
@@ -303,15 +300,26 @@ public class ConsultaCalRenTipoSustBean implements Serializable {
 		
 	}
 	
-	/// Ir a Calificaciones
+	/// Ir a Sitios
 	public void irSitios() {
-		if (calren.getId()!=null) {
-			calrenS = String.valueOf(calren.getId());
+		if (calRen.getId()!=null) {
+			calrenS = String.valueOf(calRen.getId());
 			final FacesContext context = FacesContext.getCurrentInstance();
 			final Flash flash = context.getExternalContext().getFlash();
 			flash.put("calren", calrenS);
 			Utilitario.irAPagina("/pg/cal/calrensitioscal");
 		}
 	}
+	
+	/// Ir a Formularios actividades
+		public void irFormularios() {
+			if (calRen.getId()!=null) {
+				calrenS = String.valueOf(calRen.getId());
+				final FacesContext context = FacesContext.getCurrentInstance();
+				final Flash flash = context.getExternalContext().getFlash();
+				flash.put("calren", calrenS);
+				Utilitario.irAPagina("/pg/cal/calrenformulariosactcal");
+			}
+		}
 
 }

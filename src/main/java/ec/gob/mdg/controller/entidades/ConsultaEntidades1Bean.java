@@ -54,7 +54,7 @@ import lombok.Data;
 @Data
 @Named
 @ViewScoped
-public class ConsultaEntidadesBean implements Serializable {
+public class ConsultaEntidades1Bean implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
@@ -369,10 +369,10 @@ public class ConsultaEntidadesBean implements Serializable {
 			if (calrenSus != null) {
 				calren = serviceCalRen.calrenPorId(calrenSus.getCalificacionesRenovaciones().getId());
 				if (calren.getAprobado().equals("N")) {
-					calrenSus.setEstado(calrenSustancias.getEstado());
-					calrenSus.setTipoCambio(calrenSustancias.getTipoCambio());
+//					calrenSus.setEstado(calrenSustancias.getEstado());
+//					calrenSus.setTipoCambio(calrenSustancias.getTipoCambio());
 					calrenSus.setCupo_asignado(calrenSustancias.getCupo_asignado());
-					calrenSus.setPresentacion(calrenSustancias.getPresentacion());
+//					calrenSus.setPresentacion(calrenSustancias.getPresentacion());
 					this.serviceSustancias.modificar(calrenSus);
 					actualizaCalren(calrenSus.getCalificacionesRenovaciones().getId());
 					FacesContext.getCurrentInstance().addMessage(null,

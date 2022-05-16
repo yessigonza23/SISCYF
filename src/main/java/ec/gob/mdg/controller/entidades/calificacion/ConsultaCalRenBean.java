@@ -119,12 +119,11 @@ public class ConsultaCalRenBean implements Serializable {
 ////Selecciona Calificaciones renovaciones
 
 	public void onRowSelect(SelectEvent event) {
-		System.out.println("selecciona fila " + ((CalificacionesRenovaciones) event.getObject()).getId());
 		cargarSustancias(((CalificacionesRenovaciones) event.getObject()).getId());
 	}
 
 	public void onRowUnselect(UnselectEvent event) {
-		System.out.println("deselecciona fila " + ((CalificacionesRenovaciones) event.getObject()).getId());
+		
 		cargarSustancias(((CalificacionesRenovaciones) event.getObject()).getId());
 	}
 

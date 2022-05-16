@@ -1,0 +1,243 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+<p:fieldset legend="Información General de Sitios" tyle="width:70%"
+	rendered="#{consultaCalRenSitiosBean.render}">
+	<p:panelGrid id="pg_sitios" columns="8"
+		style="text-align: left;width:100%">
+		<p:column></p:column>
+		<p:column></p:column>
+		<p:column></p:column>
+		<p:column></p:column>
+		<p:column></p:column>
+		<p:column></p:column>
+		<p:column></p:column>
+		<p:commandButton id="btnEncerar" value="Limpiar"
+			icon="ui-icon-circle-arrow-w"
+			actionListener="#{consultaCalRenSitiosBean.limpiar()}"
+			update=":frm:dt_sitio,:frm:pn_sitios_sistemas,:frm:pn_sitios_detalle" />
+
+
+		<p:outputLabel styleClass="especialstrong" value="Coordinación:"/>
+		<p:outputLabel
+			value="#{consultaCalRenSitiosBean.sitios.parroquia.canton.provincia.coordinacion.nombre}"/>
+
+		<p:outputLabel styleClass="especialstrong" value="Provincia:"/>
+		<p:outputLabel
+			value="#{consultaCalRenSitiosBean.sitios.parroquia.canton.provincia.nombre}"/>
+
+		<p:outputLabel styleClass="especialstrong" value="Cantón:"/>
+		<p:outputLabel
+			value="#{consultaCalRenSitiosBean.sitios.parroquia.canton.nombre}"/>
+
+		<p:outputLabel styleClass="especialstrong" value="Parroquia:"/>
+		<p:outputLabel
+			value="#{consultaCalRenSitiosBean.sitios.parroquia.nombre}"/>
+
+		<p:outputLabel styleClass="especialstrong" value="Calle:"/>
+		<p:outputLabel value="#{consultaCalRenSitiosBean.sitios.calle}"/>
+
+		<p:outputLabel styleClass="especialstrong" value="Número:"/>
+		<p:outputLabel value="#{consultaCalRenSitiosBean.sitios.numero}"/>
+
+		<p:outputLabel styleClass="especialstrong" value="Referencia:"/>
+		<p:outputLabel value="#{consultaCalRenSitiosBean.sitios.interseccion}"/>
+
+		<p:outputLabel styleClass="especialstrong" value="Longitud:"/>
+		<p:outputLabel value="#{consultaCalRenSitiosBean.sitios.longitud}"/>
+
+		<p:outputLabel styleClass="especialstrong" value="Latitud:"/>
+		<p:outputLabel value="#{consultaCalRenSitiosBean.sitios.latitud}"/>
+
+		<p:outputLabel styleClass="especialstrong" value="Instalaciones:"/>
+		<p:outputLabel value="#{consultaCalRenSitiosBean.sitios.instalacion}"/>
+
+		<p:outputLabel styleClass="especialstrong" value="Telefono:"/>
+		<p:outputLabel value="#{consultaCalRenSitiosBean.sitios.telefono}"/>
+
+		<p:outputLabel styleClass="especialstrong" value="Oficina:"/>
+		<p:selectBooleanCheckbox
+			value="#{consultaCalRenSitiosBean.sitios.oficina}"/>
+
+		<p:outputLabel styleClass="especialstrong" value="Bodega:"/>
+		<p:selectBooleanCheckbox
+			value="#{consultaCalRenSitiosBean.sitios.bodega}"/>
+
+		<p:outputLabel styleClass="especialstrong" value="Bodeguero"/>
+		<p:outputLabel
+			value="#{consultaCalRenSitiosBean.sitios.representantes.nombre}" />
+
+		<p:outputLabel styleClass="especialstrong" value="Planta"/>
+		<p:selectBooleanCheckbox
+			value="#{consultaCalRenSitiosBean.sitios.planta}"/>
+
+		<p:outputLabel styleClass="especialstrong" value="Sucursal:"/>
+		<p:selectBooleanCheckbox
+			value="#{consultaCalRenSitiosBean.sitios.sucursal}"/>
+
+		<p:outputLabel styleClass="especialstrong" value="Actividad:"/>
+		<p:selectBooleanCheckbox
+			value="#{consultaCalRenSitiosBean.sitios.mayor_actividad}"/>
+
+	</p:panelGrid>
+</p:fieldset>
+<p:separator></p:separator>
+<p:fieldset legend="Control de Ingresos del Sitio" tyle="width:70%"
+	rendered="#{consultaCalRenSitiosBean.render}">
+	<p:panelGrid id="pg_sitios_det" columns="10"
+		style="text-align: left;width:100%">
+
+		<p:outputLabel styleClass="especialstrong"
+			value="Control ingreso manual:"/>
+		<p:selectBooleanCheckbox
+			value="#{consultaCalRenSitiosBean.sitios.control_ingreso_manual}"/>
+
+		<p:outputLabel styleClass="especialstrong"
+			value="Control ingreso computarizado"/>
+		<p:selectBooleanCheckbox
+			value="#{consultaCalRenSitiosBean.sitios.control_ingreso_computarizado}"/>
+
+		<p:outputLabel styleClass="especialstrong" value="Kardex:"/>
+		<p:selectBooleanCheckbox
+			value="#{consultaCalRenSitiosBean.sitios.kardex}"/>
+
+		<p:outputLabel styleClass="especialstrong" value="Bitacora:"/>
+		<p:selectBooleanCheckbox
+			value="#{consultaCalRenSitiosBean.sitios.bitacora}"/>
+
+		<p:outputLabel styleClass="especialstrong" value="Otros:"/>
+		<p:selectBooleanCheckbox
+			value="#{consultaCalRenSitiosBean.sitios.otros}"/>
+	</p:panelGrid>
+	
+	<p:panelGrid id="pg_sitios_det_ci" columns="1"
+		style="text-align: left;width:100%">
+		<p:outputLabel styleClass="especialstrong"
+			value="Descripción de otros:"/>
+		<p:outputLabel
+			value="#{consultaCalRenSitiosBean.sitios.otros_descripcion}"/>
+	</p:panelGrid>
+</p:fieldset>
+
+<p:separator rendered="#{consultaCalRenSitiosBean.render}"></p:separator>
+
+<!-- 		SEGURIDAD FISICA E INTEGRAL -->
+<p:fieldset legend="Seguridad Física e Industrial" tyle="width:70%"
+	rendered="#{consultaCalRenSitiosBean.render}">
+	<p:panelGrid id="pg_sitios_seg_cerra" columns="8"
+		style="text-align: left;width:100%"
+		rendered="#{consultaCalRenSitiosBean.render}">
+		<p:outputLabel styleClass="especialstrong" value="Cerramiento"/>
+		<p:selectBooleanCheckbox
+			value="#{consultaCalRenSitiosBean.sitios.cerramiento}"/>
+	</p:panelGrid>
+
+	<p:panelGrid id="pg_sitios_seg" columns="10"
+		rendered="#{consultaCalRenSitiosBean.render}"
+		style="text-align: left;width:100%">
+		<p:outputLabel styleClass="especialstrong" value="Cerca eléctrica:"/>
+		<p:selectBooleanCheckbox
+			value="#{consultaCalRenSitiosBean.sitios.cerca_electrica}"/>
+
+		<p:outputLabel styleClass="especialstrong" value="Guardiania:"/>
+		<p:selectBooleanCheckbox
+			value="#{consultaCalRenSitiosBean.sitios.guardiania}"/>
+
+		<p:outputLabel styleClass="especialstrong" value="Alarmas"/>
+		<p:selectBooleanCheckbox
+			value="#{consultaCalRenSitiosBean.sitios.alarmas}"/>
+
+		<p:outputLabel styleClass="especialstrong"
+			value="Sensores de movimiento"/>
+		<p:selectBooleanCheckbox
+			value="#{consultaCalRenSitiosBean.sitios.sensores_movimiento}"/>
+
+		<p:outputLabel styleClass="especialstrong" value="Circuito cerrado"/>
+		<p:selectBooleanCheckbox
+			value="#{consultaCalRenSitiosBean.sitios.circuito_cerrado}"/>
+	</p:panelGrid>
+
+	<p:panelGrid id="pg_sitios_seg_ind" columns="8"
+		rendered="#{consultaCalRenSitiosBean.render}"
+		style="text-align: left;width:100%">
+
+		<p:outputLabel styleClass="especialstrong" value="Hojas de seguridad"/>
+		<p:selectBooleanCheckbox
+			value="#{consultaCalRenSitiosBean.sitios.hojas_seguridad}"/>
+
+		<p:outputLabel styleClass="especialstrong" value="Kit de derrames:"/>
+		<p:selectBooleanCheckbox
+			value="#{consultaCalRenSitiosBean.sitios.kit_derrames}"/>
+
+		<p:outputLabel styleClass="especialstrong"
+			value="Equipos de protección"/>
+		<p:selectBooleanCheckbox
+			value="#{consultaCalRenSitiosBean.sitios.equipos_proteccion}"/>
+
+		<p:outputLabel styleClass="especialstrong"
+			value="Sistema contra incendios:"/>
+		<p:selectBooleanCheckbox
+			value="#{consultaCalRenSitiosBean.sitios.sistema_contra_incendios}"/>
+
+		<p:outputLabel styleClass="especialstrong"
+			value="Ducha de emergencia:"/>
+		<p:selectBooleanCheckbox
+			value="#{consultaCalRenSitiosBean.sitios.ducha_emergencia}"/>
+
+		<p:outputLabel styleClass="especialstrong" value="Lavatorio de ojos"/>
+		<p:selectBooleanCheckbox
+			value="#{consultaCalRenSitiosBean.sitios.lavatorio_ojos}"/>
+	</p:panelGrid>
+
+	<p:panelGrid id="pg_sitios_seg_ind_plan" columns="8"
+		rendered="#{consultaCalRenSitiosBean.render}"
+		style="text-align: left;width:100%">
+
+		<p:outputLabel styleClass="especialstrong"
+			value="Plan de contingencia" />
+		<p:selectBooleanCheckbox
+			value="#{consultaCalRenSitiosBean.sitios.plan_contigencia}"/>
+
+		<p:outputLabel styleClass="especialstrong"
+			value="Diques de contención"/>
+		<p:selectBooleanCheckbox
+			value="#{consultaCalRenSitiosBean.sitios.dique_contencion}"/>
+
+	</p:panelGrid>
+
+	<p:panelGrid id="pg_sitios_seg_ind_per" columns="8"
+		rendered="#{consultaCalRenSitiosBean.render}"
+		style="text-align: left;width:100%">
+
+		<p:outputLabel styleClass="especialstrong"
+			value="Permiso de bomberos:"/>
+		<p:selectBooleanCheckbox
+			value="#{consultaCalRenSitiosBean.sitios.permiso_bomberos}"/>
+
+		<p:outputLabel styleClass="especialstrong"
+			value="NO. permiso de bomberos:"/>
+		<p:outputLabel
+			value="#{consultaCalRenSitiosBean.sitios.num_permiso_bomberos}"/>
+
+		<p:outputLabel styleClass="especialstrong"
+			value="Vigencia permiso de bomberos:"/>
+		<p:outputLabel
+			value="#{consultaCalRenSitiosBean.sitios.vigencia_permiso_bomberos}"/>
+
+		<p:commandButton value="Ver" ajax="false"
+			actionListener="#{consultaCalRenSitiosBean.verPDF(consultaCalRenSitiosBean.sitios.ruta_archivo)}"
+			target="_blank">
+		</p:commandButton>
+
+		<p:commandButton value="VerSeg" ajax="false"
+			actionListener="#{consultaCalRenSitiosBean.verPDF(consultaCalRenSitiosBean.sitios.ruta_archivo_seguridad)}"
+			target="_blank">
+		</p:commandButton>
+	</p:panelGrid>
+</p:fieldset>
+
+</html>

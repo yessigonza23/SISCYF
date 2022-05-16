@@ -23,8 +23,6 @@ public class NavegarVistasBean implements Serializable {
 
 	public void principal() {
 		try {
-
-//			FacesContext.getCurrentInstance().getExternalContext().redirect("./../principal.xhtml");
 			Utilitario.irAPagina("/pg/adm/principal.xhtml");
 		} catch (Exception e) {
 			System.out.println("FALLO LA REDIRECCION A UN NUEVO FORMULARIO");
@@ -34,8 +32,7 @@ public class NavegarVistasBean implements Serializable {
 
 	public void principalConsultaEmpresas() {
 		try {
-
-			Utilitario.irAPagina("/pg/ent/consulta.xhtml");
+			Utilitario.irAPagina("/pg/cal/entconsultacal.xhtml");
 		} catch (Exception e) {
 			System.out.println("FALLO LA REDIRECCION A UN NUEVO FORMULARIO");
 			e.printStackTrace();
@@ -47,7 +44,6 @@ public class NavegarVistasBean implements Serializable {
 
 	public void index() {
 		try {
-
 			FacesContext.getCurrentInstance().getExternalContext().redirect("./../index.xhtml");
 		} catch (Exception e) {
 			System.out.println("FALLO LA REDIRECCION A UN NUEVO FORMULARIO");
@@ -92,8 +88,6 @@ public class NavegarVistasBean implements Serializable {
 	// CONSULTAR
 	public void usuariopuntoconsulta(String id) {
 		try {
-
-//				System.out.println("ID NAVEGAR CONSULTAR " + id);
 			FacesContext.getCurrentInstance().getExternalContext().getFlash().put("param", id);
 			FacesContext.getCurrentInstance().getExternalContext()
 					.redirect("./../pg/adm/usuariopuntoconsulta.xhtml");

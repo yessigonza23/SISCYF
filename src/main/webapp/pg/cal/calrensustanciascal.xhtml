@@ -7,15 +7,20 @@
 
 
 <p:dataTable id="dt_sus" var="e"
-	value="#{consultaCalRenTipoSustBean.listaSustancias}" selectionMode="single"
-	selection="#{consultaCalRenTipoSustBean.calrenSustancias}" rowKey="#{e.id}"
-	editable="true">
+	value="#{consultaCalRenTipoSustBean.listaSustancias}"
+	selectionMode="single"
+	selection="#{consultaCalRenTipoSustBean.calrenSustancias}"
+	rowKey="#{e.id}" editable="true">
 	<p:column style="width:10px" headerText="Editar">
 		<p:rowEditor />
 	</p:column>
 	<p:ajax event="rowEdit"
 		listener="#{consultaCalRenTipoSustBean.operarSustancias(e)}"
 		update=":frm_calren:dt_sus" />
+
+	<f:facet name="header">
+		<h:outputText value="SUSTANCIAS" />
+	</f:facet>
 
 	<p:column headerText="Sustancia" style="width:100px">
 		<p:outputLabel value="#{e.sustancias.nombre}" />
@@ -26,39 +31,31 @@
 	<p:column headerText="Cupo Solicitado" style="width:40px">
 		<p:outputLabel value="#{e.cupo_solicitado}" />
 	</p:column>
-	<p:column headerText="Cupo Asignado" style="width:40px">
+	<p:column headerText="Cupo Asignado" style="width:50px">
 		<p:cellEditor>
 			<f:facet name="output">
-				<h:outputText value="#{e.cupo_asignado}" style="width:40px" />
+				<h:outputText value="#{e.cupo_asignado}" style="width:80px" />
 			</f:facet>
 
 			<f:facet name="input">
-				<h:inputText value="#{e.cupo_asignado}" size="50" style="width:39px" />
+				<h:inputText value="#{e.cupo_asignado}" size="50" style="width:80px" />
 			</f:facet>
 		</p:cellEditor>
 	</p:column>
-		<p:column headerText="Presentación" style="width:40px">
+	<p:column headerText="Presentación" style="width:40px">
 		<p:outputLabel value="#{e.presentacion.nombre}" />
 	</p:column>
-		<p:column headerText="Tipo de Cambio" style="width:40px">
-		<p:outputLabel value="#{e.tipoCambio}" />
+	<p:column headerText="Tipo de Cambio" style="width:40px">
+		<p:outputLabel value="#{e.tipoCambio.nombre}" />
 	</p:column>
 	<p:column headerText="Activo" style="width:10px">
-		<p:cellEditor>
-			<f:facet name="output">
-				<p:selectBooleanCheckbox value="#{e.estado}" />
-			</f:facet>
-
-			<f:facet name="input">
-				<p:selectBooleanCheckbox value="#{e.estado}" />
-			</f:facet>
-		</p:cellEditor>
+		<p:selectBooleanCheckbox value="#{e.estado}" disabled="true" />
 	</p:column>
 	<p:column headerText="Acción" style="width:50px">
 		<p:commandButton value="Actividades" id="btnActividades"
 			actionListener="#{consultaCalRenTipoSustBean.cargarListaSustanciasActividades(e.id)}"
-			process="@this" oncomplete="PF('wdgact').show();" update=":frm_calren:dialogoAct"
-			icon="ui-icon-tasks">
+			process="@this" oncomplete="PF('wdgact').show();"
+			update=":frm_calren:dialogoAct" icon="ui-icon-tasks">
 			<p:ajax event="click"
 				listener="#{consultaCalRenTipoSustBean.cargarListaSustanciasActividades(e.id)}" />
 		</p:commandButton>
@@ -66,9 +63,9 @@
 </p:dataTable>
 
 <!-- DIALOGO PARA ACTIVIDADES POR SUSTANCAI -->
-<p:dialog id="dialogoAct" widgetVar="wdgact" resizable="false" responsive="true"
-	width="300" draggable="false" modal="true" position="center center"
-	closeOnEscape="true">
+<p:dialog id="dialogoAct" widgetVar="wdgact" resizable="false"
+	responsive="true" width="300" draggable="false" modal="true"
+	position="center center" closeOnEscape="true">
 	<h2 style="color: #003778; text-align: center">Actividades por
 		sustancia</h2>
 

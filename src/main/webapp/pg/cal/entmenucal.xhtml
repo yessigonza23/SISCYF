@@ -5,19 +5,19 @@
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:f="http://xmlns.jcp.org/jsf/core">
 
-<p:panelGrid id="pg_opciones" style="text-align: left" columns="1">
+<p:panelGrid id="pg_opciones" style="text-align: left;width:100%" columns="1">
 
 	<p:commandButton value="Calificación/Renovación" ajax="false"
-		icon="fa fa-fw fa-building"
+		icon="ui-icon-copy" 
 		action="#{consultaEntidadesCalBean.irCalRen()}">
 	</p:commandButton>
 	<p:commandButton value="Representantes" ajax="false"
-		icon="fa fa-fw fa-group"
-		action="#{consultaEntidadesCalBean.irRepresentantes()}">		
+		icon="ui-icon-contact"	 style="width:185px;"
+		action="#{consultaEntidadesCalBean.irRepresentantes()}">			
 	</p:commandButton>
 	<br />
 	<p:commandButton id="btnRegresar" value="Regresar"
-		icon="fa fa-fw fa-hand-o-left"
+		icon="ui-icon-circle-arrow-w" style="width:185px;"
 		action="#{navegarVistasBean.principalConsultaEmpresas()}" />
 </p:panelGrid>
 </html>

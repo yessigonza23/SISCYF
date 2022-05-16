@@ -1,0 +1,63 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui">
+
+<h:body>
+	<ui:composition template="/WEB-INF/templates/master.xhtml">
+		<ui:define name="content">
+			<h:form id="frm">
+				<h3 style="color: #003778; text-align: center">
+					#{consultaCalRenSitiosBean.empresa.nombre}</h3>
+				<p:growl id="mensaje" autoUpdate="false" showSummary="false"
+					showDetail="true" />
+				<p:panelGrid columns="2" columnClasses="topAligned">
+					<p:panel id="pn_formularios"
+						style="width:100%;height:1000px;position:relativo">
+						<p:dataTable id="dt_formulario" var="e" styleClass="centered"
+							value="#{consultaCalRenFormulariosCalBean.listaCalRenActCal}"
+							selectionMode="single"
+							selection="#{consultaCalRenFormulariosCalBean.calRenActCal}"
+							rowKey="#{e.id}" rowIndexVar="index">
+
+							<p:ajax event="rowSelect"
+								listener="#{consultaCalRenFormulariosCalBean.onRowSelect}"/>
+							<p:ajax event="rowUnselect"
+								listener="#{consultaCalRenFormulariosCalBean.onRowUnselect}"/>
+
+							<f:facet name="header">
+								<h:outputText value="ACTIVIDADES OBJETO DE LA CALIFICACIÓN"/>
+							</f:facet>
+							<p:column headerText="Actividad" style="width:80px">
+								<p:outputLabel value="#{e.actividadCalificacion.nombre}">
+								</p:outputLabel>
+							</p:column>
+							<p:column headerText="Formulario" style="width:80px">
+								<p:outputLabel
+									value="#{e.actividadCalificacion.nombre_formulario}">
+								</p:outputLabel>
+							</p:column>
+							<p:column headerText="Definición" style="width:80px">
+								<p:outputLabel value="#{e.actividadCalificacion.definicion}">
+								</p:outputLabel>
+							</p:column>
+						</p:dataTable>
+					</p:panel>
+					<p:panel id="pn_opc_form"
+						style="width:100%;height:1000px;position:relative;">
+						<p:commandButton id="btnRegresar" value="Regresar"
+							style="width:120px" icon="ui-icon-circle-arrow-w"
+							actionListener="#{consultaCalRenFormulariosCalBean.cargarSustancias()}" />
+					</p:panel>
+				</p:panelGrid>
+			</h:form>
+			<!-- Script de estilos para el contenido fel formulario-->
+			<h:outputStylesheet library="css" name="buscar.css" />
+			<h:outputStylesheet library="css" name="registroUsuario.css" />
+		</ui:define>
+
+	</ui:composition>
+</h:body>
+</html>

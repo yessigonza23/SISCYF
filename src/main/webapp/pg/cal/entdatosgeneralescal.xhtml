@@ -7,6 +7,7 @@
 
 <p:panelGrid id="pg_datosnombres" style="text-align: left;width:100%"
 	columns="2" rendered="#{consultaEntidadesCalBean.render}">
+
 	<p:outputLabel styleClass="especialstrong" value="Nombre comercial:" />
 	<p:outputLabel
 		value="#{consultaEntidadesCalBean.empresa.nombre_comercial}" />
@@ -189,7 +190,7 @@
 	<!-- INFORMACIÓN GENERAL -->
 
 	<p:panelGrid id="emp_det" style="text-align: center" columns="4"
-		rendered="#{consultaEntidadesBean.render}">
+		rendered="#{consultaEntidadesCalBean.render}">
 
 	</p:panelGrid>
 </p:panel>

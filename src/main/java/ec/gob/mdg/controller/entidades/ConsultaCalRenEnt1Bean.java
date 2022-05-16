@@ -11,12 +11,10 @@ import javax.faces.view.ViewScoped;
 import javax.inject.Inject;
 import javax.inject.Named;
 
-import org.primefaces.event.RowEditEvent;
 import org.primefaces.event.SelectEvent;
 import org.primefaces.event.UnselectEvent;
 
 import ec.gob.mdg.control.ejb.modelo.CalificacionesRenovaciones;
-import ec.gob.mdg.control.ejb.modelo.CalrenActividadesCalificacion;
 import ec.gob.mdg.control.ejb.modelo.Empresa;
 import ec.gob.mdg.control.ejb.service.ICalificacionesRenovacionesService;
 import ec.gob.mdg.control.ejb.service.IEmpresaService;
@@ -25,7 +23,7 @@ import lombok.Data;
 @Data
 @Named
 @ViewScoped
-public class ConsultaCalRenEntBean implements Serializable {
+public class ConsultaCalRenEnt1Bean implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 

@@ -21,7 +21,7 @@ import lombok.Data;
 @Data
 @Named
 @ViewScoped
-public class ConsultaRepresentantesBean implements Serializable {
+public class ConsultaRepresentantes1Bean implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 

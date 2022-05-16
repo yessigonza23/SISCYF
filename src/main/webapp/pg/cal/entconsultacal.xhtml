@@ -12,36 +12,30 @@
 			<h:form id="frm" enctype="multipart/form-data"
 				onkeypress="if (event.keyCode == 13) { return false; }">
 				<h3 style="color: #003778; text-align: center">CONSULTA DE
-					ENTIDADES - CALIFICACIÓN DE ENTIDADES</h3>
+					ENTIDADES - TRÁMITE DE CALIFICACIÓN DE ENTIDADES</h3>
 
 				<p:growl id="mensaje" autoUpdate="false" showSummary="false"
 					showDetail="true" />
 				<br />
 
 				<p:panel>
-					<p:panelGrid style="text-align: center" columns="4">
-						<p:commandButton id="btnRegresar" value="Principal"
-							icon="fa fa-fw fa-hand-o-left"
-							action="#{navegarVistasBean.principal()}" />
-					</p:panelGrid>
-					<p:separator></p:separator>
-
-					<p:panelGrid style="text-align: center" columns="4">
-						<p:column style="border-style: hidden; width:130px;">
-							<strong>Seleccione la Entidad:</strong>
-						</p:column>
-						<p:column style="border-style: hidden;">
-							<p:inputText id="txtEmp" size="60"
+					<p:panelGrid style="text-align: center;width:100%" columns="4">
+						<p:outputLabel styleClass="especialstrong"
+							value="Seleccione la Entidad:" />
+						<p:inputText id="txtEmp" size="60"
 								style="text-transform: uppercase ;float:left"
 								value="#{consultaCalBean.nombre_emp}" />
-						</p:column>
+
 
 						<p:commandButton id="btnConsultar" value="Consultar"
-							icon="fa fa-fw fa-search"
+							icon="ui-icon-search"
 							actionListener="#{consultaCalBean.consultarListaEmpresas(consultaCalBean.nombre_emp)}"
 							process="@form" update=" @this, frm:dt">
 
 						</p:commandButton>
+						<p:commandButton id="btnRegresar" value="Principal"
+							icon="ui-icon-circle-arrow-w"
+							action="#{navegarVistasBean.principal()}" />
 					</p:panelGrid>
 					<p:panelGrid style="text-align: center" columns="4">
 						<p:dataTable id="dt" resizableColumns="true" var="e"
@@ -64,7 +58,7 @@
 							</p:column>
 							<p:column headerText="Acción" style="width:20px">
 								<p:commandButton id="btnDetalle" value="Detalle"
-									icon="fa fa-fw fa-hand-o-right"
+									icon="ui-icon-circle-arrow-e"
 									action="#{consultaCalBean.irDetalleEmpresa(e.id)}">
 								</p:commandButton>
 							</p:column>

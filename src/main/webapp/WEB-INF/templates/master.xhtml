@@ -13,13 +13,15 @@
 
 	<h:outputStylesheet library="css" name="estilos.css" />
 	<h:outputStylesheet library="css" name="color.css" />
+	<h:outputStylesheet library="css" name="icons.css" />
 	<h:outputScript library="js" name="utilitario.js" target="body" />
 	<h:outputScript library="js" name="excel.js" target="body" />
 	<h:outputScript library="js" name="xlsx.core.min.js" target="body" />
+
 </h:head>
 
 <h:body class="resolucion">
-	<div id="header">		
+	<div id="header">
 		<ui:insert name="header">
 			<p:idleMonitor timeout="666000">
 				<p:ajax event="idle" listener="#{masterBean.timeout()}"

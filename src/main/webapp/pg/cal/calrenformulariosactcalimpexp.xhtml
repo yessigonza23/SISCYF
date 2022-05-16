@@ -1,0 +1,110 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui">
+
+<h:body>
+	<ui:composition template="/WEB-INF/templates/master.xhtml">
+		<ui:define name="content">
+			<h:form id="frm">
+				<h3 style="color: #003778; text-align: center">
+					#{consultaCalRenFormulariosImpExpCalBean.empresa.nombre}</h3>
+				<p:growl id="mensaje" autoUpdate="false" showSummary="false"
+					showDetail="true" />
+				<p:panelGrid columns="2" columnClasses="topAligned" style="text-align: left;width:100%">
+					<p:panel id="pn_form_impexp"
+						style="width:100%;height:1000px;position:relativo">
+						<p:panelGrid columns="6" columnClasses="topAligned" style="text-align: left;width:100%">
+							<f:facet name="header">
+								<h:outputText value="INFORMACIÓN DE LA CALIFICACIÓN" />
+							</f:facet>
+							<p:outputLabel styleClass="especialstrong" value="Secuencia:" />
+							<p:outputLabel
+								value="#{consultaCalRenFormulariosImpExpCalBean.calRen.secuencia}" />
+
+							<p:outputLabel styleClass="especialstrong"
+								value="Fecha Renovación" />
+							<p:outputLabel
+								value="#{consultaCalRenFormulariosImpExpCalBean.calRen.fecha_renovacion}" />
+
+							<p:outputLabel styleClass="especialstrong"
+								value="Fecha Caducidad" />
+							<p:outputLabel
+								value="#{consultaCalRenFormulariosImpExpCalBean.calRen.fecha_caducidad}" />
+						</p:panelGrid>
+
+						<p:panelGrid columns="2" columnClasses="topAligned" style="text-align: left;width:100%">
+							<p:dataTable id="dt_formulario" var="e" styleClass="centered"
+								value="#{consultaCalRenFormulariosImpExpCalBean.listaCalRenSustanciasAct}"
+								selectionMode="single"
+								selection="#{consultaCalRenFormulariosImpExpCalBean.calrenSustanciasActividades}"
+								rowKey="#{e.id}" rowIndexVar="index">
+
+								<p:ajax event="rowSelect"
+									listener="#{consultaCalRenFormulariosImpExpCalBean.onRowSelect}" />
+								<p:ajax event="rowUnselect"
+									listener="#{consultaCalRenFormulariosImpExpCalBean.onRowUnselect}" />
+
+								<f:facet name="header">
+									<h:outputText
+										value="SUSTANCIAS PARA LA ACTIVIDAD DE IMPORTADOR/EXPORTADOR" />
+								</f:facet>
+
+								<p:column headerText="Sustancias" style="width:80px">
+									<p:outputLabel value="#{e.calrenSustancias.sustancias.nombre}">
+									</p:outputLabel>
+								</p:column>
+								<p:column headerText="Actividad Importador/Exportador" style="width:80px">
+									<p:outputLabel
+										value="#{e.actividad_imp_exp}">
+									</p:outputLabel>
+								</p:column>
+								<p:column headerText="Código Operador" style="width:80px">
+									<p:outputLabel
+										value="#{e.codigo_operador}">
+									</p:outputLabel>
+								</p:column>
+								<p:column headerText="Permiso Arcsa" style="width:80px">
+									<p:outputLabel
+										value="#{e.permiso_arcsa}">
+									</p:outputLabel>
+								</p:column>
+							</p:dataTable>
+
+						</p:panelGrid>
+
+						<p:dataTable id="dt_form" var="x" styleClass="centered"
+							value="#{consultaCalRenFormulariosImpExpCalBean.listaCalRenSusActPaisImpExp}">
+
+							<f:facet name="header">
+								<h:outputText value="PAISES POR SUSTANCIAS PARA LA ACTIVIDAD" />
+							</f:facet>
+							<p:column headerText="Pais" style="width:80px">
+								<p:outputLabel value="#{x.pais.nombre}">
+								</p:outputLabel>
+							</p:column>
+							<p:column headerText="Permiso de importación (Exportaciones)" style="width:80px">
+								<p:outputLabel value="#{x.exp_permiso_imporacion_pais}">
+								</p:outputLabel>
+							</p:column>
+						
+						</p:dataTable>
+					</p:panel>
+					<p:panel id="pn_opc_form_impexp"
+						style="width:100%;height:1000px;position:relative;">
+						<p:commandButton id="btnRegresar" value="Regresar"
+							style="width:120px" icon="ui-icon-circle-arrow-w"
+							 actionListener="#{consultaCalRenFormulariosImpExpCalBean.irFormularios()}"/>							 
+					</p:panel>
+				</p:panelGrid>
+			</h:form>
+			<!-- Script de estilos para el contenido fel formulario-->
+			<h:outputStylesheet library="css" name="buscar.css" />
+			<h:outputStylesheet library="css" name="registroUsuario.css" />
+		</ui:define>
+
+	</ui:composition>
+</h:body>
+</html>

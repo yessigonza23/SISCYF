@@ -1,0 +1,135 @@
+package ec.gob.mdg.controller.entidades.calificacion;
+
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.annotation.PostConstruct;
+import javax.faces.application.FacesMessage;
+import javax.faces.context.FacesContext;
+import javax.faces.context.Flash;
+import javax.faces.view.ViewScoped;
+import javax.inject.Inject;
+import javax.inject.Named;
+
+import org.primefaces.event.SelectEvent;
+import org.primefaces.event.UnselectEvent;
+
+import ec.gob.mdg.control.ejb.dao.ICalrenSustanciasActividadesPaisImpExpDAO;
+import ec.gob.mdg.control.ejb.modelo.CalificacionesRenovaciones;
+import ec.gob.mdg.control.ejb.modelo.CalrenActividadesCalificacion;
+import ec.gob.mdg.control.ejb.modelo.CalrenSustancias;
+import ec.gob.mdg.control.ejb.modelo.CalrenSustanciasActividades;
+import ec.gob.mdg.control.ejb.modelo.CalrenSustanciasActividadesPaisImpExp;
+import ec.gob.mdg.control.ejb.modelo.Empresa;
+import ec.gob.mdg.control.ejb.service.ICalificacionesRenovacionesService;
+import ec.gob.mdg.control.ejb.service.ICalrenActividadesCalificacionService;
+import ec.gob.mdg.control.ejb.service.ICalrenSustanciasActividadesService;
+import ec.gob.mdg.control.ejb.service.IEmpresaService;
+import ec.gob.mdg.control.ejb.utils.Utilitario;
+import lombok.Data;
+
+@Data
+@Named
+@ViewScoped
+public class ConsultaCalRenFormulariosImpExpCalBean implements Serializable {
+
+	private static final long serialVersionUID = 1L;
+
+	@Inject
+	private IEmpresaService serviceEmpresa;
+
+	@Inject
+	private ICalificacionesRenovacionesService serviceCalRen;
+
+	@Inject
+	private ICalrenActividadesCalificacionService serviceCalRenActCal;
+
+	@Inject
+	private ICalrenSustanciasActividadesService serviceCalRenSusAct;
+
+	@Inject
+	private ICalrenSustanciasActividadesPaisImpExpDAO serviceCalRenSusActPaisImpExp;
+
+	private List<CalrenSustancias> listaCalRenSustancias = new ArrayList<>();
+	private List<CalrenSustanciasActividades> listaCalRenSustanciasAct = new ArrayList<>();
+	private List<CalrenSustanciasActividadesPaisImpExp> listaCalRenSusActPaisImpExp = new ArrayList<CalrenSustanciasActividadesPaisImpExp>();
+
+	private Empresa empresa = new Empresa();
+	private CalificacionesRenovaciones calRen = new CalificacionesRenovaciones();
+	private CalrenSustanciasActividades calrenSustanciasActividades = new CalrenSustanciasActividades();
+	private CalrenActividadesCalificacion calRenActCal = new CalrenActividadesCalificacion();
+	private CalrenSustanciasActividadesPaisImpExp calrenSusActPaisImpExp = new CalrenSustanciasActividadesPaisImpExp();
+
+	String calrenactS;
+	Integer calrenactId;
+	String abreviatura;
+	String calrenS;
+	Integer calrenaId;
+
+	@PostConstruct
+	public void init() {
+		try {
+			cargarDatos();
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+
+	public String getParam() {
+		return (String) FacesContext.getCurrentInstance().getExternalContext().getFlash().get("calrenact");
+	}
+
+	/// DATOS DE LA EMPRESA DATOS GENERALES PRIMERA PESTAÑA
+	public void cargarDatos() {
+		abreviatura = "I/E";
+		calrenactS = (String) FacesContext.getCurrentInstance().getExternalContext().getFlash().get("calrenact");
+		calrenactId = Integer.parseInt(calrenactS);
+		if (calrenactId != null) {
+			calRenActCal = serviceCalRenActCal.listaCalrenActividadesId(calrenactId);
+			if (calRenActCal != null) {
+				calRen = serviceCalRen.calrenPorId(calRenActCal.getCalificacionesRenovaciones().getId());
+				if (calRen != null) {
+					listaCalRenSustanciasAct = serviceCalRenSusAct.listaSustActiPorAbreviatura(calRen.getId(),
+							abreviatura);
+					empresa = serviceEmpresa.listarEmpresaPorId(calRen.getEmpresa().getId());
+					if (listaCalRenSustanciasAct != null && !listaCalRenSustanciasAct.isEmpty()) {
+						calrenSustanciasActividades = listaCalRenSustanciasAct.get(0);
+						if (calrenSustanciasActividades != null) {
+							cargarListaPaises(calrenSustanciasActividades.getId());
+						}
+					}
+				}
+			}
+
+		} else {
+			FacesContext.getCurrentInstance().addMessage(null,
+					new FacesMessage(FacesMessage.SEVERITY_ERROR, "No hay datos", "No puede continuar"));
+		}
+	}
+
+	public void cargarListaPaises(Integer id_CalRenSusAct) {
+		listaCalRenSusActPaisImpExp = serviceCalRenSusActPaisImpExp.listaCalrenActividadesImpExp(id_CalRenSusAct);
+	}
+
+	public void onRowSelect(SelectEvent event) {
+		cargarListaPaises(((CalrenSustanciasActividades) event.getObject()).getId());
+	}
+
+	public void onRowUnselect(UnselectEvent event) {
+		cargarListaPaises(((CalrenSustanciasActividades) event.getObject()).getId());
+	}
+
+	/// Ir a Formularios actividades
+	public void irFormularios() {
+		if (calRen.getId() != null) {
+			calrenS = String.valueOf(calRen.getId());
+			final FacesContext context = FacesContext.getCurrentInstance();
+			final Flash flash = context.getExternalContext().getFlash();
+			flash.put("calren", calrenS);
+			Utilitario.irAPagina("/pg/cal/calrenformulariosactcal");
+		}
+	}
+
+}

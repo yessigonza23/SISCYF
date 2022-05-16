@@ -10,14 +10,12 @@
 	showDetail="true" />
 
 <p:dataTable id="dt_pesaje" var="e"
-	value="#{consultaEntidadesBean.listaPesaje}"
-	rendered="#{consultaEntidadesBean.render_pe}">
+	value="#{consultaCalRenSitiosBean.listaPesaje}"
+	rendered="#{consultaCalRenSitiosBean.render_pe}">
 
 	<f:facet name="header">
 		<h:outputText value="SISTEMAS DE MEDICIÓN - PESAJE" />
 	</f:facet>
-
-
 
 	<p:column headerText="Marca Balanza" style="width:30px">
 		<p:outputLabel value="#{e.marca_balanza}" />
@@ -42,8 +40,8 @@
 	</p:column>
 </p:dataTable>
 <p:dataTable id="dt_medicion" var="e"
-	value="#{consultaEntidadesBean.listaMedicionVolumetrica}"
-	rendered="#{consultaEntidadesBean.render_mv}">
+	value="#{consultaCalRenSitiosBean.listaMedicionVolumetrica}"
+	rendered="#{consultaCalRenSitiosBean.render_mv}">
 
 	<f:facet name="header">
 		<h:outputText value="SISTEMAS DE MEDICIÓN - MEDICION VOLUMÉTRICA" />
@@ -63,17 +61,18 @@
 	</p:column>
 </p:dataTable>
 <p:dataTable id="dt_otros" var="e"
-	value="#{consultaEntidadesBean.listaOtrosInstrumentosMedicion}"
-	rendered="#{consultaEntidadesBean.render_oi}">
+	value="#{consultaCalRenSitiosBean.listaOtrosInstrumentosMedicion}"
+	rendered="#{consultaCalRenSitiosBean.render_oi}">
 
 	<f:facet name="header">
-		<h:outputText value="SISTEMAS DE MEDICIÓN - OTROS INSTRUMENTOS DE MEDICIÓN" />
+		<h:outputText
+			value="SISTEMAS DE MEDICIÓN - OTROS INSTRUMENTOS DE MEDICIÓN" />
 	</f:facet>
 
 	<p:column headerText="Instrumentos de Medición" style="width:100px">
 		<p:outputLabel value="#{e.descripcion}" />
 	</p:column>
-	
+
 </p:dataTable>
 
 </html>
