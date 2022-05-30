@@ -10,12 +10,14 @@
 		<ui:define name="content">
 			<h:form id="frm">
 				<h3 style="color: #003778; text-align: center">
-					#{consultaCalRenFormulariosImpExpCalBean.empresa.nombre}</h3>
+					#{consultaCalRenFormulariosAlmCalBean.empresa.nombre}</h3>
 				<p:growl id="mensaje" autoUpdate="false" showSummary="false"
 					showDetail="true" />
 				<p:panelGrid columns="2" columnClasses="topAligned"
 					style="text-align: left;width:100%">
-					<p:panel id="pn_form_impexp" style="width:100%;height:500px;">
+					
+					<p:panel id="pn_form_alm"
+						style="width:100%;height:500px;position:relativo">
 						<p:panelGrid columns="6" columnClasses="topAligned"
 							style="text-align: left;width:100%">
 							<f:facet name="header">
@@ -23,95 +25,91 @@
 							</f:facet>
 							<p:outputLabel styleClass="especialstrong" value="Secuencia:" />
 							<p:outputLabel
-								value="#{consultaCalRenFormulariosImpExpCalBean.calRen.secuencia}" />
+								value="#{consultaCalRenFormulariosAlmCalBean.calRen.secuencia}" />
 
 							<p:outputLabel styleClass="especialstrong"
 								value="Fecha Renovación" />
 							<p:outputLabel
-								value="#{consultaCalRenFormulariosImpExpCalBean.calRen.fecha_renovacion}" />
+								value="#{consultaCalRenFormulariosAlmCalBean.calRen.fecha_renovacion}" />
 
 							<p:outputLabel styleClass="especialstrong"
 								value="Fecha Caducidad" />
 							<p:outputLabel
-								value="#{consultaCalRenFormulariosImpExpCalBean.calRen.fecha_caducidad}" />
+								value="#{consultaCalRenFormulariosAlmCalBean.calRen.fecha_caducidad}" />
 						</p:panelGrid>
-						<p:panelGrid columns="2" columnClasses="topAligned"
-							style="text-align: left;width:100%">
-							<p:panel id="pn_form_impexp1" style="width:100%;height:400px;">
-								<p:dataTable id="dt_formulario" var="e" styleClass="centered"
-									value="#{consultaCalRenFormulariosImpExpCalBean.listaCalRenSustanciasAct}"
+						<!-- DATOS DE ALMACENERA -->
+						<p:panelGrid columns="4" columnClasses="topAligned"
+							style="text-align: left;width:100%;position:relativo">
+							<f:facet name="header">
+								<h:outputText value="DATOS GENERALES" />
+							</f:facet>
+							<p:outputLabel styleClass="especialstrong"
+								value="Área de almacenamiento (m3):" />
+							<p:outputLabel
+								value="#{consultaCalRenFormulariosAlmCalBean.calRenActCal.area_almacenamiento}" />
+
+							<p:outputLabel styleClass="especialstrong"
+								value="Capacidad de almacenamiento (m3):" />
+							<p:outputLabel
+								value="#{consultaCalRenFormulariosAlmCalBean.calRenActCal.capacidad_almacenamiento}" />
+
+						</p:panelGrid>
+						<p:panelGrid columns="3" columnClasses="topAligned"
+							style="text-align: left;width:100%;position:relativo">
+
+							<p:panel style="width:100%;height:250px;position:relativo">
+								<!-- LISTAR SUSTANCIAS -->
+								<p:dataTable id="dt_formulario_susalm" var="e"
+									styleClass="centered"
+									value="#{consultaCalRenFormulariosAlmCalBean.listaCalRenSustanciasAct}"
 									selectionMode="single"
-									selection="#{consultaCalRenFormulariosImpExpCalBean.calrenSustanciasActividades}"
-									rowKey="#{e.id}" rows="5" paginator="true"
+									selection="#{consultaCalRenFormulariosAlmCalBean.calrenSustanciasActividades}"
+									rowKey="#{e.id}" rowIndexVar="index" rows="5" paginator="true"
 									paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
 									rowsPerPageTemplate="5,10,15" sortOrder="descending"
 									paginatorPosition="top" scrollable="true">
-
-									<p:ajax event="rowSelect"
-										listener="#{consultaCalRenFormulariosImpExpCalBean.onRowSelect}"
-										update=":frm:dt_form" />
-									<p:ajax event="rowUnselect"
-										listener="#{consultaCalRenFormulariosImpExpCalBean.onRowUnselect}"
-										update=":frm:dt_form" />
-
 									<f:facet name="header">
 										<h:outputText
-											value="SUSTANCIAS PARA LA ACTIVIDAD DE IMPORTADOR/EXPORTADOR" />
+											value="SUSTANCIAS PARA LA ACTIVIDAD DE ALMACENERA" />
 									</f:facet>
-
 									<p:column headerText="Sustancias" style="width:80px">
 										<p:outputLabel value="#{e.calrenSustancias.sustancias.nombre}">
 										</p:outputLabel>
 									</p:column>
-									<p:column headerText="Actividad Importador/Exportador"
-										style="width:80px">
-										<p:outputLabel value="#{e.actividad_imp_exp}">
-											<f:converter converterId="tipoImpexp" />
-										</p:outputLabel>
-									</p:column>
-									<p:column headerText="Código Operador" style="width:80px">
-										<p:outputLabel value="#{e.codigo_operador}">
-										</p:outputLabel>
-									</p:column>
-									<p:column headerText="Permiso Arcsa" style="width:80px">
-										<p:outputLabel value="#{e.permiso_arcsa}">
-										</p:outputLabel>
-									</p:column>
 								</p:dataTable>
 							</p:panel>
-							<p:panel id="pn_form_impexp2" style="width:100%;height:400px;">
-								<p:dataTable id="dt_form" var="x" styleClass="centered"
-									value="#{consultaCalRenFormulariosImpExpCalBean.listaCalRenSusActPaisImpExp}"
+							<!-- LISTAR CLIENTES -->
+							<p:panel style="width:100%;height:250px;position:relativo">
+								<p:dataTable id="dt_form_susalm_cli" var="l"
+									styleClass="centered"
+									value="#{consultaCalRenFormulariosAlmCalBean.listaCalRenActCalClientes}"
 									rows="5" paginator="true"
 									paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
 									rowsPerPageTemplate="5,10,15" sortOrder="descending"
 									paginatorPosition="top" scrollable="true">
-
 									<f:facet name="header">
-										<h:outputText value="PAISES POR SUSTANCIAS PARA LA ACTIVIDAD" />
+										<h:outputText
+											value="POSIBLES CLIENTES PARA LA ACTIVIDAD DE ALMACENAMIENTO" />
 									</f:facet>
-									<p:column headerText="Pais" style="width:80px">
-										<p:outputLabel value="#{x.pais.nombre}">
-										</p:outputLabel>
-									</p:column>
-									<p:column headerText="Permiso de importación (Exportaciones)"
-										style="width:80px">
-										<p:outputLabel value="#{x.exp_permiso_imporacion_pais}">
+									<p:column headerText="Cliente" style="width:80px">
+										<p:outputLabel value="#{l.empresa.nombre}">
 										</p:outputLabel>
 									</p:column>
 								</p:dataTable>
 							</p:panel>
 						</p:panelGrid>
 					</p:panel>
-					<p:panel id="pn_opc_form_impexp"
+					<p:panel id="pn_opc_form_alm"
 						style="width:100%;height:500px;position:relative;">
 						<p:commandButton id="btnRegresar" value="Regresar"
 							style="width:120px" icon="ui-icon-circle-arrow-w"
-							actionListener="#{consultaCalRenFormulariosImpExpCalBean.irFormularios()}" />
+							actionListener="#{consultaCalRenFormulariosAlmCalBean.irFormularios()}" />
 					</p:panel>
 				</p:panelGrid>
 			</h:form>
-
+			<!-- Script de estilos para el contenido fel formulario-->
+			<h:outputStylesheet library="css" name="buscar.css" />
+			<h:outputStylesheet library="css" name="registroUsuario.css" />
 		</ui:define>
 
 	</ui:composition>

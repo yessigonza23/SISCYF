@@ -47,7 +47,12 @@
 		columns="1">
 		<p:outputLabel styleClass="especialstrong" value="Observación:" />
 		<p:inputText value="#{consultaCalRenTipoSustBean.calRen.observacion}"
-			style="width:300px;" />
+			style="width:1000px;" />
+
+		<p:commandButton value="Guardar Observación" ajax="false"
+			actionListener="#{consultaCalRenTipoSustBean.operar(consultaCalRenTipoSustBean.calRen)}"
+			target="_blank">
+		</p:commandButton>
 	</p:panelGrid>
 	<p:panelGrid id="calren_inf" style="text-align:left;width:100%"
 		columns="6">
@@ -86,8 +91,5 @@
 <p:panel id="pn_sustancias">
 	<ui:include src="/pg/cal/calrensustanciascal.xhtml" />
 </p:panel>
-
-
-
 
 </html>

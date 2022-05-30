@@ -58,32 +58,36 @@ public class MenuBean implements Serializable{
 		
 	public void establecerPermisos() {
 
-	        for (MenuSiscyf m : listaMenu) {
-	        	if (m.getTipo().equals("S")) {
-	                DefaultSubMenu firstSubmenu = new DefaultSubMenu(m.getNombre());
+		for (MenuSiscyf  m : listaMenu) {
+			if (m.getTipo().equals("S")) {
+				
+				DefaultSubMenu firstSubmenu = DefaultSubMenu.builder().label(m.getNombre()).build();
+				
+				for (MenuSiscyf i : listaMenu) {
+					MenuSiscyf submenu = i.getSubmenu();
+					if (submenu != null) {
+						if (submenu.getId() == m.getId()) {
+							DefaultMenuItem item = DefaultMenuItem.builder()
+					                .value(i.getNombre())
+					                .url(i.getLink())					                
+					                .build();
+							firstSubmenu.getElements().add(item);
+						}
+					}
+				}
+				model.getElements().add(firstSubmenu);
+			} else {
+				if (m.getSubmenu() == null) {
+					DefaultMenuItem item = DefaultMenuItem.builder()
+			                .value(m.getSubmenu())
+			                .url(m.getLink())
+			                .build();
 
-	                for (MenuSiscyf i : listaMenu) {
-	                	MenuSiscyf submenu = i.getSubmenu();
-	                    if (submenu != null) {
-	                    	if (submenu.getId() == m.getId()) {
-	                        	DefaultMenuItem item = new DefaultMenuItem(i.getNombre());
-	                            item.setUrl(i.getLink());
-	                            firstSubmenu.addElement(item);
-	                        }
-	                    }
-	                }	                
-	                model.addElement(firstSubmenu);
-	              } 
-	        	else {
-	            	if (m.getSubmenu() == null) {
-	                    DefaultMenuItem item = new DefaultMenuItem(m.getNombre());
-	                    item.setUrl(m.getLink());
-	                    model.addElement(item);
-	                }
-	            }
-	            
-	        }
+					model.getElements().add(item);
+				}
+			}
+
+		}
 	}
 
-	
 }

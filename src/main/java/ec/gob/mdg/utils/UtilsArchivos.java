@@ -1,24 +1,18 @@
 package ec.gob.mdg.utils;
 
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
+
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
-import java.io.Writer;
 import java.util.Properties;
 
-import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletResponse;
 
-import org.primefaces.model.UploadedFile;
+
+
 
 public class UtilsArchivos {
 
@@ -89,82 +83,82 @@ public class UtilsArchivos {
 	// metodo para cargar archivos de cualquier tipo a una ubicacion determinada.
 	// valido
 
-	public static String upload(UploadedFile file, String nombreArchivo) throws IOException {
-		String rutaAdjuntos = "";
-		try {
-			rutaAdjuntos = UtilsArchivos.getRutaCargaMasiva();
+//	public static String upload(UploadedFile file, String nombreArchivo) throws IOException {
+//		String rutaAdjuntos = "";
+//		try {
+//			rutaAdjuntos = UtilsArchivos.getRutaCargaMasiva();
+//
+//			InputStream in = (InputStream) file.getInputstream();
+//			File f = new File(rutaAdjuntos + nombreArchivo);
+//			f.createNewFile();
+//			FileOutputStream out1 = new FileOutputStream(f);
+//			byte[] buffer = new byte[1024];
+//			int length;
+//			while ((length = in.read(buffer)) > 0) {
+//				out1.write(buffer, 0, length);
+//			}
+//
+//			String path = rutaAdjuntos + nombreArchivo;
+//			String pathS = rutaAdjuntos + "S" + nombreArchivo;
+//
+//			String line = "";
+//			BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(path), "Cp1252"));
+//			Writer out = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(pathS), sistemaOperativo));
+//			try {
+//				while ((line = br.readLine()) != null) {
+//					out.write(line);
+//					out.write("\n");
+//				}
+//			} finally {
+//				br.close();
+//				out.close();
+//			}
+//			out1.close();
+//			in.close();
+//
+//			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Correcto",
+//					"El archivo " + file.getFileName() + " se guardo satisfactoriamente"));
+//			return rutaAdjuntos;
+//		} catch (Exception e) {
+//			e.printStackTrace(System.out);
+//		}
+//		return rutaAdjuntos;
+//
+//	}
 
-			InputStream in = (InputStream) file.getInputstream();
-			File f = new File(rutaAdjuntos + nombreArchivo);
-			f.createNewFile();
-			FileOutputStream out1 = new FileOutputStream(f);
-			byte[] buffer = new byte[1024];
-			int length;
-			while ((length = in.read(buffer)) > 0) {
-				out1.write(buffer, 0, length);
-			}
-
-			String path = rutaAdjuntos + nombreArchivo;
-			String pathS = rutaAdjuntos + "S" + nombreArchivo;
-
-			String line = "";
-			BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(path), "Cp1252"));
-			Writer out = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(pathS), sistemaOperativo));
-			try {
-				while ((line = br.readLine()) != null) {
-					out.write(line);
-					out.write("\n");
-				}
-			} finally {
-				br.close();
-				out.close();
-			}
-			out1.close();
-			in.close();
-
-			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Correcto",
-					"El archivo " + file.getFileName() + " se guardo satisfactoriamente"));
-			return rutaAdjuntos;
-		} catch (Exception e) {
-			e.printStackTrace(System.out);
-		}
-		return rutaAdjuntos;
-
-	}
-
-	public static String uploadFirma(UploadedFile file, String nombreArchivo) throws IOException {
-		String rutaAdjuntos = "";
-
-		try {
-			rutaAdjuntos = UtilsArchivos.getRutaCertificados();
-
-			InputStream in = (InputStream) file.getInputstream();
-
-			File f = new File(rutaAdjuntos + nombreArchivo);
-
-			f.createNewFile();
-
-			FileOutputStream out = new FileOutputStream(f);
-
-			byte[] buffer = new byte[1024];
-
-			int length;
-			while ((length = in.read(buffer)) > 0) {
-				out.write(buffer, 0, length);
-			}
-
-			out.close();
-			in.close();
-
-			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Correcto",
-					"El certificado: " + file.getFileName() + " se carga satisfactoriamente"));
-			return rutaAdjuntos;
-		} catch (Exception e) {
-			e.printStackTrace(System.out);
-		}
-		return rutaAdjuntos;
-
-	}
+//	public static String uploadFirma(UploadedFile file, String nombreArchivo) throws IOException {
+//		String rutaAdjuntos = "";
+//
+//		try {
+//			rutaAdjuntos = UtilsArchivos.getRutaCertificados();
+//
+//			InputStream in = (InputStream) file.getInputstream();
+//
+//			File f = new File(rutaAdjuntos + nombreArchivo);
+//
+//			f.createNewFile();
+//
+//			FileOutputStream out = new FileOutputStream(f);
+//
+//			byte[] buffer = new byte[1024];
+//
+//			int length;
+//			while ((length = in.read(buffer)) > 0) {
+//				out.write(buffer, 0, length);
+//			}
+//
+//			out.close();
+//			in.close();
+//
+//			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Correcto",
+//					"El certificado: " + file.getFileName() + " se carga satisfactoriamente"));
+//			return rutaAdjuntos;
+//		} catch (Exception e) {
+//			e.printStackTrace(System.out);
+//		}
+//		return rutaAdjuntos;
+//
+//	}
 
 	@SuppressWarnings("resource")
 	public static void verXls(String archivo) throws IOException {

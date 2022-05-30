@@ -43,7 +43,7 @@
 		<dependency>
 			<groupId>org.primefaces</groupId>
 			<artifactId>primefaces</artifactId>
-			<version>6.2</version>
+			<version>11.0.0</version>
 		</dependency>
 
 		<dependency>
@@ -309,12 +309,13 @@
 		</dependency>
 
 
-		<!-- https://mvnrepository.com/artifact/org.webjars/font-awesome para iconos--> 
+		<!-- https://mvnrepository.com/artifact/org.webjars/font-awesome para iconos -->
 		<dependency>
 			<groupId>org.webjars</groupId>
 			<artifactId>font-awesome</artifactId>
 			<version>6.1.0</version>
 		</dependency>
+	
 
 	</dependencies>
 

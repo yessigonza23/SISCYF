@@ -1,0 +1,125 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui">
+
+
+<!--LLENAR CAPACIDADES -->
+<p:dataTable id="dt_formulario_tracon" var="e"
+	value="#{consultaCalRenFormulariosTraCalBean.listaCalRenConductores}"
+	rows="5" paginator="true"
+	paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+	rowsPerPageTemplate="5,10,15" sortOrder="descending"
+	paginatorPosition="top"
+	emptyMessage="No hay ningún registro con esa opción"
+	rowIndexVar="index"  >
+
+	<f:facet name="header">
+		<h:outputText value="CONDUCTORES PARA LA ACTIVIDAD DE TRANSPORTE" />
+	</f:facet>
+
+	<p:column style="text-align: justify;width:15px;">
+		<f:facet name="header">
+			<h:outputText value="No." />
+		</f:facet>
+		<h:outputText value="#{index + 1}" />
+	</p:column>
+	<p:column headerText="Nacionalidad" style="width:80px">
+		<p:outputLabel value="#{e.conductores.pais.nacionalidad}">
+		</p:outputLabel>
+	</p:column>
+	<p:column headerText="Identificación" style="width:80px">
+		<p:outputLabel value="#{e.conductores.identificacion}">
+		</p:outputLabel>
+	</p:column>
+	<p:column headerText="Apellidos y Nombres" style="width:80px">
+		<p:outputLabel value="#{e.conductores.nombre}">
+		</p:outputLabel>
+	</p:column>
+
+	<p:column headerText="Tipo de licencia" style="width:80px">
+		<p:outputLabel value="#{e.conductores.tipo_licencia}">
+		</p:outputLabel>
+	</p:column>
+	
+	<p:column headerText="Vigencia" style="width:80px">
+		<p:outputLabel value="#{e.conductores.fecha_vigencia}">
+		</p:outputLabel>
+	</p:column>
+
+	<p:column headerText="Telefono celular" style="width:80px">
+		<p:outputLabel value="#{e.conductores.telefono_celular}">
+		</p:outputLabel>
+	</p:column>
+	
+	<p:column headerText="Tipo de Sustancia" style="width:80px">
+		<p:outputLabel value="#{e.tipo_sustancia}">
+			<f:converter converterId="tipoSustancia" />
+		</p:outputLabel>
+	</p:column>
+</p:dataTable>
+
+<!-- DIALOGO PARA SUSTANCIAS PELIGROSAS -->
+<p:dialog id="dialogoSusCon" widgetVar="wdgsuscon" resizable="false"
+	width="500" draggable="true" modal="true" position="center"
+	closeOnEscape="true" positionType="absolute">
+	<h2 style="color: #003778; text-align: center">Detalle de
+		Información</h2>
+
+	<p:panelGrid id="pg_sus_con" columns="2" tyle="margin-left: 50%">
+		<p:outputLabel styleClass="especialstrong"
+			value="No. Certificado Capacitación:" />
+		<p:outputLabel
+			value="#{consultaCalRenFormulariosTraCalBean.calrenConductores.num_certificado}" />
+
+		<p:outputLabel styleClass="especialstrong"
+			value="Fecha de capacitación:" />
+		<p:outputLabel
+			value="#{consultaCalRenFormulariosTraCalBean.calrenConductores.fecha_capacitacion}">
+			<f:convertDateTime pattern="dd/MM/yyyy" />
+		</p:outputLabel>
+
+		<p:outputLabel styleClass="especialstrong" value="Fecha de vigencia:" />
+		<p:outputLabel
+			value="#{consultaCalRenFormulariosTraCalBean.calrenConductores.fecha_vigencia_capacitacion}">
+			<f:convertDateTime pattern="dd/MM/yyyy" />
+		</p:outputLabel>
+
+		<p:commandButton value="Ver" ajax="false"
+			actionListener="#{consultaCalRenFormulariosTraCalBean.verPDF(consultaCalRenFormulariosTraCalBean.calrenConductores.ruta_archivo)}"
+			target="_blank">
+		</p:commandButton>
+	</p:panelGrid>
+</p:dialog>
+
+<!-- DIALOGO PARA TRIPULANTES -->
+<p:dialog id="dialogoConTri" widgetVar="wdgcontri" resizable="false"
+	width="500" draggable="true" modal="true" position="center"
+	closeOnEscape="true" positionType="absolute">
+	<h2 style="color: #003778; text-align: center">Detalle de
+		Información</h2>
+
+	<p:panelGrid id="pg_con_tri" columns="2" tyle="margin-left: 50%">
+		<p:outputLabel styleClass="especialstrong"
+			value="No. libreta tripulante:" />
+		<p:outputLabel
+			value="#{consultaCalRenFormulariosTraCalBean.calrenConductores.num_libreta_tripulante}" />
+
+		<p:outputLabel styleClass="especialstrong"
+			value="Lugar y Fecha de expedición:" />
+		<p:outputLabel
+			value="#{consultaCalRenFormulariosTraCalBean.calrenConductores.lugar_fecha_expedicion_tripulante}">
+		</p:outputLabel>
+
+		<p:outputLabel styleClass="especialstrong" value="Fecha de vigencia:" />
+		<p:outputLabel
+			value="#{consultaCalRenFormulariosTraCalBean.calrenConductores.fecha_vigencia_tripulante}">
+			<f:convertDateTime pattern="dd/MM/yyyy" />
+		</p:outputLabel>
+
+	</p:panelGrid>
+</p:dialog>
+
+</html>

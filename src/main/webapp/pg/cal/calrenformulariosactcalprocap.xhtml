@@ -1,0 +1,104 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui">
+
+
+<!--LLENAR CAPACIDADES -->
+<p:dataTable id="dt_formulario_prorecreu" var="e" 
+	value="#{consultaCalRenFormulariosProCalBean.listaCalRenSusActProRecReu}"
+	selectionMode="single"
+	selection="#{consultaCalRenFormulariosProCalBean.calRenSusActProRecReu}"
+	rowKey="#{e.id}" 
+	 rows="5" paginator="true"
+	paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+	rowsPerPageTemplate="5,10,15" sortOrder="descending"
+	paginatorPosition="top"
+	emptyMessage="No hay ningún registro con esa opción">
+
+	<p:ajax event="rowSelect"
+		listener="#{consultaCalRenFormulariosProCalBean.onRowSelect}"
+		update=":frm:dt_formulario_materia" />
+	<p:ajax event="rowUnselect"
+		listener="#{consultaCalRenFormulariosProCalBean.onRowUnselect}"
+		update=":frm:dt_formulario_materia" />
+
+	<f:facet name="header">
+		<h:outputText value="SUSTANCIAS PARA LA ACTIVIDAD DE PRODUCCIÓN" />
+	</f:facet>
+	<p:column headerText="Sustancias" style="width:80px">
+		<p:outputLabel
+			value="#{e.calrenSustanciasActividades.calrenSustancias.sustancias.nombre}">
+		</p:outputLabel>
+	</p:column>
+
+	<p:column headerText="Capacidad Instalada Nominal (CN) - kg/año"
+		style="width:80px">
+		<p:outputLabel value="#{e.cap_ins_nominal}">
+			<f:convertNumber type="number" groupingUsed="true"
+				minFractionDigits="2" pattern="#0.00" />
+		</p:outputLabel>
+	</p:column>
+	<p:column headerText="Capacidad Instalada Real (CR) - kg/año"
+		style="width:80px">
+		<p:outputLabel value="#{e.cap_ins_real}">
+			<f:convertNumber type="number" groupingUsed="true"
+				minFractionDigits="2" pattern="#0.00" />
+		</p:outputLabel>
+	</p:column>
+	<p:column headerText="Rendimiento (CR/CN)" style="width:80px">
+		<p:outputLabel value="#{e.rendimiento}">
+			<f:convertNumber type="number" groupingUsed="true"
+				minFractionDigits="2" pattern="#0.00" />
+		</p:outputLabel>
+	</p:column>
+
+	<p:columnGroup type="header">
+		<p:row>
+			<p:row>
+				<p:column rowspan="1" headerText="Sustancia" />
+				<p:column colspan="2" headerText="Capacidad Instalada - kg/año" />
+				<p:column colspan="1" headerText="Rendimiento(CR/CN)" />
+				<p:column colspan="2"
+					headerText="Concentración de la scsf recuperada[%]" />
+				<p:column colspan="1" headerText="Tipo de relación porcentual" />
+				<p:column colspan="1"
+					headerText="Breve descripción del proces de Reciclaje" />
+			</p:row>
+		</p:row>
+		<p:row>
+			<p:column></p:column>
+			<p:column headerText="Nominal" />
+			<p:column headerText="Real" />
+			<p:column></p:column>
+			<p:column headerText="Desde" />
+			<p:column headerText="Hasta" />
+			<p:column></p:column>
+			<p:column></p:column>
+		</p:row>
+	</p:columnGroup>
+	<p:column headerText="Desde" style="width:80px">
+		<p:outputLabel value="#{e.desde}">
+			<f:convertNumber type="number" groupingUsed="true"
+				minFractionDigits="2" pattern="#0.00" />
+		</p:outputLabel>
+	</p:column>
+	<p:column headerText="Hasta" style="width:80px">
+		<p:outputLabel value="#{e.hasta}">
+			<f:convertNumber type="number" groupingUsed="true"
+				minFractionDigits="2" pattern="#0.00" />
+		</p:outputLabel>
+	</p:column>
+	<p:column headerText="Tipo de Relacion porcentual" style="width:80px">
+		<p:outputLabel value="#{e.relacion_porcentual}">
+		</p:outputLabel>
+	</p:column>
+	<p:column headerText="BreveDescripcion" style="width:80px">
+		<p:outputLabel value="#{e.proceso_productivo}">
+		</p:outputLabel>
+	</p:column>
+</p:dataTable>
+
+</html>

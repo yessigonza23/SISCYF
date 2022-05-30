@@ -14,10 +14,17 @@
 	<h:outputStylesheet library="css" name="estilos.css" />
 	<h:outputStylesheet library="css" name="color.css" />
 	<h:outputStylesheet library="css" name="icons.css" />
+	<h:outputStylesheet name="primeicons/primeicons.css"
+		library="primefaces" />
 	<h:outputScript library="js" name="utilitario.js" target="body" />
 	<h:outputScript library="js" name="excel.js" target="body" />
 	<h:outputScript library="js" name="xlsx.core.min.js" target="body" />
+	<h:outputScript library="js" name="xlsx.core.min.js" target="body" />
 
+          <!-- Place your kit's code here -->
+          <script src="https://kit.fontawesome.com/96bfcc34f7.js" crossorigin="anonymous" type=""></script>
+ 
+	
 </h:head>
 
 <h:body class="resolucion">
@@ -34,9 +41,10 @@
 					<f:facet name="options">
 						    Bienvenido(a): #{masterBean.mostrarUsuarioLogueado()}
                             <p:commandButton id="salir"
+							icon="pi pi-power-off"
 							actionListener="#{masterBean.cerrarSesion()}"
-							icon="fa fa-fw fa-external-link-square"
 							action="/index?faces-redirect=true" url="/index.xhtml" />
+
 						<p:tooltip id="toolTipFade3" for="salir" value="Salir del Sistema"
 							trackMouse="true" />
 					</f:facet>

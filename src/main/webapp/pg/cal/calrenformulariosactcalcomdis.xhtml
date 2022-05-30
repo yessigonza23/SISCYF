@@ -1,0 +1,166 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui">
+
+<h:body>
+	<ui:composition template="/WEB-INF/templates/master.xhtml">
+		<ui:define name="content">
+			<h:form id="frm">
+				<h3 style="color: #003778; text-align: center">
+					#{consultaCalRenFormulariosComDisCalBean.empresa.nombre}</h3>
+				<p:growl id="mensaje" autoUpdate="false" showSummary="false"
+					showDetail="true" />
+				<p:panelGrid columns="2" columnClasses="topAligned"
+					style="text-align: left;width:100%;position:relative;">
+					<p:panel id="pn_form_comdis"
+						style="width:100%;height:500px;position:relative;">
+						<p:panelGrid columns="6" columnClasses="topAligned"
+							style="text-align: left;width:100% ;position:relative;">
+							<f:facet name="header">
+								<h:outputText value="INFORMACIÓN DE LA CALIFICACIÓN" />
+							</f:facet>
+							<p:outputLabel styleClass="especialstrong" value="Secuencia:" />
+							<p:outputLabel
+								value="#{consultaCalRenFormulariosComDisCalBean.calRen.secuencia}" />
+
+							<p:outputLabel styleClass="especialstrong"
+								value="Fecha Renovación" />
+							<p:outputLabel
+								value="#{consultaCalRenFormulariosComDisCalBean.calRen.fecha_renovacion}" />
+
+							<p:outputLabel styleClass="especialstrong"
+								value="Fecha Caducidad" />
+							<p:outputLabel
+								value="#{consultaCalRenFormulariosComDisCalBean.calRen.fecha_caducidad}" />
+						</p:panelGrid>
+						<p:panelGrid columns="2" columnClasses="topAligned"
+							style="text-align: left;width:100% ;position:relative;">
+
+							<p:panel id="pn_datosg" style="width:100%;height:250px;position:relative;">
+								<!-- LISTAR SUSTANCIAS -->
+									<p:dataTable id="dt_formulario_suscomdis" var="e"
+										styleClass="centered"
+										value="#{consultaCalRenFormulariosComDisCalBean.listaCalRenSustanciasAct}"
+										selectionMode="single"
+										selection="#{consultaCalRenFormulariosComDisCalBean.calrenSustanciasActividades}"
+										rowKey="#{e.id}" rowIndexVar="index" rows="5" paginator="true"
+										paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+										rowsPerPageTemplate="5,10,15" sortOrder="descending"
+										paginatorPosition="top" scrollable="true">
+
+										<p:ajax event="rowSelect"
+											listener="#{consultaCalRenFormulariosComDisCalBean.onRowSelect}"
+											update=":frm:dt_form_pres" />
+										<p:ajax event="rowUnselect"
+											listener="#{consultaCalRenFormulariosComDisCalBean.onRowUnselect}"
+											update=":frm:dt_form_pres" />
+
+										<f:facet name="header">
+											<h:outputText
+												value="SUSTANCIAS PARA LA ACTIVIDAD DE COMERCIALIZADOR/DISTRIBUIDOR" />
+										</f:facet>
+
+										<p:column headerText="Sustancias" style="width:80px">
+											<p:outputLabel
+												value="#{e.calrenSustancias.sustancias.nombre}">
+											</p:outputLabel>
+										</p:column>
+
+										<p:columnGroup type="header">
+											<p:row>
+												<p:row>
+													<p:column rowspan="3" headerText="Sustancia" />
+													<p:column colspan="3"
+														headerText="Concentración para comercialización %" />
+													<p:column rowspan="4" headerText="Tipo de Sustancia" />
+												</p:row>
+											</p:row>
+											<p:row>
+												<p:column headerText="Minima" />
+												<p:column headerText="Maxima" />
+												<p:column headerText="Relación Porcentual" />
+											</p:row>
+										</p:columnGroup>
+
+										<p:column headerText="" style="width:80px">
+											<p:outputLabel value="#{e.calrenSustancias.minima}">
+											</p:outputLabel>
+										</p:column>
+										<p:column headerText="" style="width:80px">
+											<p:outputLabel value="#{e.calrenSustancias.maxima}">
+											</p:outputLabel>
+										</p:column>
+										<p:column headerText="" style="width:80px">
+											<p:outputLabel
+												value="#{e.calrenSustancias.relacion_porcentual}">
+											</p:outputLabel>
+										</p:column>
+
+										<p:column headerText="Tipo Sustancia" style="width:80px">
+											<p:outputLabel value="#{e.calrenSustancias.sustancias.tipo}">
+											</p:outputLabel>
+										</p:column>
+									</p:dataTable>
+
+							</p:panel>
+							<p:panel id="pn_opciones" style="width:100%;height:250px;position:relative;">
+								<!-- LISTAR PRESENTACIONES -->
+								<p:dataTable id="dt_form_pres" var="x" styleClass="centered"
+									value="#{consultaCalRenFormulariosComDisCalBean.listaCalRenSusActPresentacion}"
+									rows="5" paginator="true"
+									paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+									rowsPerPageTemplate="5,10,15" sortOrder="descending"
+									paginatorPosition="top" scrollable="true">
+
+									<f:facet name="header">
+										<h:outputText
+											value="PRESENTACIONES POR SUSTANCIAS PARA LA ACTIVIDAD" />
+									</f:facet>
+									<p:column headerText="Presentación" style="width:80px">
+										<p:outputLabel value="#{x.presentacion.nombre}">
+										</p:outputLabel>
+									</p:column>
+								</p:dataTable>
+							</p:panel>
+						</p:panelGrid>
+
+						<!-- LISTAR CLIENTES -->
+						<p:dataTable id="dt_form_suscomdis_cli" var="l"
+							styleClass="centered" 
+							value="#{consultaCalRenFormulariosComDisCalBean.listaCalRenActCalClientes}"
+							rows="5" paginator="true"
+							paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+							rowsPerPageTemplate="5,10,15" sortOrder="descending"
+							paginatorPosition="top" scrollable="true">
+
+							<f:facet name="header">
+								<h:outputText
+									value="POSIBLES CLIENTES PARA LA ACTIVIDAD COMERCIALIZADOR/DISTRIBUIDOR" />
+							</f:facet>
+
+							<p:column headerText="Cliente" style="width:80px">
+								<p:outputLabel value="#{l.empresa.nombre}">
+								</p:outputLabel>
+							</p:column>
+
+						</p:dataTable>
+					</p:panel>
+					<p:panel id="pn_opc_form_comdis"
+						style="width:100%;height:500px;position:relative;">
+						<p:commandButton id="btnRegresar" value="Regresar"
+							style="width:120px" icon="ui-icon-circle-arrow-w"
+							actionListener="#{consultaCalRenFormulariosComDisCalBean.irFormularios()}" />
+					</p:panel>
+				</p:panelGrid>
+			</h:form>
+			<!-- Script de estilos para el contenido fel formulario-->
+			<h:outputStylesheet library="css" name="buscar.css" />
+			<h:outputStylesheet library="css" name="registroUsuario.css" />
+		</ui:define>
+
+	</ui:composition>
+</h:body>
+</html>

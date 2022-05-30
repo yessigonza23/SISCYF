@@ -5,10 +5,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.annotation.PostConstruct;
+import javax.enterprise.context.SessionScoped;
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
 import javax.faces.context.Flash;
-import javax.faces.view.ViewScoped;
 import javax.inject.Inject;
 import javax.inject.Named;
 
@@ -17,13 +17,15 @@ import org.primefaces.event.UnselectEvent;
 
 import ec.gob.mdg.control.ejb.modelo.CalificacionesRenovaciones;
 import ec.gob.mdg.control.ejb.modelo.CalrenActividadesCalificacion;
+import ec.gob.mdg.control.ejb.modelo.CalrenActividadesCalificacionClientes;
 import ec.gob.mdg.control.ejb.modelo.CalrenSustancias;
 import ec.gob.mdg.control.ejb.modelo.CalrenSustanciasActividades;
-import ec.gob.mdg.control.ejb.modelo.CalrenSustanciasActividadesPaisImpExp;
+import ec.gob.mdg.control.ejb.modelo.CalrenSustanciasActividadesPresentacion;
 import ec.gob.mdg.control.ejb.modelo.Empresa;
 import ec.gob.mdg.control.ejb.service.ICalificacionesRenovacionesService;
+import ec.gob.mdg.control.ejb.service.ICalrenActividadesCalificacionClientesService;
 import ec.gob.mdg.control.ejb.service.ICalrenActividadesCalificacionService;
-import ec.gob.mdg.control.ejb.service.ICalrenSustanciasActividadesPaisImpExpService;
+import ec.gob.mdg.control.ejb.service.ICalrenSustanciasActividadesPresentacionService;
 import ec.gob.mdg.control.ejb.service.ICalrenSustanciasActividadesService;
 import ec.gob.mdg.control.ejb.service.IEmpresaService;
 import ec.gob.mdg.control.ejb.utils.Utilitario;
@@ -31,8 +33,8 @@ import lombok.Data;
 
 @Data
 @Named
-@ViewScoped
-public class ConsultaCalRenFormulariosImpExpCalBean implements Serializable {
+@SessionScoped
+public class ConsultaCalRenFormulariosComDisCalBean implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
@@ -49,23 +51,28 @@ public class ConsultaCalRenFormulariosImpExpCalBean implements Serializable {
 	private ICalrenSustanciasActividadesService serviceCalRenSusAct;
 
 	@Inject
-	private ICalrenSustanciasActividadesPaisImpExpService serviceCalRenSusActPaisImpExp;
+	private ICalrenActividadesCalificacionClientesService serviceCalRenActCalClientes;
+
+	@Inject
+	private ICalrenSustanciasActividadesPresentacionService serviceCalrenSusActPresentacion;
 
 	private List<CalrenSustancias> listaCalRenSustancias = new ArrayList<>();
 	private List<CalrenSustanciasActividades> listaCalRenSustanciasAct = new ArrayList<>();
-	private List<CalrenSustanciasActividadesPaisImpExp> listaCalRenSusActPaisImpExp = new ArrayList<CalrenSustanciasActividadesPaisImpExp>();
+	private List<CalrenActividadesCalificacionClientes> listaCalRenActCalClientes = new ArrayList<>();
+	private List<CalrenSustanciasActividadesPresentacion> listaCalRenSusActPresentacion = new ArrayList<>();
 
 	private Empresa empresa = new Empresa();
 	private CalificacionesRenovaciones calRen = new CalificacionesRenovaciones();
 	private CalrenSustanciasActividades calrenSustanciasActividades = new CalrenSustanciasActividades();
 	private CalrenActividadesCalificacion calRenActCal = new CalrenActividadesCalificacion();
-	private CalrenSustanciasActividadesPaisImpExp calrenSusActPaisImpExp = new CalrenSustanciasActividadesPaisImpExp();
+	private CalrenActividadesCalificacionClientes calrenActCalClientes = new CalrenActividadesCalificacionClientes();
+	private CalrenSustanciasActividadesPresentacion calRenSusActPresentacion = new CalrenSustanciasActividadesPresentacion();
 
 	String calrenactS;
 	Integer calrenactId;
 	String abreviatura;
 	String calrenS;
-	Integer calrenaId;
+	Integer calrenId;
 
 	@PostConstruct
 	public void init() {
@@ -83,13 +90,15 @@ public class ConsultaCalRenFormulariosImpExpCalBean implements Serializable {
 
 	/// DATOS DE LA EMPRESA DATOS GENERALES PRIMERA PESTAÑA
 	public void cargarDatos() {
-		abreviatura = "I/E";
+		abreviatura = "C/D";
 		calrenactS = (String) FacesContext.getCurrentInstance().getExternalContext().getFlash().get("calrenact");
 		calrenactId = Integer.parseInt(calrenactS);
 		if (calrenactId != null) {
 			calRenActCal = serviceCalRenActCal.listaCalrenActividadesId(calrenactId);
+			cargarClientes(calRenActCal.getId());
 			if (calRenActCal != null) {
 				calRen = serviceCalRen.calrenPorId(calRenActCal.getCalificacionesRenovaciones().getId());
+				
 				if (calRen != null) {
 					listaCalRenSustanciasAct = serviceCalRenSusAct.listaSustActiPorAbreviatura(calRen.getId(),
 							abreviatura);
@@ -97,7 +106,8 @@ public class ConsultaCalRenFormulariosImpExpCalBean implements Serializable {
 					if (listaCalRenSustanciasAct != null && !listaCalRenSustanciasAct.isEmpty()) {
 						calrenSustanciasActividades = listaCalRenSustanciasAct.get(0);
 						if (calrenSustanciasActividades != null) {
-							cargarListaPaises(calrenSustanciasActividades.getId());
+							System.out.println("id calrenact :"+calrenSustanciasActividades.getId());
+							cargarPresentaciones(calrenSustanciasActividades.getId());							
 						}
 					}
 				}
@@ -109,16 +119,26 @@ public class ConsultaCalRenFormulariosImpExpCalBean implements Serializable {
 		}
 	}
 
-	public void cargarListaPaises(Integer id_CalRenSusAct) {
-		listaCalRenSusActPaisImpExp = serviceCalRenSusActPaisImpExp.listaCalrenActividadesImpExp(id_CalRenSusAct);
+	public void cargarPresentaciones(Integer id_CalRenSusAct) {
+		if (id_CalRenSusAct!=null) {
+			listaCalRenSusActPresentacion = serviceCalrenSusActPresentacion
+					.listaCalrenActividadesPresentacion(id_CalRenSusAct);
+		}
+		
+	}
+
+	public void cargarClientes(Integer id_CalRenSusAct) {
+		if (id_CalRenSusAct!=null) {
+			listaCalRenActCalClientes = serviceCalRenActCalClientes.listaCalrenActClientesIdCalrenAct(id_CalRenSusAct);			
+		}		
 	}
 
 	public void onRowSelect(SelectEvent<CalrenSustanciasActividades> event) {
-		cargarListaPaises(((CalrenSustanciasActividades) event.getObject()).getId());
+		cargarPresentaciones(((CalrenSustanciasActividades) event.getObject()).getId());
 	}
 
 	public void onRowUnselect(UnselectEvent<CalrenSustanciasActividades> event) {
-		cargarListaPaises(((CalrenSustanciasActividades) event.getObject()).getId());
+		cargarPresentaciones(((CalrenSustanciasActividades) event.getObject()).getId());
 	}
 
 	/// Ir a Formularios actividades

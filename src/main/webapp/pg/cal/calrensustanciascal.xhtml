@@ -16,7 +16,7 @@
 	</p:column>
 	<p:ajax event="rowEdit"
 		listener="#{consultaCalRenTipoSustBean.operarSustancias(e)}"
-		update=":frm_calren:dt_sus" />
+		update=":frm_calren:dt_sus,:frm_calren:calren_det" />
 
 	<f:facet name="header">
 		<h:outputText value="SUSTANCIAS" />

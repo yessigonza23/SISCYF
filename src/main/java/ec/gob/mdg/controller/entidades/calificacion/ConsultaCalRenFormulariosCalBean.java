@@ -81,7 +81,7 @@ public class ConsultaCalRenFormulariosCalBean implements Serializable {
 		}
 	}
 
-	public void onRowSelect(SelectEvent event) throws Exception {
+	public void onRowSelect(SelectEvent<CalrenActividadesCalificacion> event) throws Exception {
 	
 		if (((CalrenActividadesCalificacion) event.getObject()) != null) {
 			actividad = ((CalrenActividadesCalificacion) event.getObject()).getActividadCalificacion().getAbreviatura();
@@ -115,7 +115,7 @@ public class ConsultaCalRenFormulariosCalBean implements Serializable {
 		}
 	}
 
-	public void onRowUnselect(UnselectEvent event) {
+	public void onRowUnselect(UnselectEvent<CalrenActividadesCalificacion> event) {
 		if (((CalrenActividadesCalificacion) event.getObject()) != null) {
 			actividad = ((CalrenActividadesCalificacion) event.getObject()).getActividadCalificacion().getAbreviatura();
 			calrenS = String.valueOf(

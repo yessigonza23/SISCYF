@@ -11,9 +11,16 @@
 	<ui:composition template="/WEB-INF/templates/master.xhtml">
 
 		<ui:define name="content">
-			
-			<h3 style="color: #003778; text-align: center">Fecha: #{principalBean.fechaActual}</h3>
-			
+			<br></br>
+			<br></br>
+			<div align="center">
+				<p:clock pattern="HH:mm:ss dd.MM.yyyy" mode="server" />
+			</div>
+		
+			<i class="fa-solid fa-hexagon-image"></i>
+			<i class="fa-brands fa-accessible-icon"></i>
+			<i class="fa-solid fa-building-circle-arrow-right"></i>
+
 		</ui:define>
 
 	</ui:composition>

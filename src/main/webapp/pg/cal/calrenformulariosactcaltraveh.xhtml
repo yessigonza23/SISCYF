@@ -1,0 +1,238 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui">
+
+
+<!--LLENAR VEHICULOS -->
+<p:dataTable id="dt_formulario_traVehiculos" var="e"
+	value="#{consultaCalRenFormulariosTraCalBean.listaCalRenVehiculos}"
+	rows="5" paginator="true"
+	paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+	rowsPerPageTemplate="5,10,15" sortOrder="descending"
+	paginatorPosition="top"
+	emptyMessage="No hay ningún registro con esa opción"
+	rowIndexVar="index" scrollable="true" scrollWidth="48%">
+
+	<f:facet name="header">
+		<h:outputText value="VEHICULOS PARA LA ACTIVIDAD DE TRANSPORTE" />
+	</f:facet>
+
+	<p:column style="text-align: justify;width:15px;">
+		<f:facet name="header">
+			<h:outputText value="No." />
+		</f:facet>
+		<h:outputText value="#{index + 1}" />
+	</p:column>
+
+	<p:column headerText="Origen" style="width:80px">
+		<p:outputLabel value="#{e.vehiculos.origen}">
+			<f:converter converterId="origen" />
+		</p:outputLabel>
+		<p:commandLink
+			actionListener="#{consultaCalRenFormulariosTraCalBean.mostrarDataVehiculosOrigen(e)}"
+			process="@this" update=":frm:dialogoVehNac,:frm:dialogoVehExt">
+			<i class="ui-icon ui-icon-search"></i>
+		</p:commandLink>
+	</p:column>
+
+	<p:column headerText="Tipo" style="width:150px">
+		<p:outputLabel value="#{e.vehiculos.vehiculosTipo.descripcion}" />
+	</p:column>
+
+	<p:column headerText="Placa del vehículo" style="width:80px">
+		<p:outputLabel value="#{e.vehiculos.placa}" />
+	</p:column>
+
+	<p:column headerText="Placa Tanquero o plataforma" style="width:80px">
+		<p:outputLabel value="#{e.vehiculos.placa_adicional}" />
+	</p:column>
+
+	<p:column headerText="Propietario" style="width:150px">
+		<p:outputLabel value="#{e.vehiculos.propietario}" />
+	</p:column>
+	<p:column headerText="País matrícula" style="width:80px">
+		<p:outputLabel value="#{e.vehiculos.pais.nombre}" />
+	</p:column>
+	<p:column headerText="Marca" style="width:80px">
+		<p:outputLabel value="#{e.vehiculos.marca}" />
+	</p:column>
+	<p:column headerText="Modelo" style="width:80px">
+		<p:outputLabel value="#{e.vehiculos.modelo}" />
+	</p:column>
+	<p:column headerText="Año fabricación" style="width:80px">
+		<p:outputLabel value="#{e.vehiculos.anio_fabricacion}" />/
+	</p:column>
+	<p:column headerText="Color" style="width:80px">
+		<p:outputLabel value="#{e.vehiculos.color}" />
+	</p:column>
+	<p:column headerText="No. Motor" style="width:120px">
+		<p:outputLabel value="#{e.vehiculos.num_motor}" />
+	</p:column>
+	<p:column headerText="No. o serie de chasis" style="width:120px">
+		<p:outputLabel value="#{e.vehiculos.num_serie_chasis}" />
+	</p:column>
+	<p:column headerText="Capacidad carga(T)" style="width:80px">
+		<p:outputLabel value="#{e.vehiculos.capacidad_carga}" />
+	</p:column>
+	<p:column headerText="Tipo de Sustancia" style="width:150px">
+		<p:outputLabel value="#{e.tipo_sustancia}">
+			<f:converter converterId="tipoSustancia" />
+		</p:outputLabel>
+		<p:commandLink
+			actionListener="#{consultaCalRenFormulariosTraCalBean.mostrarDataVehiculos(e)}"
+			process="@this" update=":frm:dialogoSus">
+			<i class="ui-icon ui-icon-search"></i>
+		</p:commandLink>
+	</p:column>
+	<p:column headerText="Link rastreo satelital" style="width:250px">
+		<p:outputLabel value="#{e.link_rastreo}" />
+	</p:column>
+	<p:column headerText="Usuario rastreo satelital" style="width:100px">
+		<p:outputLabel value="#{e.usuario_rastreo}" />
+	</p:column>
+	<p:column headerText="Contraseña rastreo satelital" style="width:100px">
+		<p:outputLabel value="#{e.clave_rastreo}" />
+	</p:column>
+
+</p:dataTable>
+
+<!-- DIALOGO PARA SUSTANCIAS PELIGROSAS -->
+<p:dialog id="dialogoSus" widgetVar="wdgsus" resizable="false"
+	width="500" draggable="true" modal="true" position="center"
+	closeOnEscape="true" positionType="absolute">
+	<p:panel>
+		<h2 style="color: #003778; text-align: center">Detalle de
+			Información</h2>
+
+		<p:panelGrid id="pg_sus" columns="2" tyle="margin-left: 50%">
+			<p:outputLabel styleClass="especialstrong"
+				value="No. Certificado SAE o para extranjero:" />
+			<p:outputLabel
+				value="#{consultaCalRenFormulariosTraCalBean.calrenVehiculos.certificado_sae}" />
+
+			<p:outputLabel styleClass="especialstrong"
+				value="Fecha de inspección:" />
+			<p:outputLabel
+				value="#{consultaCalRenFormulariosTraCalBean.calrenVehiculos.fecha_inspección}">
+				<f:convertDateTime pattern="dd/MM/yyyy" />
+			</p:outputLabel>
+
+			<p:outputLabel styleClass="especialstrong"
+				value="Fecha de caducidad:" />
+			<p:outputLabel
+				value="#{consultaCalRenFormulariosTraCalBean.calrenVehiculos.fecha_caducidad}">
+				<f:convertDateTime pattern="dd/MM/yyyy" />
+			</p:outputLabel>
+
+			<p:commandLink ajax="false" value="Ver certificado" target="_blank"
+				actionListener="#{consultaCalRenFormulariosTraCalBean.verPDF(consultaCalRenFormulariosTraCalBean.calrenVehiculos.ruta_pdf)}">
+				<i class="ui-icon ui-icon-image"></i>
+			</p:commandLink>
+
+		</p:panelGrid>
+	</p:panel>
+</p:dialog>
+
+<!-- DIALOGO PARA VEHICULOS NACIONALES -->
+<p:dialog id="dialogoVehNac" widgetVar="wdgsus" resizable="false"
+	width="500" draggable="true" modal="true" position="center"
+	closeOnEscape="true" positionType="absolute">
+	<h2 style="color: #003778; text-align: center">Detalle de
+		Información</h2>
+
+	<p:panelGrid id="pg_nac" columns="2" tyle="margin-left: 50%">
+		<p:outputLabel styleClass="especialstrong" value="Autorización:" />
+		<p:outputLabel
+			value="#{consultaCalRenFormulariosTraCalBean.calrenVehiculos.vehiculosAutorizacion.nombre}" />
+
+		<p:outputLabel styleClass="especialstrong" value="No. Autorización:" />
+		<p:outputLabel
+			value="#{consultaCalRenFormulariosTraCalBean.calrenVehiculos.n_num_autorizacion}" />
+
+		<p:outputLabel styleClass="especialstrong"
+			value="No. Autorización Otros:" />
+		<p:outputLabel
+			value="#{consultaCalRenFormulariosTraCalBean.calrenVehiculos.n_autorizacion_otros}" />
+	</p:panelGrid>
+</p:dialog>
+
+<!-- DIALOGO PARA VEHICULOS EXTRANJEROS PO -->
+<p:dialog id="dialogoVehExt" widgetVar="wdgpo" resizable="false"
+	width="500" draggable="true" modal="true" position="center"
+	closeOnEscape="true" positionType="absolute">
+	<h2 style="color: #003778; text-align: center">Detalle de
+		Información</h2>
+
+	<p:panelGrid id="pg_veh" columns="2" tyle="margin-left: 50%">
+		<p:outputLabel styleClass="especialstrong" value="Autorización:" />
+		<p:outputLabel
+			value="#{consultaCalRenFormulariosTraCalBean.calrenVehiculos.vehiculosAutorizacion.nombre}" />
+
+		<p:outputLabel styleClass="especialstrong" value="No. Permiso:" />
+		<p:outputLabel
+			value="#{consultaCalRenFormulariosTraCalBean.calrenVehiculos.x1_num_permiso}" />
+
+		<p:outputLabel styleClass="especialstrong"
+			value="Lugar y Fecha de expedición:" />
+		<p:outputLabel
+			value="#{consultaCalRenFormulariosTraCalBean.calrenVehiculos.x1_lugar_fecha_expedicion}" />
+
+		<p:outputLabel styleClass="especialstrong"
+			value="Fecha de vencimiento:" />
+		<p:outputLabel
+			value="#{consultaCalRenFormulariosTraCalBean.calrenVehiculos.x1_fecha_vencimiento}">
+			<f:convertDateTime pattern="dd/MM/yyyy" />
+		</p:outputLabel>
+	</p:panelGrid>
+</p:dialog>
+
+<!-- DIALOGO PARA VEHICULOS EXTRANJEROS CERTIFICADO DE IDEONIDAD -->
+<p:dialog id="dialogoVehExtCi" widgetVar="wdgci" resizable="false"
+	width="500" draggable="true" modal="true" position="center"
+	closeOnEscape="true" positionType="absolute">
+	<h2 style="color: #003778; text-align: center">Detalle de
+		Información</h2>
+
+	<p:panelGrid id="pg_vehci" columns="2" tyle="margin-left: 50%">
+		<p:outputLabel styleClass="especialstrong" value="Autorización:" />
+		<p:outputLabel
+			value="#{consultaCalRenFormulariosTraCalBean.calrenVehiculos.vehiculosAutorizacion.nombre}" />
+
+		<p:outputLabel styleClass="especialstrong" value="No. CI:" />
+		<p:outputLabel
+			value="#{consultaCalRenFormulariosTraCalBean.calrenVehiculos.x2_num_ci}" />
+
+		<p:outputLabel styleClass="especialstrong"
+			value="Lugar y Fecha de expedición:" />
+		<p:outputLabel
+			value="#{consultaCalRenFormulariosTraCalBean.calrenVehiculos.x2_lugar_fecha_expedicion}" />
+
+		<p:outputLabel styleClass="especialstrong"
+			value="Fecha de vencimiento:" />
+		<p:outputLabel
+			value="#{consultaCalRenFormulariosTraCalBean.calrenVehiculos.x2_fecha_vencimiento}">
+			<f:convertDateTime pattern="dd/MM/yyyy" />
+		</p:outputLabel>
+
+		<p:outputLabel styleClass="especialstrong" value="No. PPS:" />
+		<p:outputLabel
+			value="#{consultaCalRenFormulariosTraCalBean.calrenVehiculos.x2_numero_pps}" />
+
+		<p:outputLabel styleClass="especialstrong"
+			value="Lugar y Fecha de expedición - PPS:" />
+		<p:outputLabel
+			value="#{consultaCalRenFormulariosTraCalBean.calrenVehiculos.x2_lugar_fecha_expedicion_pps}" />
+
+		<p:outputLabel styleClass="especialstrong"
+			value="Fecha de vencimiento - PPS:" />
+		<p:outputLabel
+			value="#{consultaCalRenFormulariosTraCalBean.calrenVehiculos.x2_fecha_vencimiento_pps}">
+			<f:convertDateTime pattern="dd/MM/yyyy" />
+		</p:outputLabel>
+	</p:panelGrid>
+</p:dialog>
+
+</html>

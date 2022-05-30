@@ -1,0 +1,204 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui">
+<h:body>
+	<ui:composition template="/WEB-INF/templates/master.xhtml">
+		<ui:define name="content">
+			<h:form id="frm">
+				<h3 style="color: #003778; text-align: center">
+					#{consultaEntidadesCalBean.empresa.nombre}</h3>
+				<p:growl id="mensaje" autoUpdate="false" showSummary="false"
+					showDetail="true" />
+				<p:panelGrid columns="2" columnClasses="topAligned">
+					<p:panel id="pn_datosRep" style="width:100%">
+						<p:dataTable id="dt_replog" var="e"
+							value="#{consultaCalRenFormulariosTraCalBean.listaEmpresaRepresentantes}">
+
+							<f:facet name="header">
+								<h:outputText value="RESPONSABLE(S) LOGÍSTICO(S))" />
+							</f:facet>
+
+							<p:column headerText="Identificacion" style="width:30px">
+								<p:outputLabel value="#{e.representantes.identificacion}" />
+							</p:column>
+							<p:column headerText="No.Registro" style="width:80px">
+								<p:outputLabel value="#{e.representantes.num_calificacion}" />
+							</p:column>
+							<p:column headerText="Nombres" style="width:100px">
+								<p:outputLabel value="#{e.representantes.nombre}" />
+							</p:column>
+							<p:column headerText="Nacionalidad" style="width:80px">
+								<p:outputLabel value="#{e.representantes.pais.nacionalidad}">
+								</p:outputLabel>
+							</p:column>
+							<p:column headerText="Correo electrónico" style="width:100px">
+								<p:outputLabel id="correo"
+									value="#{e.representantes.correo_electronico}"
+									style="width:50px">
+								</p:outputLabel>
+							</p:column>
+							<p:column headerText="Teléfono celular" style="width:80px">
+								<p:outputLabel id="telefonocel"
+									value="#{e.representantes.telefono_celular}">
+								</p:outputLabel>
+							</p:column>
+
+							<p:column headerText="Acción" style="width:50px">
+								<p:commandButton value="Detalle" id="btnDetalle" process="@this"
+									oncomplete="PF('wdgrep').show();" update=":frm:dialogoRep"
+									icon="ui-icon-tasks">
+									<p:ajax event="click"
+										listener="#{consultaCalRenFormulariosTraCalBean.mostrarData(e)}" />
+								</p:commandButton>
+							</p:column>
+
+						</p:dataTable>
+					</p:panel>
+					<p:panel id="pn_opciones" style="width:100%">
+						<p:commandButton id="btnRegresar" value="Regresar"
+							icon="ui-icon-circle-arrow-w"
+							actionListener="#{consultaCalRenFormulariosTraCalBean.irFormularios()}" />
+					</p:panel>
+				</p:panelGrid>
+
+				<!-- DIALOGO PARA DETALLE DE REPRESENTANTES -->
+				<p:dialog id="dialogoRep" widgetVar="wdgrep" resizable="false"
+					width="500" draggable="true" modal="true" position="center"
+					closeOnEscape="true" positionType="absolute">
+					<h2 style="color: #003778; text-align: center">Detalle de
+						Información</h2>
+
+					<p:panelGrid id="pg" columns="3" tyle="margin-left: 50%">
+						<p:column style="border-style: hidden;width:50px;"></p:column>
+						<p:column style="border-style: hidden; width:130px;">
+							<strong>Nombre:</strong>
+						</p:column>
+						<p:column style="border-style: hidden;">
+							<p:outputLabel id="txtNombre"
+								style="border-style: hidden; width:130px;"
+								value="#{consultaCalRenFormulariosTraCalBean.empresaRepresentantes.representantes.nombre}" />
+						</p:column>
+
+						<p:column style="border-style: hidden;width:50px;"></p:column>
+						<p:column style="border-style: hidden; width:130px;">
+							<strong>Identificación:</strong>
+						</p:column>
+						<p:column style="border-style: hidden;">
+							<p:outputLabel id="txtIdentificacion"
+								value="#{consultaCalRenFormulariosTraCalBean.empresaRepresentantes.representantes.identificacion}" />
+						</p:column>
+
+
+						<p:column style="border-style: hidden;width:50px;"></p:column>
+						<p:column style="border-style: hidden; width:130px;">
+							<strong>Tipo Identificación:</strong>
+						</p:column>
+						<p:column style="border-style: hidden;">
+							<p:outputLabel id="txtTipoIdentificacion"
+								value="#{consultaCalRenFormulariosTraCalBean.empresaRepresentantes.representantes.tipo_identificacion}">
+								<f:converter converterId="tipoIdentificacion" />
+							</p:outputLabel>
+						</p:column>
+
+
+						<p:column style="border-style: hidden;width:100px;"></p:column>
+						<p:column style="border-style: hidden; width:130px;">
+							<strong>Dirección:</strong>
+						</p:column>
+						<p:column style="border-style: hidden;">
+							<p:outputLabel id="txtDireccion"
+								value="#{consultaCalRenFormulariosTraCalBean.empresaRepresentantes.representantes.direccion}" />
+						</p:column>
+
+
+						<p:column style="border-style: hidden;width:100px;"></p:column>
+						<p:column style="border-style: hidden; width:130px;">
+							<strong>Referencia domicilio:</strong>
+						</p:column>
+						<p:column style="border-style: hidden;">
+							<p:outputLabel id="txtReferencia"
+								value="#{consultaCalRenFormulariosTraCalBean.empresaRepresentantes.representantes.referencia}" />
+						</p:column>
+
+						<p:column style="border-style: hidden;width:100px;"></p:column>
+						<p:column style="border-style: hidden; width:130px;">
+							<strong>Teléfono domicilio:</strong>
+						</p:column>
+						<p:column style="border-style: hidden;">
+							<p:outputLabel id="txtTelDom"
+								value="#{consultaCalRenFormulariosTraCalBean.empresaRepresentantes.representantes.telefono_domicilio}" />
+						</p:column>
+
+						<p:column style="border-style: hidden;width:100px;"></p:column>
+						<p:column style="border-style: hidden; width:130px;">
+							<strong>Nombramiento:</strong>
+						</p:column>
+						<p:column style="border-style: hidden;">
+							<p:outputLabel id="txtNombramiento"
+								value="#{consultaCalRenFormulariosTraCalBean.empresaRepresentantes.representantes.nombramiento}" />
+						</p:column>
+						<p:column style="border-style: hidden;width:100px;"></p:column>
+						<p:column style="border-style: hidden; width:130px;">
+							<strong>Fecha Nombramiento:</strong>
+						</p:column>
+						<p:column style="border-style: hidden;">
+							<p:outputLabel id="txtFechaNombramiento"
+								value="#{consultaCalRenFormulariosTraCalBean.empresaRepresentantes.representantes.fecha_nombramiento}" />
+						</p:column>
+						<p:column style="border-style: hidden;width:100px;"></p:column>
+						<p:column style="border-style: hidden; width:130px;">
+							<strong>Registro Contrato:</strong>
+						</p:column>
+						<p:column style="border-style: hidden;">
+							<p:outputLabel id="txtRegistro"
+								value="#{consultaCalRenFormulariosTraCalBean.empresaRepresentantes.representantes.registro_contrato}" />
+						</p:column>
+						<p:column style="border-style: hidden;width:100px;"></p:column>
+						<p:column style="border-style: hidden; width:130px;">
+							<strong>Estado:</strong>
+						</p:column>
+						<p:column style="border-style: hidden;">
+							<p:outputLabel id="txtEstado1"
+								value="#{consultaCalRenFormulariosTraCalBean.empresaRepresentantes.representantes.estado}">
+								<f:converter converterId="estadoUsuarios" />
+							</p:outputLabel>
+						</p:column>
+						<p:column style="border-style: hidden;width:100px;"></p:column>
+						<p:column style="border-style: hidden; width:130px;">
+							<strong>Estado Registro:</strong>
+						</p:column>
+						<p:column style="border-style: hidden;">
+							<p:outputLabel id="txtEstadoRegistro"
+								value="#{consultaCalRenFormulariosTraCalBean.empresaRepresentantes.representantes.estado_registro}" />
+						</p:column>
+						<p:column style="border-style: hidden;width:100px;"></p:column>
+						<p:column style="border-style: hidden; width:130px;">
+							<strong>Fecha Activa:</strong>
+						</p:column>
+						<p:column style="border-style: hidden;">
+							<p:outputLabel id="txtFechaActiva"
+								value="#{consultaCalRenFormulariosTraCalBean.empresaRepresentantes.representantes.fecha_activa}" />
+						</p:column>
+						<p:column style="border-style: hidden;width:100px;"></p:column>
+						<p:column style="border-style: hidden; width:130px;">
+							<strong>Fecha Desactiva:</strong>
+						</p:column>
+						<p:column style="border-style: hidden;">
+							<p:outputLabel id="txtFechaDeActiva"
+								value="#{consultaCalRenFormulariosTraCalBean.empresaRepresentantes.representantes.fecha_noactiva}" />
+						</p:column>
+					</p:panelGrid>
+
+				</p:dialog>
+			</h:form>
+			<!-- Script de estilos para el contenido fel formulario-->
+			<h:outputStylesheet library="css" name="buscar.css" />
+			<h:outputStylesheet library="css" name="registroUsuario.css" />
+		</ui:define>
+
+	</ui:composition>
+</h:body>
+</html>

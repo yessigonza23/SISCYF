@@ -5,10 +5,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.annotation.PostConstruct;
+import javax.enterprise.context.SessionScoped;
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
 import javax.faces.context.Flash;
-import javax.faces.view.ViewScoped;
 import javax.inject.Inject;
 import javax.inject.Named;
 
@@ -19,11 +19,13 @@ import ec.gob.mdg.control.ejb.modelo.CalificacionesRenovaciones;
 import ec.gob.mdg.control.ejb.modelo.CalrenActividadesCalificacion;
 import ec.gob.mdg.control.ejb.modelo.CalrenSustancias;
 import ec.gob.mdg.control.ejb.modelo.CalrenSustanciasActividades;
-import ec.gob.mdg.control.ejb.modelo.CalrenSustanciasActividadesPaisImpExp;
+import ec.gob.mdg.control.ejb.modelo.CalrenSustanciasActividadesProRecReu;
+import ec.gob.mdg.control.ejb.modelo.CalrenSustanciasActividadesProRecReuMateriaPrima;
 import ec.gob.mdg.control.ejb.modelo.Empresa;
 import ec.gob.mdg.control.ejb.service.ICalificacionesRenovacionesService;
 import ec.gob.mdg.control.ejb.service.ICalrenActividadesCalificacionService;
-import ec.gob.mdg.control.ejb.service.ICalrenSustanciasActividadesPaisImpExpService;
+import ec.gob.mdg.control.ejb.service.ICalrenSustanciasActividadesProRecReuMateriaPrimaService;
+import ec.gob.mdg.control.ejb.service.ICalrenSustanciasActividadesProRecReuService;
 import ec.gob.mdg.control.ejb.service.ICalrenSustanciasActividadesService;
 import ec.gob.mdg.control.ejb.service.IEmpresaService;
 import ec.gob.mdg.control.ejb.utils.Utilitario;
@@ -31,8 +33,8 @@ import lombok.Data;
 
 @Data
 @Named
-@ViewScoped
-public class ConsultaCalRenFormulariosImpExpCalBean implements Serializable {
+@SessionScoped
+public class ConsultaCalRenFormulariosProCalBean implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
@@ -43,29 +45,34 @@ public class ConsultaCalRenFormulariosImpExpCalBean implements Serializable {
 	private ICalificacionesRenovacionesService serviceCalRen;
 
 	@Inject
-	private ICalrenActividadesCalificacionService serviceCalRenActCal;
-
-	@Inject
 	private ICalrenSustanciasActividadesService serviceCalRenSusAct;
 
 	@Inject
-	private ICalrenSustanciasActividadesPaisImpExpService serviceCalRenSusActPaisImpExp;
+	private ICalrenActividadesCalificacionService serviceCalRenActCal;
+
+	@Inject
+	private ICalrenSustanciasActividadesProRecReuService serviceCalrenSusActProRecReu;
+
+	@Inject
+	private ICalrenSustanciasActividadesProRecReuMateriaPrimaService serviceCalrenSusActProRecReuMateriaPrima;
 
 	private List<CalrenSustancias> listaCalRenSustancias = new ArrayList<>();
 	private List<CalrenSustanciasActividades> listaCalRenSustanciasAct = new ArrayList<>();
-	private List<CalrenSustanciasActividadesPaisImpExp> listaCalRenSusActPaisImpExp = new ArrayList<CalrenSustanciasActividadesPaisImpExp>();
+	private List<CalrenSustanciasActividadesProRecReu> listaCalRenSusActProRecReu = new ArrayList<>();
+	private List<CalrenSustanciasActividadesProRecReuMateriaPrima> listaCalRenSusActProRecReuMateriaPrima = new ArrayList<>();
 
 	private Empresa empresa = new Empresa();
 	private CalificacionesRenovaciones calRen = new CalificacionesRenovaciones();
 	private CalrenSustanciasActividades calrenSustanciasActividades = new CalrenSustanciasActividades();
 	private CalrenActividadesCalificacion calRenActCal = new CalrenActividadesCalificacion();
-	private CalrenSustanciasActividadesPaisImpExp calrenSusActPaisImpExp = new CalrenSustanciasActividadesPaisImpExp();
+	private CalrenSustanciasActividadesProRecReu calRenSusActProRecReu = new CalrenSustanciasActividadesProRecReu();
+	private CalrenSustanciasActividadesProRecReuMateriaPrima calRenSusActMateriaPrima = new CalrenSustanciasActividadesProRecReuMateriaPrima();
 
 	String calrenactS;
 	Integer calrenactId;
 	String abreviatura;
 	String calrenS;
-	Integer calrenaId;
+	Integer calrenId;
 
 	@PostConstruct
 	public void init() {
@@ -83,42 +90,68 @@ public class ConsultaCalRenFormulariosImpExpCalBean implements Serializable {
 
 	/// DATOS DE LA EMPRESA DATOS GENERALES PRIMERA PESTAÑA
 	public void cargarDatos() {
-		abreviatura = "I/E";
+		abreviatura = "P";
 		calrenactS = (String) FacesContext.getCurrentInstance().getExternalContext().getFlash().get("calrenact");
 		calrenactId = Integer.parseInt(calrenactS);
 		if (calrenactId != null) {
 			calRenActCal = serviceCalRenActCal.listaCalrenActividadesId(calrenactId);
+
 			if (calRenActCal != null) {
 				calRen = serviceCalRen.calrenPorId(calRenActCal.getCalificacionesRenovaciones().getId());
+
 				if (calRen != null) {
 					listaCalRenSustanciasAct = serviceCalRenSusAct.listaSustActiPorAbreviatura(calRen.getId(),
 							abreviatura);
 					empresa = serviceEmpresa.listarEmpresaPorId(calRen.getEmpresa().getId());
+
 					if (listaCalRenSustanciasAct != null && !listaCalRenSustanciasAct.isEmpty()) {
 						calrenSustanciasActividades = listaCalRenSustanciasAct.get(0);
 						if (calrenSustanciasActividades != null) {
-							cargarListaPaises(calrenSustanciasActividades.getId());
+							cargarListaCapacidad(calrenSustanciasActividades.getId());
+							if (listaCalRenSusActProRecReu != null && !listaCalRenSusActProRecReu.isEmpty()) {
+								calRenSusActProRecReu = listaCalRenSusActProRecReu.get(0);
+								if (calRenSusActProRecReu != null) {
+									cargarListaMateriaPrima(calRenSusActProRecReu.getId());
+								}
+							}
 						}
 					}
 				}
 			}
-
 		} else {
 			FacesContext.getCurrentInstance().addMessage(null,
 					new FacesMessage(FacesMessage.SEVERITY_ERROR, "No hay datos", "No puede continuar"));
 		}
 	}
 
-	public void cargarListaPaises(Integer id_CalRenSusAct) {
-		listaCalRenSusActPaisImpExp = serviceCalRenSusActPaisImpExp.listaCalrenActividadesImpExp(id_CalRenSusAct);
+	public void cargarListaCapacidad(Integer id_CalRenSusAct) {
+		String tipo_actividad = "P";
+		if (id_CalRenSusAct != null) {
+			listaCalRenSusActProRecReu = serviceCalrenSusActProRecReu.listarCalrenActividadesProRecReu(id_CalRenSusAct, tipo_actividad);
+		}
 	}
 
-	public void onRowSelect(SelectEvent<CalrenSustanciasActividades> event) {
-		cargarListaPaises(((CalrenSustanciasActividades) event.getObject()).getId());
+	public void cargarListaMateriaPrima(Integer id_CalRenSusActProRecReu) {
+		if (id_CalRenSusActProRecReu != null) {
+			listaCalRenSusActProRecReuMateriaPrima = serviceCalrenSusActProRecReuMateriaPrima
+					.listarCalrenActividadesMateriaPrima(id_CalRenSusActProRecReu);
+		}
 	}
 
-	public void onRowUnselect(UnselectEvent<CalrenSustanciasActividades> event) {
-		cargarListaPaises(((CalrenSustanciasActividades) event.getObject()).getId());
+//	public void onRowSelectSus(SelectEvent<CalrenSustanciasActividades> event) {
+//		cargarListaCapacidad(((CalrenSustanciasActividades) event.getObject()).getId());
+//	}
+//
+//	public void onRowUnselectSus(UnselectEvent<CalrenSustanciasActividades> event) {
+//		cargarListaCapacidad(((CalrenSustanciasActividades) event.getObject()).getId());
+//	}
+
+	public void onRowSelect(SelectEvent<CalrenSustanciasActividadesProRecReu> event) {
+		cargarListaMateriaPrima(((CalrenSustanciasActividadesProRecReu) event.getObject()).getId());
+	}
+
+	public void onRowUnselect(UnselectEvent<CalrenSustanciasActividadesProRecReu> event) {
+		cargarListaMateriaPrima(((CalrenSustanciasActividadesProRecReu) event.getObject()).getId());
 	}
 
 	/// Ir a Formularios actividades

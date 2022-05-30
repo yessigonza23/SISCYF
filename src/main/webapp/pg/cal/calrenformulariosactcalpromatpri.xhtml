@@ -1,0 +1,34 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui">
+
+<p:dataTable id="dt_formulario_materia" var="e" 
+	value="#{consultaCalRenFormulariosProCalBean.listaCalRenSusActProRecReuMateriaPrima}"
+	widgetVar="accionTabla1" rows="15" paginator="true"
+	paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+	rowsPerPageTemplate="5,10,15" sortOrder="descending"
+	paginatorPosition="top" showGridlines="true"
+	emptyMessage="No hay ningún registro con esa opción">
+
+	<f:facet name="header">
+		<h:outputText value="MATERIA PRIMA" />
+	</f:facet>
+
+	<p:column headerText="Sustancias" style="width:80px">
+		<p:outputLabel value="#{e.sustanciasNoControladas.nombre}">
+		</p:outputLabel>
+	</p:column>
+	<p:column headerText="Porcentaje" style="width:80px">
+		<p:outputLabel value="#{e.porcentaje}">
+		</p:outputLabel>
+	</p:column>
+	<p:column headerText="Relación porcentual" style="width:80px">
+		<p:outputLabel value="#{e.relacion_porcentual}">
+		</p:outputLabel>
+	</p:column>
+</p:dataTable>
+
+</html>

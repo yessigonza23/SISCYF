@@ -1,0 +1,139 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui">
+
+<h:body>
+	<ui:composition template="/WEB-INF/templates/master.xhtml">
+		<ui:define name="content">
+			<h:form id="frm">
+				<h3 style="color: #003778; text-align: center">
+					#{consultaCalRenFormulariosRecCalBean.empresa.nombre}</h3>
+				<p:growl id="mensaje" autoUpdate="false" showSummary="false"
+					showDetail="true" />
+				<p:panelGrid columns="2" columnClasses="topAligned"
+					style="text-align: left;width:100%">
+					<p:panel id="pn_form_rec"
+						style="width:100%;height:500px;position:relativo">
+						<p:panelGrid columns="6" columnClasses="topAligned"
+							style="text-align: left;width:100%">
+							<f:facet name="header">
+								<h:outputText value="INFORMACIÓN DE LA CALIFICACIÓN" />
+							</f:facet>
+							<p:outputLabel styleClass="especialstrong" value="Secuencia:" />
+							<p:outputLabel
+								value="#{consultaCalRenFormulariosRecCalBean.calRen.secuencia}" />
+
+							<p:outputLabel styleClass="especialstrong"
+								value="Fecha Renovación" />
+							<p:outputLabel
+								value="#{consultaCalRenFormulariosRecCalBean.calRen.fecha_renovacion}" />
+
+							<p:outputLabel styleClass="especialstrong"
+								value="Fecha Caducidad" />
+							<p:outputLabel
+								value="#{consultaCalRenFormulariosRecCalBean.calRen.fecha_caducidad}" />
+						</p:panelGrid>
+
+						<!--LLENAR CAPACIDADES -->
+						<p:dataTable id="dt_formulario_prorecreu" var="e"
+							value="#{consultaCalRenFormulariosRecCalBean.listaCalRenSustanciasActividadesProRecReu}"
+							selectionMode="single"
+							selection="#{consultaCalRenFormulariosRecCalBean.calRenSusActProRecReu}"
+							rowKey="#{e.id}" rowIndexVar="index" rows="5" paginator="true"
+							paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+							rowsPerPageTemplate="5,10,15" sortOrder="descending"
+							paginatorPosition="top" scrollable="true">
+
+							<f:facet name="header">
+								<h:outputText value="SUSTANCIAS PARA LA ACTIVIDAD DE RECICLAJE" />
+							</f:facet>
+							<p:column headerText="Sustancias"
+								style="width:80px">
+								<p:outputLabel value="#{e.calrenSustanciasActividades.calrenSustancias.sustancias.nombre}">
+								</p:outputLabel>
+							</p:column>
+
+							<p:column headerText="Capacidad Instalada Nominal (CN) - kg/año"
+								style="width:80px">
+								<p:outputLabel value="#{e.cap_ins_nominal}">
+									<f:convertNumber type="number" groupingUsed="true"
+										minFractionDigits="2" pattern="#0.00" />
+								</p:outputLabel>
+							</p:column>
+							<p:column headerText="Capacidad Instalada Real (CR) - kg/año"
+								style="width:80px">
+								<p:outputLabel value="#{e.cap_ins_real}">
+									<f:convertNumber type="number" groupingUsed="true"
+										minFractionDigits="2" pattern="#0.00" />
+								</p:outputLabel>
+							</p:column>
+							<p:column headerText="Rendimiento (CR/CN)" style="width:80px">
+								<p:outputLabel value="#{e.rendimiento}">
+									<f:convertNumber type="number" groupingUsed="true"
+										minFractionDigits="2" pattern="#0.00" />
+								</p:outputLabel>
+							</p:column>
+
+							<p:columnGroup type="header">
+								<p:row>
+									<p:row>
+										<p:column rowspan="1" headerText="Sustancia" />
+										<p:column colspan="2"
+											headerText="Capacidad Instalada - kg/año" />
+										<p:column colspan="1" headerText="Rendimiento(CR/CN)" />
+										<p:column colspan="2"
+											headerText="Concentración de la scsf recuperada[%]" />
+										<p:column colspan="1" headerText="Tipo de relación porcentual" />
+										<p:column colspan="1"
+											headerText="Breve descripción del proces de Reciclaje" />
+									</p:row>
+								</p:row>
+								<p:row>
+									<p:column></p:column>
+									<p:column headerText="Nominal" />
+									<p:column headerText="Real" />
+									<p:column></p:column>
+									<p:column headerText="Desde" />
+									<p:column headerText="Hasta" />
+									<p:column></p:column>
+									<p:column></p:column>
+								</p:row>
+							</p:columnGroup>
+							<p:column headerText="Desde" style="width:80px">
+								<p:outputLabel value="#{e.desde}">
+									<f:convertNumber type="number" groupingUsed="true"
+										minFractionDigits="2" pattern="#0.00" />
+								</p:outputLabel>
+							</p:column>
+							<p:column headerText="Hasta" style="width:80px">
+								<p:outputLabel value="#{e.hasta}">
+									<f:convertNumber type="number" groupingUsed="true"
+										minFractionDigits="2" pattern="#0.00" />
+								</p:outputLabel>
+							</p:column>
+							<p:column headerText="Relacion" style="width:80px">
+								<p:outputLabel value="#{e.relacion_porcentual}">
+								</p:outputLabel>
+							</p:column>
+							<p:column headerText="BreveDescripcion" style="width:80px">
+								<p:outputLabel value="#{e.proceso_productivo}">
+								</p:outputLabel>
+							</p:column>
+						</p:dataTable>
+					</p:panel>
+					<p:panel id="pn_opc_form_rec"
+						style="width:100%;height:500px;position:relative;">
+						<p:commandButton id="btnRegresar" value="Regresar"
+							style="width:120px" icon="ui-icon-circle-arrow-w"
+							actionListener="#{consultaCalRenFormulariosRecCalBean.irFormularios()}" />
+					</p:panel>
+				</p:panelGrid>
+			</h:form>
+		</ui:define>
+
+	</ui:composition>
+</h:body>
+</html>

@@ -130,7 +130,7 @@ public class ConsultaCalRenSitiosBean implements Serializable {
 	Boolean render_mv = false;
 	Boolean render_oi = false;
 
-	public void onRowSelectSitio(SelectEvent event) throws Exception {
+	public void onRowSelectSitio(SelectEvent<Sitios> event) throws Exception {
 		if (((Sitios) event.getObject()).getId() != null) {
 			mostrarData(((Sitios) event.getObject()));			
 			cargarListaPesaje(((Sitios) event.getObject()).getId());
@@ -159,7 +159,7 @@ public class ConsultaCalRenSitiosBean implements Serializable {
 
 	}
 
-	public void onRowUnselectSitio(UnselectEvent event) {
+	public void onRowUnselectSitio(UnselectEvent<Sitios> event) {
 		if (((Sitios) event.getObject()).getId() != null) {
 			mostrarData(((Sitios) event.getObject()));
 			cargarListaPesaje(((Sitios) event.getObject()).getId());
