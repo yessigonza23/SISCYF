@@ -7,10 +7,10 @@ import lombok.experimental.Accessors;
 
 @Data
 @Accessors(chain = true)
-public class SriRucDetalleDTO implements Serializable{
-	
+public class SriRucDetalleDTO implements Serializable {
+
 	private static final long serialVersionUID = 1L;
-	
+
 	private boolean conDatos = false;
 	private String numeroRuc;
 	private String numeroEstablecimiento;
@@ -20,9 +20,5 @@ public class SriRucDetalleDTO implements Serializable{
 	private String interseccion;
 	private String numero;
 	private String tipoEstablecimiento;
-	
-
-	
-	
 
 }

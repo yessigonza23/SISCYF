@@ -89,9 +89,7 @@ public class ConsultaCalRenFormulariosCalBean implements Serializable {
 					((CalrenActividadesCalificacion) event.getObject()).getId());
 			final FacesContext context = FacesContext.getCurrentInstance();
 			final Flash flash = context.getExternalContext().getFlash();
-			flash.put("calrenact", calrenactS);
-
-			
+			flash.put("calrenact", calrenactS);			
 			if (actividad.equals("I/E")) {
 				
 				Utilitario.irAPagina("/pg/cal/calrenformulariosactcalimpexp");

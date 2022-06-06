@@ -13,7 +13,6 @@ import javax.faces.context.Flash;
 import javax.inject.Inject;
 import javax.inject.Named;
 
-import org.apache.commons.fileupload.RequestContext;
 import org.primefaces.PrimeFaces;
 
 import ec.gob.mdg.control.ejb.modelo.CalificacionesRenovaciones;
@@ -93,19 +92,14 @@ public class ConsultaCalRenFormulariosTraCalBean implements Serializable {
 		calrenactId = Integer.parseInt(calrenactS);
 		if (calrenactId != null) {
 			calRenActCal = serviceCalRenActCal.listaCalrenActividadesId(calrenactId);
-System.out.println("calren act secuencia: " + calRenActCal.getCalificacionesRenovaciones().getSecuencia());
-			if (calRenActCal != null) {
-				System.out.println("calrenactcal renovaciones id: "+calRenActCal.getCalificacionesRenovaciones().getId());
+			if (calRenActCal != null) {				
 				calRen = serviceCalRen.calrenPorId(calRenActCal.getCalificacionesRenovaciones().getId());
-				System.out.println("cal ren secuencia: " + calRen.getSecuencia());
-
 				if (calRen != null) {
 					listaCalRenVehiculos = this.serviceCalRenVehiculos.listarCalrenVehiculosPorIdCalren(calRen.getId());
 					listaCalRenConductores = this.serviceCalRenConductores
 							.listarCalrenConductoresPorIdCalren(calRen.getId());					
 					empresa = serviceEmpresa.listarEmpresaPorId(calRen.getEmpresa().getId());
 					listaEmpresaRepresentantes = serviceEmpresaRepresentantes.listarRepLogisticos(empresa);
-
 				} else {
 					FacesContext.getCurrentInstance().addMessage(null,
 							new FacesMessage(FacesMessage.SEVERITY_ERROR, "No hay datos", "No puede continuar"));

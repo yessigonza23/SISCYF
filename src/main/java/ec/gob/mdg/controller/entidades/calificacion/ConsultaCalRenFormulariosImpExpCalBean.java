@@ -17,15 +17,12 @@ import org.primefaces.event.UnselectEvent;
 
 import ec.gob.mdg.control.ejb.modelo.CalificacionesRenovaciones;
 import ec.gob.mdg.control.ejb.modelo.CalrenActividadesCalificacion;
-import ec.gob.mdg.control.ejb.modelo.CalrenSustancias;
-import ec.gob.mdg.control.ejb.modelo.CalrenSustanciasActividades;
-import ec.gob.mdg.control.ejb.modelo.CalrenSustanciasActividadesPaisImpExp;
 import ec.gob.mdg.control.ejb.modelo.Empresa;
+import ec.gob.mdg.control.ejb.modelo.VistaPaisesImpExpDTO;
 import ec.gob.mdg.control.ejb.service.ICalificacionesRenovacionesService;
 import ec.gob.mdg.control.ejb.service.ICalrenActividadesCalificacionService;
-import ec.gob.mdg.control.ejb.service.ICalrenSustanciasActividadesPaisImpExpService;
-import ec.gob.mdg.control.ejb.service.ICalrenSustanciasActividadesService;
 import ec.gob.mdg.control.ejb.service.IEmpresaService;
+import ec.gob.mdg.control.ejb.service.IVistaPaisesImpExpDTOService;
 import ec.gob.mdg.control.ejb.utils.Utilitario;
 import lombok.Data;
 
@@ -45,21 +42,24 @@ public class ConsultaCalRenFormulariosImpExpCalBean implements Serializable {
 	@Inject
 	private ICalrenActividadesCalificacionService serviceCalRenActCal;
 
-	@Inject
-	private ICalrenSustanciasActividadesService serviceCalRenSusAct;
+//	@Inject
+//	private ICalrenSustanciasActividadesService serviceCalRenSusAct;
 
 	@Inject
-	private ICalrenSustanciasActividadesPaisImpExpService serviceCalRenSusActPaisImpExp;
+	private IVistaPaisesImpExpDTOService serviceVistaPaisesImpExpDTO;
 
-	private List<CalrenSustancias> listaCalRenSustancias = new ArrayList<>();
-	private List<CalrenSustanciasActividades> listaCalRenSustanciasAct = new ArrayList<>();
-	private List<CalrenSustanciasActividadesPaisImpExp> listaCalRenSusActPaisImpExp = new ArrayList<CalrenSustanciasActividadesPaisImpExp>();
+	///// LISTAR LOS TIPOS SI ES IMPORTACION Y EXPORTACION
+	private List<VistaPaisesImpExpDTO> listaTipoIE = new ArrayList<VistaPaisesImpExpDTO>();
+	private VistaPaisesImpExpDTO tipoIE = new VistaPaisesImpExpDTO();
+	//// LISTAR SUSTANCIAS
+	private List<VistaPaisesImpExpDTO> listaSustancias = new ArrayList<>();
+	private VistaPaisesImpExpDTO sustancias = new VistaPaisesImpExpDTO();
+	//// LISTAR PAISES
+	private List<VistaPaisesImpExpDTO> listaPaises = new ArrayList<VistaPaisesImpExpDTO>();
 
 	private Empresa empresa = new Empresa();
 	private CalificacionesRenovaciones calRen = new CalificacionesRenovaciones();
-	private CalrenSustanciasActividades calrenSustanciasActividades = new CalrenSustanciasActividades();
 	private CalrenActividadesCalificacion calRenActCal = new CalrenActividadesCalificacion();
-	private CalrenSustanciasActividadesPaisImpExp calrenSusActPaisImpExp = new CalrenSustanciasActividadesPaisImpExp();
 
 	String calrenactS;
 	Integer calrenactId;
@@ -70,6 +70,7 @@ public class ConsultaCalRenFormulariosImpExpCalBean implements Serializable {
 	@PostConstruct
 	public void init() {
 		try {
+			System.out.println("entra a init");
 			cargarDatos();
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
@@ -86,39 +87,88 @@ public class ConsultaCalRenFormulariosImpExpCalBean implements Serializable {
 		abreviatura = "I/E";
 		calrenactS = (String) FacesContext.getCurrentInstance().getExternalContext().getFlash().get("calrenact");
 		calrenactId = Integer.parseInt(calrenactS);
+		System.out.println("1");
 		if (calrenactId != null) {
 			calRenActCal = serviceCalRenActCal.listaCalrenActividadesId(calrenactId);
+			System.out.println("2");
 			if (calRenActCal != null) {
 				calRen = serviceCalRen.calrenPorId(calRenActCal.getCalificacionesRenovaciones().getId());
+				System.out.println("3");
 				if (calRen != null) {
-					listaCalRenSustanciasAct = serviceCalRenSusAct.listaSustActiPorAbreviatura(calRen.getId(),
-							abreviatura);
 					empresa = serviceEmpresa.listarEmpresaPorId(calRen.getEmpresa().getId());
-					if (listaCalRenSustanciasAct != null && !listaCalRenSustanciasAct.isEmpty()) {
-						calrenSustanciasActividades = listaCalRenSustanciasAct.get(0);
-						if (calrenSustanciasActividades != null) {
-							cargarListaPaises(calrenSustanciasActividades.getId());
+					listaTipoIE = serviceVistaPaisesImpExpDTO.listarTipo(calRen.getId());
+					System.out.println("4: listaTipoIE " + listaTipoIE);
+
+					if (listaTipoIE != null && !listaTipoIE.isEmpty()) {
+						System.out.println("4.1: " + listaTipoIE);
+						tipoIE = listaTipoIE.get(0);
+						System.out.println("5"+tipoIE.getImpexp_actividad_codigo());
+						if (tipoIE != null) {
+							listaSustancias = serviceVistaPaisesImpExpDTO.listarSustancias(calRen.getId(),
+									tipoIE.getImpexp_actividad_codigo());
+							System.out.println("6");
+							if (listaSustancias != null && !listaSustancias.isEmpty()) {
+								sustancias = listaSustancias.get(0);
+								System.out.println("7");
+								if (sustancias != null) {
+									System.out.println(
+											"aaaaaaaaaaaantes de cargar paises " + sustancias.getCalrensusact_id());
+
+									cargarListaPaises(sustancias.getCalrensusact_id(),tipoIE.getImpexp_actividad_codigo());
+								}
+							}
 						}
 					}
 				}
 			}
-
 		} else {
 			FacesContext.getCurrentInstance().addMessage(null,
 					new FacesMessage(FacesMessage.SEVERITY_ERROR, "No hay datos", "No puede continuar"));
 		}
 	}
 
-	public void cargarListaPaises(Integer id_CalRenSusAct) {
-		listaCalRenSusActPaisImpExp = serviceCalRenSusActPaisImpExp.listaCalrenActividadesImpExp(id_CalRenSusAct);
+	public void cargarListaPaises(Integer id_CalRenSusAct,String actividad) {
+		System.out.println("carga paisesssssssssssssssss" + id_CalRenSusAct);
+		listaPaises = serviceVistaPaisesImpExpDTO.listarPaises(id_CalRenSusAct,actividad);
 	}
 
-	public void onRowSelect(SelectEvent<CalrenSustanciasActividades> event) {
-		cargarListaPaises(((CalrenSustanciasActividades) event.getObject()).getId());
+	public void cargarListaSustancias(Integer id_calren, String actividad ) {
+		System.out.println("carga SUSTANCIASSSSSSSSSSSSSSSSSSS: " + id_calren + "_" + actividad);
+		abreviatura = "I/E";
+		listaSustancias = serviceVistaPaisesImpExpDTO.listarSustancias(id_calren, actividad);
+		if (listaSustancias != null && !listaSustancias.isEmpty()) {
+			sustancias = listaSustancias.get(0);
+
+			if (sustancias != null) {
+				System.out.println("aaaaaaaaaaaantes de cargar paises " + sustancias.getCalrensusact_id());
+
+				cargarListaPaises(sustancias.getCalrensusact_id(),actividad);
+			}
+		}
 	}
 
-	public void onRowUnselect(UnselectEvent<CalrenSustanciasActividades> event) {
-		cargarListaPaises(((CalrenSustanciasActividades) event.getObject()).getId());
+	///// LISTAR SUSTANCIAS POR TIPO IMP/EXP
+
+	public void onRowSelectTipo(SelectEvent<VistaPaisesImpExpDTO> event) {
+		cargarListaSustancias(
+				((VistaPaisesImpExpDTO) event.getObject()).getCalren_id(),
+				((VistaPaisesImpExpDTO) event.getObject()).getActcal_abreviatura());
+	}
+
+	public void onRowUnselectTipo(UnselectEvent<VistaPaisesImpExpDTO> event) {
+		cargarListaSustancias(
+				((VistaPaisesImpExpDTO) event.getObject()).getCalren_id(),
+				((VistaPaisesImpExpDTO) event.getObject()).getActcal_abreviatura());
+	}
+
+	/////// LISTAR PAISES
+
+	public void onRowSelect(SelectEvent<VistaPaisesImpExpDTO> event) {
+		cargarListaPaises(((VistaPaisesImpExpDTO) event.getObject()).getCalrensusact_id(),tipoIE.getImpexp_actividad_codigo());
+	}
+
+	public void onRowUnselect(UnselectEvent<VistaPaisesImpExpDTO> event) {
+		cargarListaPaises(((VistaPaisesImpExpDTO) event.getObject()).getCalrensusact_id(),tipoIE.getImpexp_actividad_codigo());
 	}
 
 	/// Ir a Formularios actividades

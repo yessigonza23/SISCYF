@@ -1,0 +1,151 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+<h:body>
+	<ui:composition template="/WEB-INF/templates/master.xhtml">
+		<ui:define name="content">
+			<h:form id="frm">
+				<h3 style="color: #003778; text-align: center">
+					ACTIVIDADES DE CALIFICACIÓN</h3>
+				<p:growl id="mensaje" autoUpdate="false" showSummary="false"
+					showDetail="true" />
+
+				<p:panelGrid columns="2" columnClasses="topAligned"
+					style="text-align: left;width:100%">
+					<p:panel id="pn_datosg" style="width:100%">
+						<p:dataTable id="dt" resizableColumns="true" 
+							value="#{actividadCalificacionBean.listaActividadCalificacion}"
+							var="e" widgetVar="wgvpar" rows="15" paginator="true"
+							paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+							rowsPerPageTemplate="10,15,20" sortOrder="descending"
+							paginatorPosition="top"
+							emptyMessage="No hay ningún registro con esa opción">
+
+							<p:column headerText="Nombre de la Actividad"
+								filterBy="#{e.nombre}" filterMatchMode="contains"
+								style="width:20px;text-align:left">
+								<p:outputLabel value="#{e.nombre}" />
+							</p:column>
+
+							<p:column headerText="Nombre del Formulario"
+								filterBy="#{e.nombre_formulario}" filterMatchMode="contains"
+								style="width:20px">
+								<p:outputLabel value="#{e.nombre_formulario}" />
+							</p:column>
+
+							<p:column exportable="false" style="width: 10px">
+								<p:commandLink
+									actionListener="#{actividadCalificacionBean.mostrarData(e)}"
+									oncomplete="PF('wdlg_par').show()" immediate="true"
+									process="@this" update="frm:dlg" >
+									<i class="ui-icon ui-icon-pencil"></i>
+								</p:commandLink>
+							</p:column>
+
+						</p:dataTable>
+
+						<p:dialog id="dlg" widgetVar="wdlg_par" resizable="false"
+							width="1000" draggable="true" modal="true" position="center"
+							closeOnEscape="true" positionType="absolute">
+							
+							<h2 style="color: #003778; text-align: center">Actividades de Calificación</h2>
+							<p:fieldset legend="#{actividadCalificacionBean.tipoDialog}"
+								style="width:90%">
+
+								<p:panelGrid id="pg" columns="3" tyle="margin-left: 35%">
+
+									<p:column style="border-style: hidden;width:50px;"></p:column>
+									<p:column style="border-style: hidden; width:130px;">Nombre: </p:column>
+									<p:column style="border-style: hidden;">
+										<p:inputText id="txtNombres"
+											value="#{actividadCalificacionBean.actividadCalificacion.nombre}"
+											style="width:450px" />
+										<p:messages for="txtNombre" display="icon" />
+									</p:column>
+
+									<p:column style="border-style: hidden;width:50px;"></p:column>
+									<p:column style="border-style: hidden; width:130px;">Definición: </p:column>
+									<p:column style="border-style: hidden;">
+										<p:inputText id="txtDefinicion" style="width:600px"
+											value="#{actividadCalificacionBean.actividadCalificacion.definicion}" />
+										<p:messages for="txtDefinicion" display="icon" />
+									</p:column>
+
+									<p:column style="border-style: hidden;width:50px;"></p:column>
+									<p:column style="border-style: hidden; width:130px;">Abreviatura: </p:column>
+									<p:column style="border-style: hidden;">
+										<p:inputText id="txtAbreviatura"
+											value="#{actividadCalificacionBean.actividadCalificacion.abreviatura}" />
+										<p:messages for="txtDefinicion" display="icon" />
+									</p:column>
+
+									<p:column style="border-style: hidden;width:50px;"></p:column>
+									<p:column style="border-style: hidden; width:130px;">Nombre Formulario: </p:column>
+									<p:column style="border-style: hidden;">
+										<p:inputText id="txtNombreFormulario"
+											value="#{actividadCalificacionBean.actividadCalificacion.nombre_formulario}" />
+										<p:messages for="txtDefinicion" display="icon" />
+									</p:column>
+
+									<p:column style="border-style: hidden;width:50px;"></p:column>
+									<p:column style="border-style: hidden; width:130px;">Estado: </p:column>
+									<p:column style="border-style: hidden;">
+										<p:selectBooleanCheckbox id="cbxEstado"
+											value="#{actividadCalificacionBean.actividadCalificacion.estado}" />
+										
+									</p:column>
+
+									<p:column style="border-style: hidden;width:50px;"></p:column>
+									<p:column style="border-style: hidden; width:130px;">Maneja Sustancias: </p:column>
+									<p:column style="border-style: hidden;">
+										<p:selectBooleanCheckbox
+											value="#{actividadCalificacionBean.actividadCalificacion.si_sustancia}" />
+										
+									</p:column>
+
+								</p:panelGrid>
+
+							</p:fieldset>
+							<p:panelGrid id="pgBotones" columns="3" style="margin-left: 35%">
+								<p:commandButton value="Registrar"
+									actionListener="#{actividadCalificacionBean.operar('R')}"
+									ajax="true"
+									oncomplete="if (args &amp;&amp; !args.validationFailed) PF('wdlg_par').hide()"
+									update="pg, dt"
+									rendered="#{actividadCalificacionBean.tipoDialog == 'Nueva Actividad'}" />
+
+								<p:commandButton value="Modificar"
+									actionListener="#{actividadCalificacionBean.operar('M')}"
+									ajax="true"
+									oncomplete="if (args &amp;&amp; !args.validationFailed) PF('wdlg_par').hide()"
+									update="pg, dt"
+									rendered="#{actividadCalificacionBean.tipoDialog == 'Modificar Actividad'}" />
+							</p:panelGrid>
+						</p:dialog>
+					</p:panel>
+					<p:panel id="pn_opciones" style="width:100%">
+						<p:commandButton value="Nuevo" oncomplete="PF('wdlg_par').show()"
+							icon="ui-icon-newwin" style="width:100px" 
+							actionListener="#{actividadCalificacionBean.limpiarControles()}"
+							update="frm:dlg" process="@this" />
+						<p:commandButton id="btnRegresar" value="Principal"
+							icon="ui-icon-circle-arrow-w"  style="width:100px"
+							action="#{navegarVistasBean.principal()}" />
+					</p:panel>
+				</p:panelGrid>
+
+
+
+			</h:form>
+			<!-- Script de estilos para el contenido fel formulario-->
+			<h:outputStylesheet library="css" name="buscar.css" />
+			<h:outputStylesheet library="css" name="registroUsuario.css" />
+		</ui:define>
+
+	</ui:composition>
+</h:body>
+</html>

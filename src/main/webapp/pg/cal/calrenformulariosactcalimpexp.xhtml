@@ -34,25 +34,66 @@
 								value="Fecha Caducidad" />
 							<p:outputLabel
 								value="#{consultaCalRenFormulariosImpExpCalBean.calRen.fecha_caducidad}" />
+
+							<p:outputLabel styleClass="especialstrong" value="Permiso ARCSA" />
+							<p:outputLabel
+								value="#{consultaCalRenFormulariosImpExpCalBean.calRenActCal.permiso_arcsa}" />
+
+							<p:outputLabel styleClass="especialstrong"
+								value="Código de operador - Importador" />
+							<p:outputLabel
+								value="#{consultaCalRenFormulariosImpExpCalBean.calRenActCal.codigo_operador_importacion}" />
+
+							<p:outputLabel styleClass="especialstrong"
+								value="Código de operador - Exportador" />
+							<p:outputLabel
+								value="#{consultaCalRenFormulariosImpExpCalBean.calRenActCal.codigo_operador_exportacion}" />
 						</p:panelGrid>
+						<!-- FILTRAR POR EXPORTADOR O IMPORTADOR LAS SUSTANCIAS -->
+
+						<p:panelGrid columns="6" columnClasses="topAligned"
+							style="text-align: left;width:100%">
+
+							<f:facet name="header">
+								<h:outputText value="TIPO DE ACTIVIDAD" />
+							</f:facet>
+
+							<p:selectOneMenu id="cboTipo"
+								value="#{consultaCalRenFormulariosImpExpCalBean.tipoIE.impexp_actividad_codigo}"
+								converter="omnifaces.SelectItemsConverter" autoWidth="false"
+								style="width:350px;" filter="true" required="true"
+								requiredMessage="Requerido el tipo">
+								
+								<f:selectItems
+									value="#{consultaCalRenFormulariosImpExpCalBean.listaTipoIE}"
+									var="c" itemLabel="#{c.impexp_actividad_nombre}  "
+									itemValue="#{c}" />
+								<p:ajax event="change"
+									listener="#{consultaCalRenFormulariosImpExpCalBean.cargarListaSustancias(consultaCalRenFormulariosImpExpCalBean.tipoIE.calren_id, consultaCalRenFormulariosImpExpCalBean.tipoIE.impexp_actividad_codigo)}"
+									update="frm:dt_formulario,frm:dt_form" />
+							</p:selectOneMenu>
+						</p:panelGrid>
+
+						<!-- LISTAR SUSTANCIAS -->
+
 						<p:panelGrid columns="2" columnClasses="topAligned"
 							style="text-align: left;width:100%">
 							<p:panel id="pn_form_impexp1" style="width:100%;height:400px;">
-								<p:dataTable id="dt_formulario" var="e" styleClass="centered"
-									value="#{consultaCalRenFormulariosImpExpCalBean.listaCalRenSustanciasAct}"
+								<p:dataTable id="dt_formulario" var="e" lazy="true"
+									value="#{consultaCalRenFormulariosImpExpCalBean.listaSustancias}"
 									selectionMode="single"
-									selection="#{consultaCalRenFormulariosImpExpCalBean.calrenSustanciasActividades}"
-									rowKey="#{e.id}" rows="5" paginator="true"
+									selection="#{consultaCalRenFormulariosImpExpCalBean.sustancias}"
+									rowKey="#{e.calrensusact_id}" rows="5" paginator="true"
 									paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
 									rowsPerPageTemplate="5,10,15" sortOrder="descending"
 									paginatorPosition="top" scrollable="true">
 
 									<p:ajax event="rowSelect"
 										listener="#{consultaCalRenFormulariosImpExpCalBean.onRowSelect}"
-										update=":frm:dt_form" />
+										update="frm:dt_form" />
 									<p:ajax event="rowUnselect"
 										listener="#{consultaCalRenFormulariosImpExpCalBean.onRowUnselect}"
-										update=":frm:dt_form" />
+										update="frm:dt_form" />
 
 									<f:facet name="header">
 										<h:outputText
@@ -60,28 +101,17 @@
 									</f:facet>
 
 									<p:column headerText="Sustancias" style="width:80px">
-										<p:outputLabel value="#{e.calrenSustancias.sustancias.nombre}">
+										<p:outputLabel
+											value="#{e.sus_nombre}">
 										</p:outputLabel>
 									</p:column>
-									<p:column headerText="Actividad Importador/Exportador"
-										style="width:80px">
-										<p:outputLabel value="#{e.actividad_imp_exp}">
-											<f:converter converterId="tipoImpexp" />
-										</p:outputLabel>
-									</p:column>
-									<p:column headerText="Código Operador" style="width:80px">
-										<p:outputLabel value="#{e.codigo_operador}">
-										</p:outputLabel>
-									</p:column>
-									<p:column headerText="Permiso Arcsa" style="width:80px">
-										<p:outputLabel value="#{e.permiso_arcsa}">
-										</p:outputLabel>
-									</p:column>
+
 								</p:dataTable>
 							</p:panel>
 							<p:panel id="pn_form_impexp2" style="width:100%;height:400px;">
 								<p:dataTable id="dt_form" var="x" styleClass="centered"
-									value="#{consultaCalRenFormulariosImpExpCalBean.listaCalRenSusActPaisImpExp}"
+									lazy="true"
+									value="#{consultaCalRenFormulariosImpExpCalBean.listaPaises}"
 									rows="5" paginator="true"
 									paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
 									rowsPerPageTemplate="5,10,15" sortOrder="descending"
@@ -91,14 +121,10 @@
 										<h:outputText value="PAISES POR SUSTANCIAS PARA LA ACTIVIDAD" />
 									</f:facet>
 									<p:column headerText="Pais" style="width:80px">
-										<p:outputLabel value="#{x.pais.nombre}">
+										<p:outputLabel value="#{x.pais_nombre}">
 										</p:outputLabel>
 									</p:column>
-									<p:column headerText="Permiso de importación (Exportaciones)"
-										style="width:80px">
-										<p:outputLabel value="#{x.exp_permiso_imporacion_pais}">
-										</p:outputLabel>
-									</p:column>
+							
 								</p:dataTable>
 							</p:panel>
 						</p:panelGrid>

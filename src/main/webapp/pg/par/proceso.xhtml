@@ -12,7 +12,7 @@
 			<h:form id="frm" enctype="multipart/form-data"
 				onkeypress="if (event.keyCode == 13) { return false; }">
 				<h2 style="color: #003778; text-align: center">REGISTRO DE
-					COORDINACIONES</h2>
+					PROCESOS</h2>
 				<p:growl id="growl" showDetail="true" sticky="true">
 					<p:autoUpdate />
 				</p:growl>
@@ -21,7 +21,7 @@
 					style="display:block; text-align:center; width:100%; margin:0px auto;"
 					columnClasses="centered">
 					<p:commandButton value="Nuevo" oncomplete="PF('wdlg').show()"
-						actionListener="#{coordinacionBean.limpiarControles()}"
+						actionListener="#{procesoBean.limpiarControles()}"
 						update="frm:dlg" process="@this" />
 					<p:commandButton id="btnRegresar" value="Principal"
 						icon="fa fa-fw fa-hand-o-left"
@@ -29,8 +29,9 @@
 						update="@this" />
 				</p:panelGrid>
 
+
 				<p:dataTable id="dt" resizableColumns="true"
-					value="#{coordinacionBean.lista}" var="e" widgetVar="wdg_coordinacion"
+					value="#{procesoBean.lista}" var="e" widgetVar="estudiosTabla"
 					rows="15" paginator="true"
 					paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
 					rowsPerPageTemplate="10,15,20" sortOrder="descending"
@@ -67,28 +68,69 @@
 						<p:panelGrid id="pg" columns="3" tyle="margin-left: 35%">
 
 							<p:column style="border-style: hidden;width:50px;"></p:column>
-							<p:column style="border-style: hidden; width:130px;">Nombre Coordinación: </p:column>
+							<p:column style="border-style: hidden; width:130px;">Institución: </p:column>
+							<p:column style="border-style: hidden;">
+								<p:selectOneMenu id="categorie_article"
+									value="#{procesoBean.proceso.institucion}" effect="fade"
+									converter="omnifaces.SelectItemsConverter" filter="true"
+									filterMatchMode="startsWith" tyle="width:100px">
+									<f:selectItem itemLabel="Select One" noSelectionOption="true" />
+									<f:selectItems value="#{procesoBean.listai}" var="e"
+										itemLabel="#{e.nombre}" itemValue="#{e}" />
+									<f:ajax render="selected_item" />
+								</p:selectOneMenu>
+								<p:messages for="cboInstitucion" />
+							</p:column>
+
+							<p:column style="border-style: hidden;width:50px;"></p:column>
+							<p:column style="border-style: hidden; width:130px;">Nombre Proceso: </p:column>
 							<p:column style="border-style: hidden;">
 								<p:inputText id="txtNombres"
-									value="#{coordinacionBean.coordinacion.nombre}" required="true"
+									value="#{procesoBean.proceso.nombre}" required="true"
 									style="width:300px" />
 								<p:messages for="txtNombres" display="icon" />
-							</p:column>							
+							</p:column>
+
+							<p:column style="border-style: hidden;width:50px;"></p:column>
+							<p:column style="border-style: hidden; width:130px;">Tipo: </p:column>
+							<p:column style="border-style: hidden;">
+								<p:selectOneMenu id="txtEstado"
+									value="#{procesoBean.proceso.tipo}" required="true"
+									style="width:100px">
+									<f:selectItem itemLabel="Sustancias" itemValue="S" />
+									<f:selectItem itemLabel="Migración" itemValue="M" />
+									<f:selectItem itemLabel="Gobernaciones" itemValue="G" />
+								</p:selectOneMenu>
+							</p:column>
+
+							<p:column style="border-style: hidden;width:50px;"></p:column>
+							<p:column style="border-style: hidden; width:130px;">Tipo Proceso: </p:column>
+							<p:column style="border-style: hidden;">
+								<p:selectOneMenu id="txtTipoProceso"
+									value="#{procesoBean.proceso.tipo_proceso}" required="true"
+									style="width:100px">
+									<f:selectItem itemLabel="Sustancias" itemValue="S" />
+									<f:selectItem itemLabel="Migración" itemValue="M" />
+									<f:selectItem itemLabel="Gobernaciones" itemValue="G" />
+									<f:selectItem itemLabel="PAF" itemValue="P" />
+								</p:selectOneMenu>
+							</p:column>
+
 						</p:panelGrid>
 
 					</p:fieldset>
 					<p:panelGrid id="pgBotones" columns="3" style="margin-left: 35%">
 						<p:commandButton value="Registrar"
-							actionListener="#{coordinacionBean.operar('R')}" ajax="true"
+							actionListener="#{procesoBean.operar('R')}" ajax="true"
 							oncomplete="if (args &amp;&amp; !args.validationFailed) PF('wdlg').hide()"
 							update="pg, dt"
-							rendered="#{coordinacionBean.tipoDialog == 'Nuevo Coordinación'}" />
+							rendered="#{procesoBean.tipoDialog == 'Nuevo Proceso'}" />
 
 						<p:commandButton value="Modificar"
-							actionListener="#{coordinacionBean.operar('M')}" ajax="true"
+							actionListener="#{procesoBean.operar('M')}" ajax="true"
 							oncomplete="if (args &amp;&amp; !args.validationFailed) PF('wdlg').hide()"
 							update="pg, dt"
-							rendered="#{coordinacionBean.tipoDialog == 'Modificar Coordinación'}" />
+							rendered="#{procesoBean.tipoDialog == 'Modificar Proceso'}" />
 					</p:panelGrid>
 				</p:dialog>
 			</h:form>

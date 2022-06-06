@@ -1,0 +1,106 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+<h:body>
+	<ui:composition template="/WEB-INF/templates/master.xhtml">
+		<ui:define name="content">
+			<h:form id="frm">
+				<h3 style="color: #003778; text-align: center">ACTIVIDADES PRINCIPAL DE
+					EMPRESAS</h3>
+				<p:growl id="mensaje" autoUpdate="false" showSummary="false"
+					showDetail="true" />
+
+				<p:panelGrid columns="2" columnClasses="topAligned"
+					style="text-align: left;width:100%">
+					<p:panel id="pn_datosg" style="width:100%">
+						<p:dataTable id="dt" resizableColumns="true" 
+							value="#{actividadEmpresaBean.listaActividadEmpresa}"
+							var="e" widgetVar="wgvpar" rows="15" paginator="true"
+							paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+							rowsPerPageTemplate="10,15,20" sortOrder="descending"
+							paginatorPosition="top"
+							emptyMessage="No hay ningún registro con esa opción">
+
+							<p:column headerText="Código"
+								filterBy="#{e.id}" filterMatchMode="contains"
+								style="width:20px;text-align:left">
+								<p:outputLabel value="#{e.id}" />
+							</p:column>
+
+							<p:column headerText="Nombre de la Actividad"
+								filterBy="#{e.nombre}" filterMatchMode="contains"
+								style="width:20px">
+								<p:outputLabel value="#{e.nombre}" />
+							</p:column>
+
+							<p:column exportable="false" style="width: 10px">
+								<p:commandLink
+									actionListener="#{actividadEmpresaBean.mostrarData(e)}"
+									oncomplete="PF('wdlg_par').show()" immediate="true"
+									process="@this" update="frm:dlg">
+									<i class="ui-icon ui-icon-pencil"></i>
+								</p:commandLink>
+							</p:column>
+
+						</p:dataTable>
+
+						<p:dialog id="dlg" widgetVar="wdlg_par" resizable="false"
+							width="700" draggable="true" modal="true" position="center"
+							closeOnEscape="true" positionType="absolute">
+
+							<h2 style="color: #003778; text-align: center">Actividades
+								de Empresa</h2>
+							<p:fieldset legend="#{actividadEmpresaBean.tipoDialog}"
+								style="width:90%">
+
+								<p:panelGrid id="pg" columns="3" tyle="margin-left: 35%">
+
+									<p:column style="border-style: hidden;width:50px;"></p:column>
+									<p:column style="border-style: hidden; width:130px;">Nombre: </p:column>
+									<p:column style="border-style: hidden;">
+										<p:inputText id="txtNombres"
+											value="#{actividadEmpresaBean.actividadEmpresa.nombre}"
+											style="width:450px" />
+										<p:messages for="txtNombre" display="icon" />
+									</p:column>
+
+								</p:panelGrid>
+
+							</p:fieldset>
+							<p:panelGrid id="pgBotones" columns="3" style="margin-left: 35%">
+								<p:commandButton value="Registrar"
+									actionListener="#{actividadEmpresaBean.operar('R')}"
+									ajax="true"
+									oncomplete="if (args &amp;&amp; !args.validationFailed) PF('wdlg_par').hide()"
+									update="pg, dt"
+									rendered="#{actividadEmpresaBean.tipoDialog == 'Nueva Actividad'}" />
+
+								<p:commandButton value="Modificar"
+									actionListener="#{actividadEmpresaBean.operar('M')}"
+									ajax="true"
+									oncomplete="if (args &amp;&amp; !args.validationFailed) PF('wdlg_par').hide()"
+									update="pg, dt"
+									rendered="#{actividadEmpresaBean.tipoDialog == 'Modificar Actividad'}" />
+							</p:panelGrid>
+						</p:dialog>
+					</p:panel>
+					<p:panel id="pn_opciones" style="width:100%">
+						<p:commandButton value="Nuevo" oncomplete="PF('wdlg_par').show()"
+							icon="ui-icon-newwin" style="width:100px"
+							actionListener="#{actividadEmpresaBean.limpiarControles()}"
+							update="frm:dlg" process="@this" />
+						<p:commandButton id="btnRegresar" value="Principal"
+							icon="ui-icon-circle-arrow-w" style="width:100px"
+							action="#{navegarVistasBean.principal()}" />
+					</p:panel>
+				</p:panelGrid>
+			</h:form>
+		</ui:define>
+
+	</ui:composition>
+</h:body>
+</html>

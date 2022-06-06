@@ -7,10 +7,10 @@ import lombok.experimental.Accessors;
 
 @Data
 @Accessors(chain = true)
-public class SriRucDTO implements Serializable{
-	
+public class SriRucDTO implements Serializable {
+
 	private static final long serialVersionUID = 1L;
-	
+
 	private boolean conDatos = false;
 	private String numeroRuc;
 	private String razonSocial;
@@ -21,7 +21,5 @@ public class SriRucDTO implements Serializable{
 	private String estadoContribuyente;
 	private String actividadEstablecimiento;
 	private String claseContribuyente;
-	
-	
 
 }

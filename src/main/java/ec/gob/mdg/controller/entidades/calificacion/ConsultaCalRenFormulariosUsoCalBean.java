@@ -17,24 +17,26 @@ import org.primefaces.event.UnselectEvent;
 
 import ec.gob.mdg.control.ejb.modelo.CalificacionesRenovaciones;
 import ec.gob.mdg.control.ejb.modelo.CalrenActividadesCalificacion;
+import ec.gob.mdg.control.ejb.modelo.CalrenIntervenciones;
 import ec.gob.mdg.control.ejb.modelo.CalrenSustancias;
 import ec.gob.mdg.control.ejb.modelo.CalrenSustanciasActividades;
-import ec.gob.mdg.control.ejb.modelo.CalrenSustanciasActividadesProRecReu;
-import ec.gob.mdg.control.ejb.modelo.CalrenSustanciasActividadesProRecReuMateriaPrima;
+import ec.gob.mdg.control.ejb.modelo.CalrenSustanciasEmpleo;
 import ec.gob.mdg.control.ejb.modelo.Empresa;
+import ec.gob.mdg.control.ejb.modelo.Producto;
 import ec.gob.mdg.control.ejb.service.ICalificacionesRenovacionesService;
 import ec.gob.mdg.control.ejb.service.ICalrenActividadesCalificacionService;
-import ec.gob.mdg.control.ejb.service.ICalrenSustanciasActividadesProRecReuMateriaPrimaService;
-import ec.gob.mdg.control.ejb.service.ICalrenSustanciasActividadesProRecReuService;
+import ec.gob.mdg.control.ejb.service.ICalrenIntervencionesService;
 import ec.gob.mdg.control.ejb.service.ICalrenSustanciasActividadesService;
+import ec.gob.mdg.control.ejb.service.ICalrenSustanciasEmpleoService;
 import ec.gob.mdg.control.ejb.service.IEmpresaService;
+import ec.gob.mdg.control.ejb.service.IProductoService;
 import ec.gob.mdg.control.ejb.utils.Utilitario;
 import lombok.Data;
 
 @Data
 @Named
 @SessionScoped
-public class ConsultaCalRenFormulariosProCalBean implements Serializable {
+public class ConsultaCalRenFormulariosUsoCalBean implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
@@ -51,28 +53,35 @@ public class ConsultaCalRenFormulariosProCalBean implements Serializable {
 	private ICalrenActividadesCalificacionService serviceCalRenActCal;
 
 	@Inject
-	private ICalrenSustanciasActividadesProRecReuService serviceCalrenSusActProRecReu;
+	private ICalrenIntervencionesService serviceCalRenIntervenciones;
 
 	@Inject
-	private ICalrenSustanciasActividadesProRecReuMateriaPrimaService serviceCalrenSusActProRecReuMateriaPrima;
+	private ICalrenSustanciasEmpleoService serviceCalRenSusEmpleo;
+	
+	@Inject
+	private IProductoService serviceProducto;
 
 	private List<CalrenSustancias> listaCalRenSustancias = new ArrayList<>();
 	private List<CalrenSustanciasActividades> listaCalRenSustanciasAct = new ArrayList<>();
-	private List<CalrenSustanciasActividadesProRecReu> listaCalRenSusActProRecReu = new ArrayList<>();
-	private List<CalrenSustanciasActividadesProRecReuMateriaPrima> listaCalRenSusActProRecReuMateriaPrima = new ArrayList<>();
+	private List<CalrenSustanciasEmpleo> listaCalRenSustanciasEmpleo = new ArrayList<>();
+	private List<CalrenIntervenciones> listaCalrenIntervenciones = new ArrayList<>();
+	private List<Producto> listaCalrenIntProductos = new ArrayList<>();
 
 	private Empresa empresa = new Empresa();
 	private CalificacionesRenovaciones calRen = new CalificacionesRenovaciones();
 	private CalrenSustanciasActividades calrenSustanciasActividades = new CalrenSustanciasActividades();
 	private CalrenActividadesCalificacion calRenActCal = new CalrenActividadesCalificacion();
-	private CalrenSustanciasActividadesProRecReu calRenSusActProRecReu = new CalrenSustanciasActividadesProRecReu();
-	private CalrenSustanciasActividadesProRecReuMateriaPrima calRenSusActMateriaPrima = new CalrenSustanciasActividadesProRecReuMateriaPrima();
+	private CalrenSustanciasEmpleo calRenSustanciasEmpleo = new CalrenSustanciasEmpleo();
+	private CalrenIntervenciones calrenIntervenciones = new CalrenIntervenciones();
+	private Producto calRenProductos = new Producto();
 
 	String calrenactS;
 	Integer calrenactId;
 	String abreviatura;
+	String actividad;
 	String calrenS;
 	Integer calrenId;
+	Double total_porcentaje=0.0;
 
 	@PostConstruct
 	public void init() {
@@ -90,9 +99,10 @@ public class ConsultaCalRenFormulariosProCalBean implements Serializable {
 
 	/// DATOS DE LA EMPRESA DATOS GENERALES PRIMERA PESTAÑA
 	public void cargarDatos() {
-		abreviatura = "P";
+		abreviatura = "U";
 		calrenactS = (String) FacesContext.getCurrentInstance().getExternalContext().getFlash().get("calrenact");
 		calrenactId = Integer.parseInt(calrenactS);
+		
 		if (calrenactId != null) {
 			calRenActCal = serviceCalRenActCal.listaCalrenActividadesId(calrenactId);
 
@@ -104,16 +114,12 @@ public class ConsultaCalRenFormulariosProCalBean implements Serializable {
 							abreviatura);
 					empresa = serviceEmpresa.listarEmpresaPorId(calRen.getEmpresa().getId());
 
-					if (listaCalRenSustanciasAct != null && !listaCalRenSustanciasAct.isEmpty()) {
-						calrenSustanciasActividades = listaCalRenSustanciasAct.get(0);
-						if (calrenSustanciasActividades != null) {
-							cargarListaCapacidad(calrenSustanciasActividades.getId());
-							if (listaCalRenSusActProRecReu != null && !listaCalRenSusActProRecReu.isEmpty()) {
-								calRenSusActProRecReu = listaCalRenSusActProRecReu.get(0);
-								if (calRenSusActProRecReu != null) {
-									cargarListaMateriaPrima(calRenSusActProRecReu.getId());
-								}
-							}
+					cargarListaEmpleo(calRen.getId());
+					cargarListaIntProductos(calRen.getId());
+					if (listaCalrenIntProductos != null && !listaCalrenIntProductos.isEmpty()) {
+						calRenProductos = listaCalrenIntProductos.get(0);
+						if (calRenProductos != null) {
+							cargarListaIntervenciones(calRenProductos.getId());
 						}
 					}
 				}
@@ -124,27 +130,36 @@ public class ConsultaCalRenFormulariosProCalBean implements Serializable {
 		}
 	}
 
-	public void cargarListaCapacidad(Integer id_CalRenSusAct) {
-		String tipo_actividad = "P";
-		if (id_CalRenSusAct != null) {
-			listaCalRenSusActProRecReu = serviceCalrenSusActProRecReu.listarCalrenActividadesProRecReu(id_CalRenSusAct, tipo_actividad);
+	public void cargarListaIntProductos(Integer id_calren) {
+		actividad = "U";
+		if (id_calren != null) {
+			listaCalrenIntProductos = serviceProducto.listaProductosPorIdCalren(id_calren,actividad);
 		}
 	}
 
-	public void cargarListaMateriaPrima(Integer id_CalRenSusActProRecReu) {
-		if (id_CalRenSusActProRecReu != null) {
-			listaCalRenSusActProRecReuMateriaPrima = serviceCalrenSusActProRecReuMateriaPrima
-					.listarCalrenActividadesMateriaPrima(id_CalRenSusActProRecReu);
+	public void cargarListaIntervenciones(Integer id_producto) {
+		total_porcentaje =0.0;
+		if (id_producto != null) {
+			listaCalrenIntervenciones = serviceCalRenIntervenciones.listaPorIdCalren(id_producto);
+			for(CalrenIntervenciones c : listaCalrenIntervenciones) {
+				total_porcentaje = total_porcentaje  +  c.getPorcentaje();
+			}
 		}
 	}
 
-
-	public void onRowSelect(SelectEvent<CalrenSustanciasActividadesProRecReu> event) {
-		cargarListaMateriaPrima(((CalrenSustanciasActividadesProRecReu) event.getObject()).getId());
+	public void cargarListaEmpleo(Integer id_calren) {
+		actividad = "U";
+		if (id_calren != null) {
+			listaCalRenSustanciasEmpleo = serviceCalRenSusEmpleo.listarPorIdCalren(id_calren,actividad);
+		}
 	}
 
-	public void onRowUnselect(UnselectEvent<CalrenSustanciasActividadesProRecReu> event) {
-		cargarListaMateriaPrima(((CalrenSustanciasActividadesProRecReu) event.getObject()).getId());
+	public void onRowSelect(SelectEvent<Producto> event) {
+		cargarListaIntervenciones(((Producto) event.getObject()).getId());
+	}
+
+	public void onRowUnselect(UnselectEvent<Producto> event) {
+		cargarListaIntervenciones(((Producto) event.getObject()).getId());
 	}
 
 	/// Ir a Formularios actividades

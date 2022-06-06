@@ -7,10 +7,10 @@ import lombok.experimental.Accessors;
 
 @Data
 @Accessors(chain = true)
-public class AntPlacaDTO implements Serializable{
-	
+public class AntPlacaDTO implements Serializable {
+
 	private static final long serialVersionUID = 1L;
-	
+
 	private boolean conDatos = false;
 	private String placa;
 	private String anioMatriculado;
@@ -27,7 +27,13 @@ public class AntPlacaDTO implements Serializable{
 	private String tipoIdent;
 	private String tipoVehiculo;
 	private String tipoServicio;
+	private String anio;
+	private String claseServicio;
+	private String combustible;
+	private String correo;
+	private String direccion;
+	private String marca;
+	private String tonelaje;
+	private String nombrePropAnterior;
 
-	
-	
 }
