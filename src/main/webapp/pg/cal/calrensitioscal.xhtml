@@ -17,7 +17,8 @@
 				<p:growl id="mensaje" autoUpdate="false" showSummary="false"
 					showDetail="true" />
 				<p:panelGrid columns="2" columnClasses="topAligned">
-					<p:panel id="pn_datosSitios" style="width:100%;height:1000px;position:relativo" >
+					<p:panel id="pn_datosSitios"
+						style="width:100%;height:1000px;position:relativo">
 						<p:dataTable id="dt_sitio" var="e" styleClass="centered"
 							value="#{consultaCalRenSitiosBean.listaSitios}"
 							selectionMode="single"
@@ -87,7 +88,7 @@
 							<p:column headerText="Mayor Actividad" style="width:50px">
 								<p:selectBooleanCheckbox value="#{e.mayor_actividad}" />
 							</p:column>
-					
+
 
 							<p:column headerText="Actividades" style="width:50px">
 								<p:commandButton value="Ver" id="btnActividades" process="@this"
@@ -107,10 +108,14 @@
 							<ui:include src="/pg/cal/calrensitiossistmedical.xhtml" />
 						</p:panel>
 					</p:panel>
-					<p:panel id="pn_opciones" style="width:100%;height:1000px;position:relative;">
-						<p:commandButton id="btnRegresar" value="Regresar" style="width:120px"
-							icon="ui-icon-circle-arrow-w"
+					<p:panel id="pn_opciones"
+						style="width:100%;height:1000px;position:relative;">
+						<p:commandButton id="btnRegresar" value="Regresar"
+							style="width:120px" icon="ui-icon-circle-arrow-w"
 							actionListener="#{consultaCalRenSitiosBean.cargarSustancias()}" />
+						<p:commandButton id="btnPrincipal" value="Principal"
+							icon="ui-icon-circle-arrow-w" style="width:120px"
+							action="#{navegarVistasBean.principal()}" />v
 					</p:panel>
 				</p:panelGrid>
 				<!-- DIALOGO PARA ACTIVIDADES POR Sitios -->
@@ -133,7 +138,7 @@
 
 				</p:dialog>
 
-				
+
 			</h:form>
 			<!-- Script de estilos para el contenido fel formulario-->
 			<h:outputStylesheet library="css" name="buscar.css" />

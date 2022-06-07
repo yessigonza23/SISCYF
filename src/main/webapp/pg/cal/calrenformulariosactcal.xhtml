@@ -23,12 +23,12 @@
 							rowKey="#{e.id}" rowIndexVar="index">
 
 							<p:ajax event="rowSelect"
-								listener="#{consultaCalRenFormulariosCalBean.onRowSelect}"/>
+								listener="#{consultaCalRenFormulariosCalBean.onRowSelect}" />
 							<p:ajax event="rowUnselect"
-								listener="#{consultaCalRenFormulariosCalBean.onRowUnselect}"/>
+								listener="#{consultaCalRenFormulariosCalBean.onRowUnselect}" />
 
 							<f:facet name="header">
-								<h:outputText value="ACTIVIDADES OBJETO DE LA CALIFICACIÓN"/>
+								<h:outputText value="ACTIVIDADES OBJETO DE LA CALIFICACIÓN" />
 							</f:facet>
 							<p:column headerText="Actividad" style="width:80px">
 								<p:outputLabel value="#{e.actividadCalificacion.nombre}">
@@ -50,6 +50,9 @@
 						<p:commandButton id="btnRegresar" value="Regresar"
 							style="width:120px" icon="ui-icon-circle-arrow-w"
 							actionListener="#{consultaCalRenFormulariosCalBean.cargarSustancias()}" />
+						<p:commandButton id="btnPrincipal" value="Principal"
+							icon="ui-icon-circle-arrow-w" style="width:120px"
+							action="#{navegarVistasBean.principal()}" />
 					</p:panel>
 				</p:panelGrid>
 			</h:form>

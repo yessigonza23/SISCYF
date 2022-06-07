@@ -217,9 +217,13 @@
 					</p:panel>
 					<p:panel id="pn_opciones" style="width:100%">
 						<p:commandButton id="btnRegresar" value="Regresar"
-							icon="ui-icon-circle-arrow-w"
+							icon="ui-icon-circle-arrow-w" style="width:120px"
 							actionListener="#{consultaRepresentantesCalBean.irDetalleEmpresa()}" />
+						<p:commandButton id="btnPrincipal" value="Principal"
+							icon="ui-icon-circle-arrow-w" style="width:120px"
+							action="#{navegarVistasBean.principal()}" />
 					</p:panel>
+
 				</p:panelGrid>
 
 				<!-- DIALOGO PARA DETALLE DE REPRESENTANTES -->

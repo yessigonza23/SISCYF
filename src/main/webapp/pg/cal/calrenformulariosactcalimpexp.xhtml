@@ -50,29 +50,34 @@
 								value="#{consultaCalRenFormulariosImpExpCalBean.calRenActCal.codigo_operador_exportacion}" />
 						</p:panelGrid>
 						<!-- FILTRAR POR EXPORTADOR O IMPORTADOR LAS SUSTANCIAS -->
+						<p:dataTable id="dt_formulario_tipo" var="e"
+							value="#{consultaCalRenFormulariosImpExpCalBean.listaTipoIE}"
+							selectionMode="single"
+							selection="#{consultaCalRenFormulariosImpExpCalBean.tipoIE}"
+							rowKey="#{e.impexp_actividad_codigo}">
 
-						<p:panelGrid columns="6" columnClasses="topAligned"
-							style="text-align: left;width:100%">
+							<p:ajax event="rowSelect"
+								listener="#{consultaCalRenFormulariosImpExpCalBean.onRowSelectTipo}"
+								update="frm:dt_formulario,frm:dt_form" />
+							<p:ajax event="rowUnselect"
+								listener="#{consultaCalRenFormulariosImpExpCalBean.onRowUnselectTipo}"
+								update="frm:dt_formulario,frm:dt_form" />	
 
 							<f:facet name="header">
-								<h:outputText value="TIPO DE ACTIVIDAD" />
+								<h:outputText value="TIPO IMPORTADOR/EXPORTADOR" />
 							</f:facet>
+							<p:column headerText="Actividad_codigo" style="width:80px">
+								<p:outputLabel value="#{e.impexp_actividad_codigo}">
+								</p:outputLabel>
+							</p:column>
+							<p:column headerText="Actividad" style="width:80px">
+								<p:outputLabel value="#{e.impexp_actividad_nombre}">
+								</p:outputLabel>
+							</p:column>
 
-							<p:selectOneMenu id="cboTipo"
-								value="#{consultaCalRenFormulariosImpExpCalBean.tipoIE.impexp_actividad_codigo}"
-								converter="omnifaces.SelectItemsConverter" autoWidth="false"
-								style="width:350px;" filter="true" required="true"
-								requiredMessage="Requerido el tipo">
-								
-								<f:selectItems
-									value="#{consultaCalRenFormulariosImpExpCalBean.listaTipoIE}"
-									var="c" itemLabel="#{c.impexp_actividad_nombre}  "
-									itemValue="#{c}" />
-								<p:ajax event="change"
-									listener="#{consultaCalRenFormulariosImpExpCalBean.cargarListaSustancias(consultaCalRenFormulariosImpExpCalBean.tipoIE.calren_id, consultaCalRenFormulariosImpExpCalBean.tipoIE.impexp_actividad_codigo)}"
-									update="frm:dt_formulario,frm:dt_form" />
-							</p:selectOneMenu>
-						</p:panelGrid>
+
+						</p:dataTable>
+
 
 						<!-- LISTAR SUSTANCIAS -->
 
@@ -101,8 +106,7 @@
 									</f:facet>
 
 									<p:column headerText="Sustancias" style="width:80px">
-										<p:outputLabel
-											value="#{e.sus_nombre}">
+										<p:outputLabel value="#{e.sus_nombre}">
 										</p:outputLabel>
 									</p:column>
 
@@ -124,7 +128,7 @@
 										<p:outputLabel value="#{x.pais_nombre}">
 										</p:outputLabel>
 									</p:column>
-							
+
 								</p:dataTable>
 							</p:panel>
 						</p:panelGrid>

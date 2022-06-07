@@ -9,35 +9,35 @@ import javax.faces.view.ViewScoped;
 import javax.inject.Inject;
 import javax.inject.Named;
 
-import ec.gob.mdg.control.ejb.modelo.Coordinacion;
-import ec.gob.mdg.control.ejb.service.ICoordinacionService;
+import ec.gob.mdg.control.ejb.modelo.TipoSustancia;
+import ec.gob.mdg.control.ejb.service.ITipoSustanciaService;
 import lombok.Data;
 
 @Data
 @Named
 @ViewScoped
-public class CoordinacionBean implements Serializable {
+public class TipoSustanciaBean implements Serializable {
 
 	private static final long serialVersionUID = -2622304613361080515L;
 
 	@Inject
-	private ICoordinacionService serviceCoordinacion;
+	private ITipoSustanciaService serviceTipoSustancia;
 
-	private List<Coordinacion> listaCoordinacion = new ArrayList<Coordinacion>();
+	private List<TipoSustancia> listaTipoSustancia = new ArrayList<>();
 
-	private Coordinacion coordinacion = new Coordinacion();
+	private TipoSustancia tipoSustancia = new TipoSustancia();
 
 	private String tipoDialog = null;
 
 	@PostConstruct
 	public void init() {
-		listarCoordinacion();
+		listarTipoSustancia();
 		this.tipoDialog = "Nuevo";
 	}
 
-	public void listarCoordinacion() {
+	public void listarTipoSustancia() {
 		try {
-			this.listaCoordinacion = this.serviceCoordinacion.listar();
+			this.listaTipoSustancia = this.serviceTipoSustancia.listar();
 		} catch (Exception e) {
 			System.out.println(e.getMessage());
 		}
@@ -46,25 +46,25 @@ public class CoordinacionBean implements Serializable {
 	public void operar(String accion) {
 		try {
 			if (accion.equalsIgnoreCase("R")) {
-				this.serviceCoordinacion.registrar(coordinacion);
+				this.serviceTipoSustancia.registrar(tipoSustancia);
 			} else if (accion.equalsIgnoreCase("M")) {
-				this.serviceCoordinacion.modificar(coordinacion);
+				this.serviceTipoSustancia.modificar(tipoSustancia);
 			}
-			this.listarCoordinacion();
+			this.listarTipoSustancia();
 		} catch (Exception e) {
 			// System.out.println(e.getMessage());
 			e.printStackTrace();
 		}
 	}
 
-	public void mostrarData(Coordinacion i) {
-		this.coordinacion = i;
-		this.tipoDialog = "Modificar Coordinación";
+	public void mostrarData(TipoSustancia i) {
+		this.tipoSustancia = i;
+		this.tipoDialog = "Modificar Tipo Sustancia";
 	}
 
 	public void limpiarControles() {
-		this.coordinacion = new Coordinacion();
-		this.tipoDialog = "Nueva Coordinación";
+		this.tipoSustancia = new TipoSustancia();
+		this.tipoDialog = "Nuevo Tipo Sustancia";
 	}
 	
 }

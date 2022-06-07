@@ -10,7 +10,8 @@
 	<ui:composition template="/WEB-INF/templates/master.xhtml">
 		<ui:define name="content">
 			<h:form id="frm">
-				<h3 style="color: #003778; text-align: center">COORDINACIONES ZONALES</h3>
+				<h3 style="color: #003778; text-align: center">TIPO DE
+					SUSTANCIAS</h3>
 				<p:growl id="mensaje" autoUpdate="false" showSummary="false"
 					showDetail="true" />
 
@@ -21,8 +22,8 @@
 							style="text-align: left;width:100%">
 
 
-							<p:dataTable id="dt" 
-								value="#{coordinacionBean.listaCoordinacion}" var="e"
+							<p:dataTable id="dt"
+								value="#{tipoSustanciaBean.listaTipoSustancia}" var="e"
 								emptyMessage="No hay ningún registro con esa opción"
 								widgetVar="wgvpar" rows="15" paginator="true"
 								paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
@@ -37,10 +38,12 @@
 									filterMatchMode="contains" style="width:20px">
 									<p:outputLabel value="#{e.nombre}" />
 								</p:column>
-
+								<p:column headerText="Estado" style="width:20px">
+									<p:selectBooleanCheckbox value="#{e.estado}" />
+								</p:column>
 								<p:column exportable="false" style="width: 10px">
 									<p:commandLink
-										actionListener="#{coordinacionBean.mostrarData(e)}"
+										actionListener="#{tipoSustanciaBean.mostrarData(e)}"
 										oncomplete="PF('wdlg_par').show()" immediate="true"
 										process="@this" update="frm:dlg">
 										<i class="ui-icon ui-icon-pencil"></i>
@@ -53,9 +56,9 @@
 								width="700" draggable="true" modal="true" position="center"
 								closeOnEscape="true" positionType="absolute">
 
-								<h2 style="color: #003778; text-align: center">Coordinaciones
-									Zonales</h2>
-								<p:fieldset legend="#{coordinacionBean.tipoDialog}"
+								<h2 style="color: #003778; text-align: center">Tipo de
+									Sustancia</h2>
+								<p:fieldset legend="#{tipoSustanciaBean.tipoDialog}"
 									style="width:90%">
 
 									<p:panelGrid id="pg" columns="3" tyle="margin-left: 35%">
@@ -64,26 +67,42 @@
 										<p:column style="border-style: hidden; width:130px;">Nombre: </p:column>
 										<p:column style="border-style: hidden;">
 											<p:inputText id="txtNombres"
-												value="#{coordinacionBean.coordinacion.nombre}"
-												style="width:450px" onkeyup="mayusculas(this)"/>
+												value="#{tipoSustanciaBean.tipoSustancia.nombre}"
+												style="width:250px" onkeyup="mayusculas(this)" />
 											<p:messages for="txtNombre" display="icon" />
 										</p:column>
 
+										<p:column style="border-style: hidden;width:50px;"></p:column>
+										<p:column style="border-style: hidden; width:130px;">Estado: </p:column>
+										<p:column style="border-style: hidden;">
+											<p:selectBooleanCheckbox id="txtEstado"
+												value="#{tipoSustanciaBean.tipoSustancia.estado}"
+												style="width:20px" />
+										</p:column>
+
+										<p:column style="border-style: hidden;width:50px;"></p:column>
+										<p:column style="border-style: hidden; width:130px;">Definición: </p:column>
+										<p:column style="border-style: hidden;">
+											<p:inputText id="txtDefinición"
+												value="#{tipoSustanciaBean.tipoSustancia.definicion}"
+												style="width:450px" onkeyup="mayusculas(this)" />
+											<p:messages for="txtDefinición" display="icon" />
+										</p:column>
 									</p:panelGrid>
 
 								</p:fieldset>
 								<p:panelGrid id="pgBotones" columns="3" style="margin-left: 35%">
 									<p:commandButton value="Registrar"
-										actionListener="#{coordinacionBean.operar('R')}" ajax="true"
+										actionListener="#{tipoSustanciaBean.operar('R')}" ajax="true"
 										oncomplete="if (args &amp;&amp; !args.validationFailed) PF('wdlg_par').hide()"
 										update="pg, dt"
-										rendered="#{coordinacionBean.tipoDialog == 'Nueva Coordinación'}" />
+										rendered="#{tipoSustanciaBean.tipoDialog == 'Nuevo Tipo Sustancia'}" />
 
 									<p:commandButton value="Modificar"
-										actionListener="#{coordinacionBean.operar('M')}" ajax="true"
+										actionListener="#{tipoSustanciaBean.operar('M')}" ajax="true"
 										oncomplete="if (args &amp;&amp; !args.validationFailed) PF('wdlg_par').hide()"
 										update="pg, dt"
-										rendered="#{coordinacionBean.tipoDialog == 'Modificar Coordinación'}" />
+										rendered="#{tipoSustanciaBean.tipoDialog == 'Modificar Tipo Sustancia'}" />
 								</p:panelGrid>
 							</p:dialog>
 
@@ -91,10 +110,10 @@
 						</p:panelGrid>
 					</p:panel>
 					<p:panel id="pn_opciones" style="width:100%">
-						<p:commandButton value="Nueva Coordinación"
+						<p:commandButton value="Nueva Tipo de Sustancia"
 							oncomplete="PF('wdlg_par').show()" icon="ui-icon-newwin"
 							style="width:150px"
-							actionListener="#{coordinacionBean.limpiarControles()}"
+							actionListener="#{tipoSustanciaBean.limpiarControles()}"
 							update="frm:dlg" process="@this" />
 						<p:commandButton id="btnRegresar" value="Principal"
 							icon="ui-icon-circle-arrow-w" style="width:150px"

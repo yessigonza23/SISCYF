@@ -9,35 +9,35 @@ import javax.faces.view.ViewScoped;
 import javax.inject.Inject;
 import javax.inject.Named;
 
-import ec.gob.mdg.control.ejb.modelo.Coordinacion;
-import ec.gob.mdg.control.ejb.service.ICoordinacionService;
+import ec.gob.mdg.control.ejb.modelo.Continente;
+import ec.gob.mdg.control.ejb.service.IContinenteService;
 import lombok.Data;
 
 @Data
 @Named
 @ViewScoped
-public class CoordinacionBean implements Serializable {
+public class ContinenteBean implements Serializable {
 
 	private static final long serialVersionUID = -2622304613361080515L;
 
 	@Inject
-	private ICoordinacionService serviceCoordinacion;
+	private IContinenteService serviceContinente;
 
-	private List<Coordinacion> listaCoordinacion = new ArrayList<Coordinacion>();
+	private List<Continente> listaContinente = new ArrayList<Continente>();
 
-	private Coordinacion coordinacion = new Coordinacion();
+	private Continente continente = new Continente();
 
 	private String tipoDialog = null;
 
 	@PostConstruct
 	public void init() {
-		listarCoordinacion();
+		listarContinente();
 		this.tipoDialog = "Nuevo";
 	}
 
-	public void listarCoordinacion() {
+	public void listarContinente() {
 		try {
-			this.listaCoordinacion = this.serviceCoordinacion.listar();
+			this.listaContinente = this.serviceContinente.listar();
 		} catch (Exception e) {
 			System.out.println(e.getMessage());
 		}
@@ -46,25 +46,25 @@ public class CoordinacionBean implements Serializable {
 	public void operar(String accion) {
 		try {
 			if (accion.equalsIgnoreCase("R")) {
-				this.serviceCoordinacion.registrar(coordinacion);
+				this.serviceContinente.registrar(continente);
 			} else if (accion.equalsIgnoreCase("M")) {
-				this.serviceCoordinacion.modificar(coordinacion);
+				this.serviceContinente.modificar(continente);
 			}
-			this.listarCoordinacion();
+			this.listarContinente();
 		} catch (Exception e) {
 			// System.out.println(e.getMessage());
 			e.printStackTrace();
 		}
 	}
 
-	public void mostrarData(Coordinacion i) {
-		this.coordinacion = i;
-		this.tipoDialog = "Modificar Coordinación";
+	public void mostrarData(Continente i) {
+		this.continente = i;
+		this.tipoDialog = "Modificar Continente";
 	}
 
 	public void limpiarControles() {
-		this.coordinacion = new Coordinacion();
-		this.tipoDialog = "Nueva Coordinación";
+		this.continente = new Continente();
+		this.tipoDialog = "Nuevo Continente";
 	}
 	
 }

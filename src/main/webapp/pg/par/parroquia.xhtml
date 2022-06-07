@@ -1,4 +1,3 @@
-
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml"
 	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
@@ -10,7 +9,7 @@
 	<ui:composition template="/WEB-INF/templates/master.xhtml">
 		<ui:define name="content">
 			<h:form id="frm">
-				<h3 style="color: #003778; text-align: center">COORDINACIONES ZONALES</h3>
+				<h3 style="color: #003778; text-align: center">PARROQUIAS</h3>
 				<p:growl id="mensaje" autoUpdate="false" showSummary="false"
 					showDetail="true" />
 
@@ -20,10 +19,8 @@
 						<p:panelGrid columns="2" columnClasses="topAligned"
 							style="text-align: left;width:100%">
 
-
-							<p:dataTable id="dt" 
-								value="#{coordinacionBean.listaCoordinacion}" var="e"
-								emptyMessage="No hay ningún registro con esa opción"
+							<p:dataTable id="dt" value="#{parroquiaBean.listaParroquia}"
+								var="e" emptyMessage="No hay ningún registro con esa opción"
 								widgetVar="wgvpar" rows="15" paginator="true"
 								paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
 								rowsPerPageTemplate="10,15,20" sortOrder="descending"
@@ -37,10 +34,18 @@
 									filterMatchMode="contains" style="width:20px">
 									<p:outputLabel value="#{e.nombre}" />
 								</p:column>
+								<p:column headerText="Codigo" filterBy="#{e.codigo}"
+									filterMatchMode="contains" style="width:20px">
+									<p:outputLabel value="#{e.codigo}" />
+								</p:column>
+								<p:column headerText="Cantón"
+									filterBy="#{e.canton.nombre}" filterMatchMode="contains"
+									style="width:20px">
+									<p:outputLabel value="#{e.canton.nombre}" />
+								</p:column>
 
 								<p:column exportable="false" style="width: 10px">
-									<p:commandLink
-										actionListener="#{coordinacionBean.mostrarData(e)}"
+									<p:commandLink actionListener="#{parroquiaBean.mostrarData(e)}"
 										oncomplete="PF('wdlg_par').show()" immediate="true"
 										process="@this" update="frm:dlg">
 										<i class="ui-icon ui-icon-pencil"></i>
@@ -53,20 +58,45 @@
 								width="700" draggable="true" modal="true" position="center"
 								closeOnEscape="true" positionType="absolute">
 
-								<h2 style="color: #003778; text-align: center">Coordinaciones
-									Zonales</h2>
-								<p:fieldset legend="#{coordinacionBean.tipoDialog}"
+								<h2 style="color: #003778; text-align: center">Información
+									de Parroquias</h2>
+								<p:fieldset legend="#{parroquiaBean.tipoDialog}"
 									style="width:90%">
 
 									<p:panelGrid id="pg" columns="3" tyle="margin-left: 35%">
 
 										<p:column style="border-style: hidden;width:50px;"></p:column>
+										<p:column style="border-style: hidden; width:130px;">Cantón: </p:column>
+										<p:column style="border-style: hidden;">
+											<p:selectOneMenu id="categorie_article"
+												value="#{parroquiaBean.parroquia.canton}"
+												converter="omnifaces.SelectItemsConverter" filter="true"
+												filterMatchMode="startsWith" tyle="width:100px">
+												<f:selectItem itemLabel="Select One"
+													noSelectionOption="true" />
+												<f:selectItems value="#{parroquiaBean.listaCanton}" var="e"
+													itemLabel="#{e.nombre}" itemValue="#{e}" />
+												<f:ajax render="selected_item" />
+											</p:selectOneMenu>
+											<p:messages for="cboCanton" />
+										</p:column>
+
+										<p:column style="border-style: hidden;width:50px;"></p:column>
 										<p:column style="border-style: hidden; width:130px;">Nombre: </p:column>
 										<p:column style="border-style: hidden;">
 											<p:inputText id="txtNombres"
-												value="#{coordinacionBean.coordinacion.nombre}"
-												style="width:450px" onkeyup="mayusculas(this)"/>
+												value="#{parroquiaBean.parroquia.nombre}"
+												style="width:450px" onkeyup="mayusculas(this)" />
 											<p:messages for="txtNombre" display="icon" />
+										</p:column>
+										
+										<p:column style="border-style: hidden;width:50px;"></p:column>
+										<p:column style="border-style: hidden; width:130px;">Código: </p:column>
+										<p:column style="border-style: hidden;">
+											<p:inputText id="txtCodigo"
+												value="#{parroquiaBean.parroquia.codigo}"
+												style="width:450px"  />
+											<p:messages for="txtCodigo" display="icon" />
 										</p:column>
 
 									</p:panelGrid>
@@ -74,16 +104,16 @@
 								</p:fieldset>
 								<p:panelGrid id="pgBotones" columns="3" style="margin-left: 35%">
 									<p:commandButton value="Registrar"
-										actionListener="#{coordinacionBean.operar('R')}" ajax="true"
+										actionListener="#{parroquiaBean.operar('R')}" ajax="true"
 										oncomplete="if (args &amp;&amp; !args.validationFailed) PF('wdlg_par').hide()"
 										update="pg, dt"
-										rendered="#{coordinacionBean.tipoDialog == 'Nueva Coordinación'}" />
+										rendered="#{parroquiaBean.tipoDialog == 'Nueva Parroquia'}" />
 
 									<p:commandButton value="Modificar"
-										actionListener="#{coordinacionBean.operar('M')}" ajax="true"
+										actionListener="#{parroquiaBean.operar('M')}" ajax="true"
 										oncomplete="if (args &amp;&amp; !args.validationFailed) PF('wdlg_par').hide()"
 										update="pg, dt"
-										rendered="#{coordinacionBean.tipoDialog == 'Modificar Coordinación'}" />
+										rendered="#{parroquiaBean.tipoDialog == 'Modificar Parroquia'}" />
 								</p:panelGrid>
 							</p:dialog>
 
@@ -91,10 +121,10 @@
 						</p:panelGrid>
 					</p:panel>
 					<p:panel id="pn_opciones" style="width:100%">
-						<p:commandButton value="Nueva Coordinación"
+						<p:commandButton value="Nueva Parroquia"
 							oncomplete="PF('wdlg_par').show()" icon="ui-icon-newwin"
 							style="width:150px"
-							actionListener="#{coordinacionBean.limpiarControles()}"
+							actionListener="#{parroquiaBean.limpiarControles()}"
 							update="frm:dlg" process="@this" />
 						<p:commandButton id="btnRegresar" value="Principal"
 							icon="ui-icon-circle-arrow-w" style="width:150px"

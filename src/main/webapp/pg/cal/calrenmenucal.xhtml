@@ -10,14 +10,17 @@
 	<p:commandButton value="Sitios" ajax="false" icon="ui-icon-home"
 		style="width:120px;" action="#{consultaCalRenTipoSustBean.irSitios()}">
 	</p:commandButton>
-	<p:commandButton value="Actividades" ajax="false" icon="ui-icon-clipboard"
-		style="width:120px;" 
+	<p:commandButton value="Actividades" ajax="false"
+		icon="ui-icon-clipboard" style="width:120px;"
 		action="#{consultaCalRenTipoSustBean.irFormularios()}">
 	</p:commandButton>
-	
+
 	<br />
 	<p:commandButton id="btnRegresar" value="Regresar"
 		icon="ui-icon-circle-arrow-w" style="width:120px"
 		action="#{consultaCalRenTipoSustBean.irCalRen()}" />
+	<p:commandButton id="btnPrincipal" value="Principal"
+		icon="ui-icon-circle-arrow-w" style="width:120px"
+		action="#{navegarVistasBean.principal()}" />
 </p:panelGrid>
 </html>
