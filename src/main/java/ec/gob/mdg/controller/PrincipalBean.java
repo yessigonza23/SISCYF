@@ -17,24 +17,19 @@ import lombok.Data;
 @ViewScoped
 public class PrincipalBean implements Serializable {
 
-	private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 1L;	
 
-	
-	Usuario p = (Usuario) FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("usuario");
+	Usuario us = (Usuario) FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("usuario");
 
 	Date fechaActual;
 
 	@PostConstruct
 	public void init() {
-
 		try {
-			fechaActual = UtilsDate.timestamp();		
-
+			fechaActual = UtilsDate.timestamp();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
 
-	
-	
 }

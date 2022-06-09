@@ -13,30 +13,34 @@
 				onkeypress="if (event.keyCode == 13) { return false; }">
 				<h2 style="color: #003778; text-align: center">CONSULTA DE
 					ROLES</h2>
-				<p:panelGrid columns="3"
-					style="display:block; text-align:center; width:100%; margin:0px auto;"
-					columnClasses="centered">
-					<p:commandButton id="btnRegresar" value="Principal"
-						icon="fa fa-fw fa-hand-o-left"
-						action="#{navegarVistasBean.principal()}" process="@this"
-						update="@this" />
-				</p:panelGrid>
-				<p:dataTable id="dt" resizableColumns="true" var="e"
-					value="#{rolBean.lista}" rows="15" paginator="true"
-					paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
-					rowsPerPageTemplate="10,15,20" sortOrder="descending"
-					paginatorPosition="top"
-					emptyMessage="No hay ningún registro con esa opción">
 
-					<p:column headerText="Nombre del Rol" filterBy="#{e.tipo}"
-						filterMatchMode="contains" style="width:20px">
-						<p:outputLabel value="#{e.tipo}" />
-					</p:column>
-					<p:column headerText="Asignar Menú" style="width: 10px">
-						<p:commandButton id="btnAsignaMenu" value="Asignar"
-							action="#{navegarVistasBean.irDetalleRol(e.id)}" />
-					</p:column>
-				</p:dataTable>
+				<p:panelGrid columns="2" columnClasses="topAligned"
+					style="text-align: left;width:100%">
+					<p:panel id="pn_datosg" style="width:100%">
+						<p:dataTable id="dt" resizableColumns="true" var="e"
+							value="#{rolBean.lista}" rows="15" paginator="true"
+							paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+							rowsPerPageTemplate="10,15,20" sortOrder="descending"
+							paginatorPosition="top"
+							emptyMessage="No hay ningún registro con esa opción">
+
+							<p:column headerText="Nombre del Rol" filterBy="#{e.tipo}"
+								filterMatchMode="contains" style="width:20px">
+								<p:outputLabel value="#{e.tipo}" />
+							</p:column>
+							<p:column headerText="Asignar Menú" style="width: 10px">
+								<p:commandButton id="btnAsignaMenu" value="Asignar"
+									action="#{navegarVistasBean.irDetalleRol(e.id)}" />
+							</p:column>
+						</p:dataTable>
+					</p:panel>
+					<p:panel id="pn_opciones" style="width:100%">
+						<p:commandButton id="btnRegresar" value="Principal"
+							icon="fa fa-fw fa-hand-o-left"
+							action="#{navegarVistasBean.principal()}" process="@this"
+							update="@this" />
+					</p:panel>
+				</p:panelGrid>
 			</h:form>
 
 			<!-- Script de estilos para el contenido fel formulario-->

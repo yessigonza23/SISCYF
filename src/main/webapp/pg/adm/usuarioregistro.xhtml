@@ -16,52 +16,67 @@
 				<p:growl id="growl" showDetail="true" sticky="true">
 					<p:autoUpdate />
 				</p:growl>
+				<p:panelGrid columns="2" columnClasses="topAligned"
+					style="text-align: left;width:100%">
+					<p:panel id="pn_datosg" style="width:100%">
+						<p:panelGrid id="panel" columns="1" cellpadding="5"
+							cellspacing="1" style="padding-right: 100%; margin: 0 auto;">
 
-				<p:panel >
-					<p:panelGrid id="panel" columns="1" cellpadding="5" cellspacing="1"
-						style="padding-right: 100%; margin: 0 auto;">
+							<p:column style="border-style: hidden; width:130px;">Ci/RUC/Pasaporte: </p:column>
+							<p:column style="border-style: hidden;">
+								<p:inputText id="txtCi" maxlength="13"
+									placeholder="Ingrese la cédula "
+									value="#{usuarioBean.usuario.username}">
+									<p:ajax event="valueChange"
+										listener="#{usuarioBean.consultaIdentificacion(usuarioBean.usuario.username)}"
+										update="@form" />
+									<p:ajax event="valueChange"
+										listener="#{usuarioBean.validaCedula(usuarioBean.usuario.username)}"
+										update="@form" />
+								</p:inputText>
+								<p:message for="txtCi" display="icon" />
+							</p:column>
 
-						<p:column style="border-style: hidden; width:130px;">Ci/RUC/Pasaporte: </p:column>
-						<p:column style="border-style: hidden;">
-							<p:inputText id="txtCi" maxlength="13"
-								placeholder="Ingrese la cédula "
-								value="#{usuarioBean.usuario.username}">
-								<p:ajax event="valueChange"
-									listener="#{usuarioBean.consultaIdentificacion(usuarioBean.usuario.username)}"
-									update="@form" />
-								<p:ajax event="valueChange"
-									listener="#{usuarioBean.validaCedula(usuarioBean.usuario.username)}"
-									update="@form" />
-							</p:inputText>
-							<p:message for="txtCi" display="icon" />
-						</p:column>
+							<p:column style="border-style: hidden; width:130px;">Nombres: </p:column>
+							<p:column style="border-style: hidden;">
+								<p:inputText id="txtNombres" disabled="true"
+									value="#{usuarioBean.usuarioRegCivil.nombre}"
+									style="width:300px;">
+								</p:inputText>
+								<p:message for="txtNombres" display="text" />
+							</p:column>
 
-						<p:column style="border-style: hidden; width:130px;">Nombres: </p:column>
-						<p:column style="border-style: hidden;">
-							<p:inputText id="txtNombres" disabled="true"
-								value="#{usuarioBean.usuarioRegCivil.nombre}"
-								style="width:300px;">
-							</p:inputText>
-							<p:message for="txtNombres" display="text" />
-						</p:column>
+						</p:panelGrid>
 
-					</p:panelGrid>
+						<p:panelGrid id="pgDatosUsuario" rendered="#{usuarioBean.render}"
+							columns="1" cellpadding="5" cellspacing="1"
+							style="padding-right: 50px; margin: 0 auto;">
 
-					<p:panelGrid id="pgDatosUsuario" rendered="#{usuarioBean.render}"
-						columns="2" cellpadding="5" cellspacing="1"
-						style="padding-right: 50px; margin: 0 auto;">
+							<p:column style="border-style: hidden; width:130px;">Coordinación: </p:column>
+							<p:column style="border-style: hidden;">
+								<p:selectOneMenu id="Coordinacion"
+									value="#{usuarioBean.usuario.coordinacion}"
+									converter="omnifaces.SelectItemsConverter" filter="true"
+									filterMatchMode="startsWith" tyle="width:200px">
+									<f:selectItem itemLabel="Select One" noSelectionOption="true" />
+									<f:selectItems value="#{usuarioBean.listaCoordinacion}" var="e"
+										itemLabel="#{e.nombre}" itemValue="#{e}" />
+									<f:ajax render="selected_item" />
+								</p:selectOneMenu>
+								<p:messages for="Coordinacion" />
+							</p:column>
 
-						<p:column style="border-style: hidden; width:130px;">Cargo: </p:column>
-						<p:column style="border-style: hidden;">
-							<p:inputText id="txtCargo" value="#{usuarioBean.usuario.cargo}"
-								style="width:300px;" disabled="#{usuarioBean.valida}"
-								onkeyup="mayusculas(this)" maxlength="100" required="true"
-								requiredMessage="Requerido Cargo">
-							</p:inputText>
-							<p:message for="txtCargo" display="text" />
-						</p:column>
+							<p:column style="border-style: hidden; width:130px;">Cargo: </p:column>
+							<p:column style="border-style: hidden;">
+								<p:inputText id="txtCargo" value="#{usuarioBean.usuario.cargo}"
+									style="width:300px;" disabled="#{usuarioBean.valida}"
+									onkeyup="mayusculas(this)" maxlength="100" required="true"
+									requiredMessage="Requerido Cargo">
+								</p:inputText>
+								<p:message for="txtCargo" display="text" />
+							</p:column>
 
-						<p:column style="border-style: hidden;width:50px;"></p:column>
+							<p:column style="border-style: hidden;width:50px;"></p:column>
 							<p:column style="border-style: hidden; width:130px;">Título: </p:column>
 							<p:column style="border-style: hidden;">
 								<p:selectOneMenu id="titulo" disabled="#{usuarioBean.valida}"
@@ -80,49 +95,50 @@
 								</p:selectOneMenu>
 							</p:column>
 
-						<p:column style="border-style: hidden; width:130px;">Correo Electrónico: </p:column>
-						<p:column style="border-style: hidden;">
-							<p:inputText id="txtCorreo"
-								value="#{usuarioBean.usuario.correo_electronico}"
-								style="width:300px;" disabled="#{usuarioBean.valida}"
-								maxlength="100" required="true"
-								requiredMessage="Requerido Correo electronico"
-								validatorMessage="Correo electrónico no es válido">
-								<f:validateRegex
-									pattern="[\w\.-]*[a-zA-Z0-9_]@[\w\.-]*[a-zA-Z0-9]\.[a-zA-Z][a-zA-Z\.]*[a-zA-Z]" />
-							</p:inputText>
-							<p:message for="txtCorreo" display="text" />
-						</p:column>
-						<p:column style="border-style: hidden;width:50px;"></p:column>
-						<p:column style="border-style: hidden; width:130px;">Tipo de Certificado: </p:column>
-						<p:column style="border-style: hidden;">
-							<p:selectOneMenu id="tipoCert" disabled="#{usuarioBean.valida}"
-								value="#{usuarioBean.usuario.tipoCertificado}" required="true"
-								style="width:100px">
-								<f:selectItem itemLabel="Archivo" itemValue="A" />
-								<f:selectItem itemLabel="Token" itemValue="T" />
+							<p:column style="border-style: hidden; width:130px;">Correo Electrónico: </p:column>
+							<p:column style="border-style: hidden;">
+								<p:inputText id="txtCorreo"
+									value="#{usuarioBean.usuario.correo_electronico}"
+									style="width:300px;" disabled="#{usuarioBean.valida}"
+									maxlength="100" required="true"
+									requiredMessage="Requerido Correo electronico"
+									validatorMessage="Correo electrónico no es válido">
+									<f:validateRegex
+										pattern="[\w\.-]*[a-zA-Z0-9_]@[\w\.-]*[a-zA-Z0-9]\.[a-zA-Z][a-zA-Z\.]*[a-zA-Z]" />
+								</p:inputText>
+								<p:message for="txtCorreo" display="text" />
+							</p:column>
+							<p:column style="border-style: hidden;width:50px;"></p:column>
+							<p:column style="border-style: hidden; width:130px;">Tipo de Certificado: </p:column>
+							<p:column style="border-style: hidden;">
+								<p:selectOneMenu id="tipoCert" disabled="#{usuarioBean.valida}"
+									value="#{usuarioBean.usuario.tipoCertificado}" required="true"
+									style="width:100px">
+									<f:selectItem itemLabel="Archivo" itemValue="A" />
+									<f:selectItem itemLabel="Token" itemValue="T" />
 
-							</p:selectOneMenu>
-						</p:column>
-					</p:panelGrid>
+								</p:selectOneMenu>
+							</p:column>
+						</p:panelGrid>
 
-					<p:panelGrid id="panelBotones" columns="3"
-						style="padding-right: 50px; margin: 0 auto;">
+
+					</p:panel>
+					<p:panel id="pn_opciones" style="width:100%">
 						<p:commandButton id="btnguardar" value="Guardar"
-							icon="fa fa-fw fa-floppy-o"
+							icon="fa fa-fw fa-floppy-o" style="width:150px"
 							actionListener="#{usuarioBean.registrar()}" process="@form"
 							update=" @this" disabled="#{usuarioBean.estadeshabilitado}">
-
 						</p:commandButton>
+						<br />
 						<p:commandButton icon="ui-icon-newwin" id="btnNuevo" value="Nuevo"
-							onclick="location.reload()">
+							onclick="location.reload()" style="width:150px">
 						</p:commandButton>
+						<br />
 						<p:commandButton id="btnRegresar" value="Principal"
-							icon="fa fa-fw fa-hand-o-left"
-							action="#{navegarVistasBean.principal()}" process="@this"
-							update="@this" />
-					</p:panelGrid>
-				</p:panel>
+							icon="ui-icon-circle-arrow-w" style="width:150px"
+							action="#{navegarVistasBean.principal()}" />
+					</p:panel>
+				</p:panelGrid>
 			</h:form>
 			<!-- Script de estilos para el contenido fel formulario-->
 			<h:outputStylesheet library="css" name="buscar.css" />

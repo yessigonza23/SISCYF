@@ -1,0 +1,89 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+<h:body>
+	<ui:composition template="/WEB-INF/templates/master.xhtml">
+		<ui:define name="content">
+			<h:form id="asignaMenu"
+				onkeypress="if (event.keyCode == 13) { return false; }">
+
+				<h2 style="color: #003778; text-align: center">ASIGNACIÓN DE
+					MENÚ AL ROL</h2>
+				<h3 style="color: #003778; text-align: center">#{asignarMenuRolBean.rol.tipo}</h3>
+
+				<p:growl id="growl" showDetail="true" sticky="true">
+					<p:autoUpdate />
+				</p:growl>
+				<p:panel>
+					<p:panelGrid columns="3"
+						style="display:block; text-align:center; width:100%; margin:0px auto;"
+						columnClasses="centered">
+						<p:commandButton id="btnRegresar" value="Principal"
+							icon="fa fa-fw fa-hand-o-left"
+							action="#{navegarVistasBean.principal()}" process="@this"
+							update="@this" />
+					</p:panelGrid>
+				</p:panel>
+				<h:panelGrid columns="2" columnClasses="topAligned">
+					<p:fieldset legend="Menús Asignados" tyle="width:50%">
+						<p:dataTable id="menuasignado" resizableColumns="true"
+							value="#{asignarMenuRolBean.listaMenuRol}" var="e" rows="15"
+							paginator="true"
+							paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+							rowsPerPageTemplate="10,15,20" sortOrder="descending"
+							paginatorPosition="top"
+							emptyMessage="No hay ningún registro con esa opción">
+
+							<p:column headerText="Menú " filterBy="#{e.menu.nombre_completo}"
+								filterMatchMode="contains" style="width: 100px">
+								<p:outputLabel value="#{e.menu.nombre_completo}" />
+							</p:column>
+							<p:column style="width: 20px">
+								<p:commandButton id="btnQuitaMenu" value="Quitar"
+									action="#{asignarMenuRolBean.quitar(e.menu.id,e.rol.id)}"
+									update="asignaMenu:menuasignado,asignaMenu:menupendiente">
+
+								</p:commandButton>
+							</p:column>
+
+						</p:dataTable>
+					</p:fieldset>
+					<p:fieldset legend="Menús Pendientes de Asignación" styleClass=""
+						tyle="width:50%">
+						<p:dataTable id="menupendiente" resizableColumns="true"
+							value="#{asignarMenuRolBean.listaMenu}" var="e" rows="15"
+							paginator="true"
+							paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+							rowsPerPageTemplate="10,15,20" sortOrder="descending"
+							paginatorPosition="top"
+							emptyMessage="No hay ningún registro con esa opción">
+
+							<p:column headerText="Menú " filterBy="#{e.nombre_completo}"
+								filterMatchMode="contains" style="width: 100px">
+								<p:outputLabel value="#{e.nombre_completo}" />
+							</p:column>
+							<p:column style="width: 50px">
+								<p:commandButton id="btnAsignaMenu" value="Asignar"
+									action="#{asignarMenuRolBean.asignar(e.id,asignarMenuRolBean.rol.id)}"
+									update="asignaMenu:menuasignado,asignaMenu:menupendiente">
+
+								</p:commandButton>
+							</p:column>
+						</p:dataTable>
+					</p:fieldset>
+				</h:panelGrid>
+			</h:form>
+			<!-- Script de estilos para el contenido fel formulario-->
+			<h:outputStylesheet library="
+									css" name="buscar.css" />
+			<h:outputStylesheet library="css" name="registroUsuario.css" />
+		</ui:define>
+
+	</ui:composition>
+
+</h:body>
+</html>

@@ -65,9 +65,4 @@
 		<param-value>ui-lightness</param-value>
 	</context-param>
 
-	
-	<!-- 	<context-param> -->
-<!-- 		<param-name>primefaces.THEME</param-name> -->
-<!-- 		<param-value>home</param-value> -->
-<!-- 	</context-param> -->
 </web-app>

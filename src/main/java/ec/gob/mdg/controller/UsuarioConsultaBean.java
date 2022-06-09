@@ -28,7 +28,7 @@ public class UsuarioConsultaBean implements Serializable {
 
 	@Inject
 	private IUsuarioService serviceUsuario;
-	
+
 	@Inject
 	private OperacionesConUsuario serviceOperacionesUsuario;
 
@@ -36,24 +36,21 @@ public class UsuarioConsultaBean implements Serializable {
 	boolean estadeshabilitado;
 	boolean estadeshabilitado_ap = true;
 	Integer idusuario = 0;
-	boolean valida=false;
+	boolean valida = false;
 	private String tipoDialog;
 	String contrasena;
-	
+
 	private Usuario usuario;
-	
-	//private Usuario usuario = (Usuario) FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("usuario");
-	
+
 	@PostConstruct
 	public void init() {
 		this.listarUsuarioPunto();
 	}
 
-	//VALIDA SI EXISTE EL USUARIO
+	// VALIDA SI EXISTE EL USUARIO
 	public boolean validaCedula(String cedula) {
-		valida=serviceOperacionesUsuario.validaUsuarioCedula(cedula);
-		System.out.println("imprime el valida : "+valida);
-		if(valida==true) {
+		valida = serviceOperacionesUsuario.validaUsuarioCedula(cedula);
+		if (valida == true) {
 			FacesContext.getCurrentInstance().addMessage(null,
 					new FacesMessage(FacesMessage.SEVERITY_FATAL, "Esta cédula ya fue ingresada", "ERROR"));
 		}
@@ -62,27 +59,25 @@ public class UsuarioConsultaBean implements Serializable {
 
 	public void listarUsuarioPunto() {
 		try {
-			this.listaUsuario = this.serviceUsuario.listar();
+			this.listaUsuario = this.serviceUsuario.listaUsuariosInternos();;
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
 
-
-	
 	public void operar(String accion) {
 		try {
-			 if(accion.equalsIgnoreCase("M")) {
-				 mostrarData(usuario);
-					usuario.setNombre(usuario.getNombre().toUpperCase());
-					usuario.setCorreo_electronico(usuario.getCorreo_electronico().toLowerCase());
-					usuario.setCargo(usuario.getCargo().toUpperCase());
-					usuario.setUsername(usuario.getUsername().toLowerCase());
-					usuario.setTitulo(usuario.getTitulo());
-					usuario.setEstado(usuario.getEstado());
-					
+			if (accion.equalsIgnoreCase("M")) {
+				mostrarData(usuario);
+				usuario.setNombre(usuario.getNombre().toUpperCase());
+				usuario.setCorreo_electronico(usuario.getCorreo_electronico().toLowerCase());
+				usuario.setCargo(usuario.getCargo().toUpperCase());
+				usuario.setUsername(usuario.getUsername().toLowerCase());
+				usuario.setTitulo(usuario.getTitulo());
+				usuario.setEstado(usuario.getEstado());
+
 				this.serviceUsuario.modificar(this.usuario);
-				
+
 			}
 			this.listarUsuarioPunto();
 		} catch (Exception e) {
@@ -94,15 +89,18 @@ public class UsuarioConsultaBean implements Serializable {
 		this.usuario = i;
 		this.tipoDialog = "Modificar Usuario";
 	}
-	
-	public void onRowSelect(SelectEvent event) {
-        FacesMessage msg = new FacesMessage("Usuario Seleccionado", String.valueOf(((Usuario) event.getObject()).getId()));
-        FacesContext.getCurrentInstance().addMessage(null, msg);
-        
-    }
 
-    public void onRowUnselect(UnselectEvent event) {
-        FacesMessage msg = new FacesMessage("Product Unselected", String.valueOf(((Usuario) event.getObject()).getId()));
-        FacesContext.getCurrentInstance().addMessage(null, msg);
-    }
+	public void onRowSelect(SelectEvent<Usuario> event) {
+		
+		FacesMessage msg = new FacesMessage("Usuario Seleccionado",
+				String.valueOf(((Usuario) event.getObject()).getId()));
+		FacesContext.getCurrentInstance().addMessage(null, msg);
+
+	}
+
+	public void onRowUnselect(UnselectEvent<Usuario> event) {
+		FacesMessage msg = new FacesMessage("Product Unselected",
+				String.valueOf(((Usuario) event.getObject()).getId()));
+		FacesContext.getCurrentInstance().addMessage(null, msg);
+	}
 }

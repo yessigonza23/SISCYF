@@ -1,0 +1,240 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+<h:body>
+	<ui:composition template="/WEB-INF/templates/master.xhtml">
+		<ui:define name="content">
+			<h:form id="frm">
+				<h3 style="color: #003778; text-align: center">INFORMACIÓN DE VEHÍCULOS</h3>
+				<p:growl id="mensaje" autoUpdate="false" showSummary="false"
+					showDetail="true" />
+
+				<p:panelGrid columns="2" columnClasses="topAligned"
+					style="text-align: left;width:100%">
+					<p:panel id="pn_datosg" style="width:100%">
+						<p:panelGrid columns="2" columnClasses="topAligned"
+							style="text-align: left;width:100%">
+
+
+							<p:dataTable id="dt" value="#{vehiculosBean.listaVehiculos}"
+								var="e" emptyMessage="No hay ningún registro con esa opción"
+								widgetVar="wgvpar" rows="15" paginator="true"
+								paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+								rowsPerPageTemplate="10,15,20" sortOrder="descending"
+								paginatorPosition="top">
+
+								<p:column headerText="Id" filterBy="#{e.id}"
+									filterMatchMode="contains" style="width:5px">
+									<p:outputLabel value="#{e.id}" />
+								</p:column>
+								<p:column headerText="origen" filterBy="#{e.origen}"
+									filterMatchMode="contains" style="width:20px">
+									<p:outputLabel value="#{e.origen}">
+										<f:converter converterId="origen" />
+									</p:outputLabel>
+								</p:column>
+								<p:column headerText="Tipo de Vehiculo"
+									filterBy="#{e.vehiculosTipo.nombre}" filterMatchMode="contains"
+									style="width:100px">
+									<p:outputLabel value="#{e.vehiculosTipo.nombre}" />
+								</p:column>
+								<p:column headerText="Placa del vehículo" filterBy="#{e.placa}"
+									filterMatchMode="contains" style="width:20px">
+									<p:outputLabel value="#{e.placa}" />
+								</p:column>
+								<p:column exportable="false" style="width: 10px">
+									<p:commandLink actionListener="#{vehiculosBean.mostrarData(e)}"
+										oncomplete="PF('wdlg_par').show()" immediate="true"
+										process="@this" update="frm:dlg">
+										<i class="ui-icon ui-icon-pencil"></i>
+									</p:commandLink>
+								</p:column>
+
+							</p:dataTable>
+
+							<p:dialog id="dlg" widgetVar="wdlg_par" resizable="false"
+								width="700" draggable="true" modal="true" position="center"
+								closeOnEscape="true" positionType="absolute">
+
+								<h2 style="color: #003778; text-align: center">Información
+									de Vehículos</h2>
+								<p:fieldset legend="#{vehiculosBean.tipoDialog}"
+									style="width:90%">
+
+									<p:panelGrid id="pg" columns="3" tyle="margin-left: 35%">
+
+										<p:column style="border-style: hidden;width:50px;"></p:column>
+										<p:column style="border-style: hidden; width:130px;">Origen: </p:column>
+										<p:column style="border-style: hidden;">
+											<p:selectOneMenu id="cboOrigen"
+												value="#{vehiculosBean.vehiculos.origen}" required="true"
+												style="width:100px">
+												<f:selectItem itemLabel="NACIONAL" itemValue="N" />
+												<f:selectItem itemLabel="EXTRANJERO" itemValue="E" />
+											</p:selectOneMenu>
+										</p:column>
+
+										<p:column style="border-style: hidden;width:50px;"></p:column>
+										<p:column style="border-style: hidden; width:130px;">Tipo de Vehículo: </p:column>
+										<p:column style="border-style: hidden;">
+											<p:selectOneMenu id="Tipo"
+												value="#{vehiculosBean.vehiculos.vehiculosTipo}"
+												converter="omnifaces.SelectItemsConverter" filter="true"
+												filterMatchMode="startsWith" tyle="width:200px">
+												<f:selectItem itemLabel="Select One"
+													noSelectionOption="true" />
+												<f:selectItems value="#{vehiculosBean.listaVehiculosTipo}"
+													var="e" itemLabel="#{e.nombre}" itemValue="#{e}" />
+												<f:ajax render="selected_item" />
+											</p:selectOneMenu>
+											<p:messages for="cboTipo" />
+										</p:column>
+
+										<p:column style="border-style: hidden;width:50px;"></p:column>
+										<p:column style="border-style: hidden; width:130px;">Placa: </p:column>
+										<p:column style="border-style: hidden;">
+											<p:inputText id="txtPlaca"
+												value="#{vehiculosBean.vehiculos.placa}" style="width:100px"
+												onkeyup="mayusculas(this)">
+											</p:inputText>
+											<p:messages for="txtPlaca" display="icon" />
+										</p:column>
+
+										<p:column style="border-style: hidden;width:50px;"></p:column>
+										<p:column style="border-style: hidden; width:130px;">Placa tanquero o plataforma: </p:column>
+										<p:column style="border-style: hidden;">
+											<p:inputText id="txtPlacaTanquero"
+												value="#{vehiculosBean.vehiculos.placa_adicional}"
+												style="width:100px" onkeyup="mayusculas(this)" />
+										</p:column>
+										<p:column style="border-style: hidden;width:50px;"></p:column>
+										<p:column style="border-style: hidden; width:130px;">Propietario: </p:column>
+										<p:column style="border-style: hidden;">
+											<p:inputText id="txtPropietario"
+												value="#{vehiculosBean.vehiculos.propietario}"
+												style="width:250px" onkeyup="mayusculas(this)" />
+										</p:column>
+
+										<p:column style="border-style: hidden;width:50px;"></p:column>
+										<p:column style="border-style: hidden; width:130px;">País de Matrícula: </p:column>
+										<p:column style="border-style: hidden;">
+											<p:selectOneMenu id="pais"
+												value="#{vehiculosBean.vehiculos.pais}"
+												converter="omnifaces.SelectItemsConverter" filter="true"
+												filterMatchMode="startsWith" tyle="width:200px">
+												<f:selectItem itemLabel="Select One"
+													noSelectionOption="true" />
+												<f:selectItems value="#{vehiculosBean.listaPais}" var="e"
+													itemLabel="#{e.nombre}" itemValue="#{e}" />
+												<f:ajax render="selected_item" />
+											</p:selectOneMenu>
+											<p:messages for="cboPais" />
+										</p:column>
+
+
+										<p:column style="border-style: hidden;width:50px;"></p:column>
+										<p:column style="border-style: hidden; width:130px;">Marca: </p:column>
+										<p:column style="border-style: hidden;">
+											<p:inputText id="txtMarca"
+												value="#{vehiculosBean.vehiculos.marca}"
+												style="width:150px" onkeyup="mayusculas(this)" />
+										</p:column>
+										
+										<p:column style="border-style: hidden;width:50px;"></p:column>
+										<p:column style="border-style: hidden; width:130px;">Modelo: </p:column>
+										<p:column style="border-style: hidden;">
+											<p:inputText id="txtModelo"
+												value="#{vehiculosBean.vehiculos.modelo}"
+												style="width:150px" onkeyup="mayusculas(this)" />
+										</p:column>
+										
+										<p:column style="border-style: hidden;width:50px;"></p:column>
+										<p:column style="border-style: hidden; width:130px;">Año de Fabricación: </p:column>
+										<p:column style="border-style: hidden;">
+											<p:inputText id="txtAnio"
+												value="#{vehiculosBean.vehiculos.anio_fabricacion}"
+												style="width:100px" onkeyup="mayusculas(this)" />
+										</p:column>
+										
+										<p:column style="border-style: hidden;width:50px;"></p:column>
+										<p:column style="border-style: hidden; width:130px;">Color: </p:column>
+										<p:column style="border-style: hidden;">
+											<p:inputText id="txtColor"
+												value="#{vehiculosBean.vehiculos.color}"
+												style="width:100px" onkeyup="mayusculas(this)" />
+										</p:column>
+										
+										<p:column style="border-style: hidden;width:50px;"></p:column>
+										<p:column style="border-style: hidden; width:130px;">Nro. Motor: </p:column>
+										<p:column style="border-style: hidden;">
+											<p:inputText id="txtNumMotor"
+												value="#{vehiculosBean.vehiculos.num_motor}"
+												style="width:250px" onkeyup="mayusculas(this)" />
+										</p:column>
+										
+										<p:column style="border-style: hidden;width:50px;"></p:column>
+										<p:column style="border-style: hidden; width:130px;">Nro. Chasis: </p:column>
+										<p:column style="border-style: hidden;">
+											<p:inputText id="txtNroChasis"
+												value="#{vehiculosBean.vehiculos.num_serie_chasis}"
+												style="width:250px" onkeyup="mayusculas(this)" />
+										</p:column>
+										
+										<p:column style="border-style: hidden;width:50px;"></p:column>
+										<p:column style="border-style: hidden; width:130px;">Capacidad de la carga: </p:column>
+										<p:column style="border-style: hidden;">
+											<p:inputText id="txtCapacidad"
+												value="#{vehiculosBean.vehiculos.capacidad_carga}"
+												style="width:100px" onkeyup="mayusculas(this)" />
+										</p:column>
+										
+										<p:column style="border-style: hidden;width:50px;"></p:column>
+										<p:column style="border-style: hidden; width:130px;">Capacidad de la carga: </p:column>
+										<p:column style="border-style: hidden;">
+											<p:inputText id="txtCapacidad"
+												value="#{vehiculosBean.vehiculos.capacidad_carga}"
+												style="width:250px" onkeyup="mayusculas(this)" />
+										</p:column>
+									</p:panelGrid>
+
+								</p:fieldset>
+								<p:panelGrid id="pgBotones" columns="3" style="margin-left: 35%">
+									<p:commandButton value="Registrar"
+										actionListener="#{vehiculosBean.operar('R')}" ajax="true"
+										oncomplete="if (args &amp;&amp; !args.validationFailed) PF('wdlg_par').hide()"
+										update="pg, dt"
+										rendered="#{vehiculosBean.tipoDialog == 'Nuevo Vehículo'}" />
+
+									<p:commandButton value="Modificar"
+										actionListener="#{vehiculosBean.operar('M')}" ajax="true"
+										oncomplete="if (args &amp;&amp; !args.validationFailed) PF('wdlg_par').hide()"
+										update="pg, dt"
+										rendered="#{vehiculosBean.tipoDialog == 'Modificar Vehiculo'}" />
+								</p:panelGrid>
+							</p:dialog>
+
+
+						</p:panelGrid>
+					</p:panel>
+					<p:panel id="pn_opciones" style="width:100%">
+						<p:commandButton value="Nuevo Vehículo"
+							oncomplete="PF('wdlg_par').show()" icon="ui-icon-newwin"
+							style="width:150px"
+							actionListener="#{vehiculosBean.limpiarControles()}"
+							update="frm:dlg" process="@this" />
+						<p:commandButton id="btnRegresar" value="Principal"
+							icon="ui-icon-circle-arrow-w" style="width:150px"
+							action="#{navegarVistasBean.principal()}" />
+					</p:panel>
+				</p:panelGrid>
+			</h:form>
+		</ui:define>
+
+	</ui:composition>
+</h:body>
+</html>

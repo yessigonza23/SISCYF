@@ -2,6 +2,8 @@ package ec.gob.mdg.controller;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Properties;
 
 import javax.annotation.PostConstruct;
@@ -20,9 +22,11 @@ import javax.mail.internet.MimeMultipart;
 
 import org.mindrot.jbcrypt.BCrypt;
 
+import ec.gob.mdg.control.ejb.modelo.Coordinacion;
 import ec.gob.mdg.control.ejb.modelo.Correo;
 import ec.gob.mdg.control.ejb.modelo.Usuario;
 import ec.gob.mdg.control.ejb.operaciones.OperacionesConUsuario;
+import ec.gob.mdg.control.ejb.service.ICoordinacionService;
 import ec.gob.mdg.control.ejb.service.ICorreoService;
 import ec.gob.mdg.control.ejb.service.IUsuarioService;
 import ec.gob.mdg.control.ejb.utils.CedulaRuc;
@@ -45,9 +49,14 @@ public class UsuarioBean implements Serializable {
 	
 	@Inject
 	private ICorreoService serviceCorreo;
+	
+	@Inject
+	private ICoordinacionService serviceCoordinación;
 
 	private Correo correo;
 	private Usuario usuario;
+	private List<Coordinacion> listaCoordinacion = new ArrayList<Coordinacion>();
+	
 	RegistroCivilCedulaDTO usuarioRegCivil = new RegistroCivilCedulaDTO();
 	boolean estadeshabilitado;
 	boolean estadeshabilitado_ap = true;
@@ -61,8 +70,10 @@ public class UsuarioBean implements Serializable {
 	public void init() {
 		this.usuario = new Usuario();
 		// usuario.setUsername("1716925050");
+		render = false;
 		claveNueva = generarSecuenciaAleatoria();
 		desactivarAP();
+		listarCoordinacion();
 		// consultaIdentificacion();
 	}
 
@@ -91,10 +102,18 @@ public class UsuarioBean implements Serializable {
 		}
 	}
 	
+	public void listarCoordinacion() {
+		try {
+			this.listaCoordinacion = this.serviceCoordinación.listar();
+		} catch (Exception e) {
+			// TODO: handle exception
+		}
+	}
+	
 	//VALIDA SI EXISTE EL USUARIO
 		public boolean validaCedula(String cedula) {
 			valida=serviceOpUsuario.validaUsuarioCedula(cedula);
-//			System.out.println("imprime el valida : "+valida);
+
 			if(valida==true) {
 				estadeshabilitado=true;
 				FacesContext.getCurrentInstance().addMessage(null,
@@ -181,11 +200,12 @@ public class UsuarioBean implements Serializable {
 	}
 
 	public void enviarContrasenia(String cedula, String clave) {
-		System.out.println("entra a enviar contraseña 1");
-		eviarCorreo(cedula, claveNueva);
+
+		eviarCorreo(cedula, clave);
 	}
 
-	public boolean eviarCorreo(String ci, String clave) {		
+	public boolean eviarCorreo(String ci, String clave) {
+
 		correo = serviceCorreo.obtenerDatosCorreo();
 		Properties props = System.getProperties();
 		props.put("mail.smtp.host", correo.getMailSmtpHost()); 		
@@ -201,24 +221,25 @@ public class UsuarioBean implements Serializable {
 		String cuerpoMensaje = "<html><head><title></title></head><body>" + "Estimado(a) Usuario (a): "
 				+ usuario.getNombre();
 
-		cuerpoMensaje += "<br><br>Le informamos que se ha realizado la creación de su usuario para el Sistema SISCYF, su usuario es:  "
+		cuerpoMensaje += "<br><br>Le informamos que se ha realizado el registro de su usuario para el Sistema SISCYF, su usuario es:  "
 				+ usuario.getUsername() + ", con la clave: " + clave + "<br><br>Atentamente,<br>"
 				+ "MDG - Sistema SISCYF <br><br>" + "</body></html>";
 
 		Session session = Session.getInstance(props, null);
-//		session.setDebug(true);
+
 		try {
 			MimeBodyPart textoMensaje = new MimeBodyPart();
 			textoMensaje.setContent(cuerpoMensaje, "text/html");
 
 			MimeMultipart multiParte = new MimeMultipart();
 			multiParte.addBodyPart(textoMensaje);
-
+			
 			MimeMessage message = new MimeMessage(session);
 			message.setFrom(new InternetAddress(correo.getMailEmisor(), "Ministerio de Gobierno"));			
 			message.addRecipients(Message.RecipientType.TO, usuario.getCorreo_electronico());			
 			message.setSubject(asuntoMensaje);			
 			message.setContent(multiParte);
+			
 			Transport transport = session.getTransport("smtp");			
 			transport.connect(correo.getMailSmtpHost(), correo.getMailEmisor(), correo.getMailPasswordEmisor());			
 			transport.sendMessage(message, message.getAllRecipients());

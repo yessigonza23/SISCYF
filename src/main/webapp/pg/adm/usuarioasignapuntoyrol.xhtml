@@ -31,26 +31,17 @@
 					paginatorPosition="top"
 					emptyMessage="No hay ningún registro con esa opción">
 
-					<p:column headerText="No. Cédula" filterBy="#{e.ci}"
+					<p:column headerText="No. Identificación" filterBy="#{e.username}"
 						filterMatchMode="contains" style="width:80px">
-						<p:outputLabel value="#{e.ci}" />
+						<p:outputLabel value="#{e.username}" />
 					</p:column>
 
-					<p:column headerText="Nombres y Apellidos"
-						filterBy="#{e.nombre} #{e.apellido}" filterMatchMode="contains"
+					<p:column headerText="Apellidos y Nombres"
+						filterBy="#{e.nombre}" filterMatchMode="contains"
 						style="width:80px">
-						<p:outputLabel value="#{e.nombre} #{e.apellido}"
-							style="text-transform: uppercase" />
+						<p:outputLabel value="#{e.nombre}" />
 					</p:column>
 					
-
-					<p:column style="width: 60px">
-						<p:commandButton id="btnAsignaPunto" value="Pto. Recaudación"
-							icon="fa fa-fw fa-universal-access "
-							action="#{navegarVistasBean.usuariopuntoconsulta(e.id)}" />
-
-					</p:column>
-
 					<p:column exportable="false" style="width: 50px">
 						<p:commandButton id="btnAsignaRol" value="Asignar Rol"
 							icon="fa fa-fw fa-universal-access "

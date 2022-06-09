@@ -99,9 +99,10 @@ public class NavegarVistasBean implements Serializable {
 
 	// IR A ASIGNAR MENU
 	public void irDetalleRol(String idRol) {
+
 		try {
 			FacesContext.getCurrentInstance().getExternalContext().getFlash().put("idRol", idRol);
-			FacesContext.getCurrentInstance().getExternalContext().redirect("./../protegido/rolesasignamenu.xhtml");
+			FacesContext.getCurrentInstance().getExternalContext().redirect("./../pg/adm/rolesasignamenu.xhtml");
 		} catch (Exception e) {
 			System.out.println("FALLO LA REDIRECCION A UN NUEVO FORMULARIO");
 			e.printStackTrace();

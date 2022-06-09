@@ -22,6 +22,7 @@ public class UtilsArchivos {
 	private static final String rutaRaiz = (p.getProperty("os.name").compareToIgnoreCase("linux") == 0 ? "/opt"
 			: p.getProperty("user.home")) + sep + "comprobanteselectronicos" + sep;
 
+	@SuppressWarnings("unused")
 	private static final String sistemaOperativo = (p.getProperty("os.name").compareToIgnoreCase("linux") == 0 ? "UTF-8"
 			: "Cp1252");
 

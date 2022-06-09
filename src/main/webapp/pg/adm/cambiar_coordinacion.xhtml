@@ -12,65 +12,43 @@
 			<h:form id="cambioPunto"
 				onkeypress="if (event.keyCode == 13) { return false; }">
 
-				<h2 style="color: #003778; text-align: center">CAMBIO DE PUNTO
-					DE RECAUDACIÓN</h2>
-
+				<h2 style="color: #003778; text-align: center">CAMBIO DE
+					COORDINACIÓN ZONAL</h2>
 				<p:growl id="growl" showDetail="true" sticky="true">
 					<p:autoUpdate />
 				</p:growl>
+				<p:panelGrid columns="2" columnClasses="topAligned"
+					style="text-align: left;width:100%">
+					<p:panel id="pn_datosg" style="width:100%">
+						<p:panelGrid columns="2" style="margin-top:30px">
 
-				<p:fieldset Style="width:100%">
-					<p:panelGrid columns="1"
-						style="display:block; text-align:center;width:800px;"
-						columnClasses="centered">
-						<p:commandButton id="btnRegresar" value="Principal"
-							icon="fa fa-fw fa-hand-o-left"
-							action="#{navegarVistasBean.principal()}" process="@this"
-							update="@this" />
-					</p:panelGrid>
+							<p:outputLabel styleClass="especialstrong"
+								value="Coordinación Zonal Actual:" />
+							<p:inputText id="txtPunto" maxlength="20"
+								value="#{cambioPuntoBean.us.coordinacion.nombre}"
+								required="true" style="width:350px; color: red;" />
 
-					<p:panelGrid columns="3" style="margin-top:30px">
-
-						<p:row style="border-style: hidden;">
-							<p:column style="border-style: hidden;width:50px;"></p:column>
-							<p:column style="border-style: hidden; width:130px;">Punto de Recaudación Actual: </p:column>
-							<p:column style="border-style: hidden;">
-								<p:inputText id="txtPunto" maxlength="20"
-									value="#{cambioPuntoBean.punto_actual.nombre}" required="true"
-									requiredMessage="Requerido punto de recaudación "
-									style="width:200px; color: red;" />
-								<p:message for="txtPunto" display="icon" />
-							</p:column>
-						</p:row>
-
-						<p:row style="border-style: hidden;">
-							<p:column style="border-style: hidden;width:50px;"></p:column>
-							<p:column style="border-style: hidden; width:130px;">Punto de Recaudación a Cambiar: </p:column>
-							<p:column style="border-style: hidden;">
-								<p:selectOneMenu value="#{cambioPuntoBean.punto_nuevo}"
-									converter="omnifaces.SelectItemsConverter" autoWidth="false"
-									style="width:350px;" filter="true" required="true">
-									<p:ajax event="change" process="@this"
-										listener="#{cambioPuntoBean.modificarPunto(cambioPuntoBean.punto_nuevo)}" />
-									<f:selectItem itemLabel="--Seleccione--" itemValue=""
-										noSelectionOption="true" />
-									<f:selectItems value="#{puntoRecaudacionBean.lista}" var="e"
-										itemValue="#{e}" itemLabel="#{e.nombre}" /> -->
-					</p:selectOneMenu>
-								<p:message for="txtPunto" display="icon" />
-							</p:column>
-						</p:row>
-						<p:commandButton icon="ui-icon-key" value="Continuar"
-							action="/protegido/principal?faces-redirect=true"
-							immediate="true" process="@this" update="@this" />
-					</p:panelGrid>
-				</p:fieldset>
-				
-
+							<p:outputLabel styleClass="especialstrong"
+								value="Coordinación Zonal a Cambiar:" />
+							<p:selectOneMenu value="#{cambioPuntoBean.coordinacionnueva}"
+								converter="omnifaces.SelectItemsConverter" autoWidth="false"
+								style="width:350px;" filter="true" required="true">
+								<f:selectItem itemLabel="--Seleccione--" itemValue=""
+									noSelectionOption="true" />
+								<f:selectItems value="#{cambioPuntoBean.listaCoordinacion}"
+									var="e" itemValue="#{e}" itemLabel="#{e.nombre}" />
+								<p:ajax event="change" process="@this"
+									listener="#{cambioPuntoBean.modificarCoordinacion(cambioPuntoBean.coordinacionnueva)}" />
+							</p:selectOneMenu>
+						</p:panelGrid>
+					</p:panel>
+					<p:panel id="pn_opciones" style="width:100%">
+						<p:commandButton icon="ui-icon-key" value="Guardar"
+							action="#{navegarVistasBean.principal()}" immediate="true"
+							process="@this" update="@this"  style="width:150px"/>
+					</p:panel>
+				</p:panelGrid>
 			</h:form>
-			<!-- Script de estilos para el contenido fel formulario-->
-			<h:outputStylesheet library="css" name="buscar.css" />
-			<h:outputStylesheet library="css" name="registroUsuario.css" />
 		</ui:define>
 
 	</ui:composition>
