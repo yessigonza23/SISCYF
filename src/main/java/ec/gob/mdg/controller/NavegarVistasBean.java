@@ -102,7 +102,7 @@ public class NavegarVistasBean implements Serializable {
 
 		try {
 			FacesContext.getCurrentInstance().getExternalContext().getFlash().put("idRol", idRol);
-			FacesContext.getCurrentInstance().getExternalContext().redirect("./../pg/adm/rolesasignamenu.xhtml");
+			FacesContext.getCurrentInstance().getExternalContext().redirect("./../adm/rolesasignamenu.xhtml");
 		} catch (Exception e) {
 			System.out.println("FALLO LA REDIRECCION A UN NUEVO FORMULARIO");
 			e.printStackTrace();

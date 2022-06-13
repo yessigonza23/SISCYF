@@ -18,64 +18,66 @@
 				<p:growl id="growl" showDetail="true" sticky="true">
 					<p:autoUpdate />
 				</p:growl>
-				<p:panel>
-					<p:panelGrid columns="3"
-						style="display:block; text-align:center; width:100%; margin:0px auto;"
-						columnClasses="centered">
+				<p:panelGrid columns="2" columnClasses="topAligned"
+					style="text-align: left;width:100%">
+					<p:panel id="pn_datosg" style="width:100%">
+						<h:panelGrid columns="2" columnClasses="topAligned">
+							<p:fieldset legend="Menús Asignados" tyle="width:50%">
+								<p:dataTable id="menuasignado" resizableColumns="true"
+									value="#{asignarMenuRolBean.listaMenuRol}" var="e" rows="15"
+									paginator="true"
+									paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+									rowsPerPageTemplate="10,15,20" sortOrder="descending"
+									paginatorPosition="top"
+									emptyMessage="No hay ningún registro con esa opción">
+
+									<p:column headerText="Menú "
+										filterBy="#{e.menu.nombre_completo}"
+										filterMatchMode="contains" style="width: 100px">
+										<p:outputLabel value="#{e.menu.nombre_completo}" />
+									</p:column>
+									<p:column style="width: 20px">
+										<p:commandButton id="btnQuitaMenu" value="Quitar"
+											action="#{asignarMenuRolBean.quitar(e.menu.id,e.rol.id)}"
+											update="asignaMenu:menuasignado,asignaMenu:menupendiente">
+
+										</p:commandButton>
+									</p:column>
+
+								</p:dataTable>
+							</p:fieldset>
+							<p:fieldset legend="Menús Pendientes de Asignación" styleClass=""
+								tyle="width:50%">
+								<p:dataTable id="menupendiente" resizableColumns="true"
+									value="#{asignarMenuRolBean.listaMenu}" var="e" rows="15"
+									paginator="true"
+									paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+									rowsPerPageTemplate="10,15,20" sortOrder="descending"
+									paginatorPosition="top"
+									emptyMessage="No hay ningún registro con esa opción">
+
+									<p:column headerText="Menú " filterBy="#{e.nombre_completo}"
+										filterMatchMode="contains" style="width: 100px">
+										<p:outputLabel value="#{e.nombre_completo}" />
+									</p:column>
+									<p:column style="width: 50px">
+										<p:commandButton id="btnAsignaMenu" value="Asignar"
+											action="#{asignarMenuRolBean.asignar(e.id,asignarMenuRolBean.rol.id)}"
+											update="asignaMenu:menuasignado,asignaMenu:menupendiente">
+
+										</p:commandButton>
+									</p:column>
+								</p:dataTable>
+							</p:fieldset>
+						</h:panelGrid>
+					</p:panel>
+					<p:panel id="pn_opciones" style="width:100%">
 						<p:commandButton id="btnRegresar" value="Principal"
 							icon="fa fa-fw fa-hand-o-left"
 							action="#{navegarVistasBean.principal()}" process="@this"
 							update="@this" />
-					</p:panelGrid>
-				</p:panel>
-				<h:panelGrid columns="2" columnClasses="topAligned">
-					<p:fieldset legend="Menús Asignados" tyle="width:50%">
-						<p:dataTable id="menuasignado" resizableColumns="true"
-							value="#{asignarMenuRolBean.listaMenuRol}" var="e" rows="15"
-							paginator="true"
-							paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
-							rowsPerPageTemplate="10,15,20" sortOrder="descending"
-							paginatorPosition="top"
-							emptyMessage="No hay ningún registro con esa opción">
-
-							<p:column headerText="Menú " filterBy="#{e.menu.nombre_completo}"
-								filterMatchMode="contains" style="width: 100px">
-								<p:outputLabel value="#{e.menu.nombre_completo}" />
-							</p:column>
-							<p:column style="width: 20px">
-								<p:commandButton id="btnQuitaMenu" value="Quitar"
-									action="#{asignarMenuRolBean.quitar(e.menu.id,e.rol.id)}"
-									update="asignaMenu:menuasignado,asignaMenu:menupendiente">
-
-								</p:commandButton>
-							</p:column>
-
-						</p:dataTable>
-					</p:fieldset>
-					<p:fieldset legend="Menús Pendientes de Asignación" styleClass=""
-						tyle="width:50%">
-						<p:dataTable id="menupendiente" resizableColumns="true"
-							value="#{asignarMenuRolBean.listaMenu}" var="e" rows="15"
-							paginator="true"
-							paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
-							rowsPerPageTemplate="10,15,20" sortOrder="descending"
-							paginatorPosition="top"
-							emptyMessage="No hay ningún registro con esa opción">
-
-							<p:column headerText="Menú " filterBy="#{e.nombre_completo}"
-								filterMatchMode="contains" style="width: 100px">
-								<p:outputLabel value="#{e.nombre_completo}" />
-							</p:column>
-							<p:column style="width: 50px">
-								<p:commandButton id="btnAsignaMenu" value="Asignar"
-									action="#{asignarMenuRolBean.asignar(e.id,asignarMenuRolBean.rol.id)}"
-									update="asignaMenu:menuasignado,asignaMenu:menupendiente">
-
-								</p:commandButton>
-							</p:column>
-						</p:dataTable>
-					</p:fieldset>
-				</h:panelGrid>
+					</p:panel>
+				</p:panelGrid>
 			</h:form>
 			<!-- Script de estilos para el contenido fel formulario-->
 			<h:outputStylesheet library="

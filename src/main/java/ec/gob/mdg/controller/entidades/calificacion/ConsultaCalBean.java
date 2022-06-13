@@ -30,10 +30,12 @@ public class ConsultaCalBean implements Serializable {
 
 	String nombre_emp;
 	String id_emp;
+	String estado="ingresado";
 
 	public void consultarListaEmpresas(String nombre) {
+		String estado="ingresado";
 		if (nombre != null) {
-			listaEmpresas = this.serviceEmpresa.listarEmpresasPorNombre(nombre.toUpperCase());
+			listaEmpresas = this.serviceEmpresa.listarEmpresasPorNombre(nombre.toUpperCase(),estado);
 		}
 	}
 

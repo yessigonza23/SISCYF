@@ -14,8 +14,7 @@
 					ROLES PARA EL USUARIO:</h2>
 
 				<h3 style="color: #003778; text-align: center">
-					#{asignarRolUsuarioBean.usuario.nombre}
-					#{asignarRolUsuarioBean.usuario.apellido}</h3>
+					#{asignarRolUsuarioBean.usuario.nombre}</h3>
 
 				<p:growl id="growl" showDetail="true" sticky="true">
 					<p:autoUpdate />
@@ -30,13 +29,13 @@
 							paginatorPosition="top"
 							emptyMessage="No hay ningún registro con esa opción">
 
-							<p:column headerText="Rol " filterBy="#{e.rol.tipo}"
+							<p:column headerText="Rol " filterBy="#{e.rolsiscyf.tipo}"
 								filterMatchMode="contains" style="width: 100px">
-								<p:outputLabel value="#{e.rol.tipo}" />
+								<p:outputLabel value="#{e.rolsiscyf.tipo}" />
 							</p:column>
 							<p:column style="width: 20px">
 								<p:commandButton id="btnQuitaRol" value="Quitar"
-									action="#{asignarRolUsuarioBean.quitar(e.usuario.id,e.rol.id)}"
+									action="#{asignarRolUsuarioBean.quitar(e.usuario.id,e.rolsiscyf.id)}"
 									update="asignaRol:rolasignado,asignaRol:rolpendiente">
 
 								</p:commandButton>

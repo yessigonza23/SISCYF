@@ -11,7 +11,7 @@
 
 			<h:form id="frm" enctype="multipart/form-data"
 				onkeypress="if (event.keyCode == 13) { return false; }">
-				<h2 style="color: #003778; text-align: center">REGISTRO DE
+				<h2 style="color: #003778; text-align: center">
 					OPCIONES DE MENÚ</h2>
 				<p:growl id="growl" autoUpdate="true" showDetail="true"
 					sticky="true" />
@@ -32,15 +32,16 @@
 								filterMatchMode="contains" style="width:5px">
 								<p:outputLabel value="#{e.id}" />
 							</p:column>
-							<p:column headerText="Nombre" filterBy="#{e.nombre}"
+							<p:column headerText="Nombre" filterBy="#{e.nombre_completo}"
 								filterMatchMode="contains" style="width:5px">
-								<p:outputLabel value="#{e.nombre}" />
+								<p:outputLabel value="#{e.nombre_completo}" />
 							</p:column>
 							<p:column headerText="Tipo" filterBy="#{e.tipo}"
 								filterMatchMode="contains" style="width:5px">
 								<p:outputLabel value="#{e.tipo}">
-								<f:converter converterId="tipoMenu" />
+									<f:converter converterId="tipoMenu" />
 								</p:outputLabel>
+
 							</p:column>
 							<p:column exportable="false" style="width: 10px">
 								<p:commandLink
@@ -91,11 +92,11 @@
 									<p:column style="border-style: hidden; width:130px;">Código Submenú: </p:column>
 									<p:column style="border-style: hidden;">
 										<p:selectOneMenu id="categorie_article"
-											value="#{menuDinamicoBean.menu.submenu}" effect="fade"
+											value="#{menuDinamicoBean.submenu}" effect="fade"
 											converter="omnifaces.SelectItemsConverter" filter="true"
 											filterMatchMode="startsWith" tyle="width:100px">
 											<f:selectItem itemLabel="Select One" noSelectionOption="true" />
-											<f:selectItems value="#{menuDinamicoBean.listaMenu}" var="e"
+											<f:selectItems value="#{menuDinamicoBean.listaSubMenu}" var="e"
 												itemLabel="#{e.nombre}" itemValue="#{e}" />
 											<f:ajax render="selected_item" />
 										</p:selectOneMenu>
@@ -103,10 +104,19 @@
 									</p:column>
 
 									<p:column style="border-style: hidden;width:50px;"></p:column>
+									<p:column style="border-style: hidden; width:130px;">Nombre Completo: </p:column>
+									<p:column style="border-style: hidden;">
+										<p:inputText id="txtNomCompleto"
+											value="#{menuDinamicoBean.menu.nombre_completo}" required="true"
+											style="width:300px" />
+										<p:messages for="txtNomCompleto" display="icon" />
+									</p:column>
+
+									<p:column style="border-style: hidden;width:50px;"></p:column>
 									<p:column style="border-style: hidden; width:130px;">Link: </p:column>
 									<p:column style="border-style: hidden;">
 										<p:inputText id="txtLink"
-											value="#{menuDinamicoBean.menu.link}" required="true"
+											value="#{menuDinamicoBean.menu.link}" 
 											style="width:300px" />
 										<p:messages for="txtLink" display="icon" />
 									</p:column>
@@ -131,9 +141,9 @@
 
 					</p:panel>
 					<p:panel id="pn_opciones" style="width:100%">
-						<p:commandButton value="Nuevo Menú" oncomplete="PF('wdlg').show()"
-							actionListener="#{menuDinamicoBean.limpiarControles()}"
-							update="frm:dlg" process="@this" />
+<!-- 						<p:commandButton value="Nuevo Menú" oncomplete="PF('wdlg').show()" -->
+<!-- 							actionListener="#{menuDinamicoBean.limpiarControles()}" -->
+<!-- 							update="frm:dlg" process="@this" /> -->
 						<p:commandButton id="btnRegresar" value="Principal"
 							icon="fa fa-fw fa-hand-o-left"
 							action="#{navegarVistasBean.principal()}" process="@this"

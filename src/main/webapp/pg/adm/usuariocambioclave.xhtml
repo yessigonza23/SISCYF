@@ -17,47 +17,39 @@
 				<p:growl id="growl" showDetail="true" sticky="true">
 					<p:autoUpdate />
 				</p:growl>
+				<p:panelGrid columns="2" columnClasses="topAligned"
+					style="text-align: left;width:100%">
+					<p:panel id="pn_datosg" style="width:100%">
+						<p:panelGrid id="panel" columns="2" cellpadding="5"
+							cellspacing="1" style="padding-right: 100%; margin: 0 auto;">
+							<p:outputLabel styleClass="especialstrong"
+								value="Digete Contraseña para Sistema:" />
+							<p:password id="Clave" size="40"
+								value="#{usuarioModificaBean.usuario.password}"
+								toggleMask="true" match="RepiteClave" />
 
-				<p:fieldset  tyle="width:50%">
-					<p:panelGrid columns="2"
-						style="display:block; text-align:center;width:500px;"
-						columnClasses="centered">
+							<p:outputLabel styleClass="especialstrong"
+								value="Confirme Contraseña para Sistema:" />
+							<p:password id="RepiteClave" size="40"
+								value="#{usuarioModificaBean.usuario.password}"
+								toggleMask="true" />
 
-						<p:row style="border-style: hidden;">
-							<p:column style="border-style: hidden;width:50px;"></p:column>
-							<p:column style="border-style: hidden; width:130px;">Digete Contraseña para Sistema: </p:column>
-							<p:column style="border-style: hidden;">
-								<p:password id="Clave" size="40"
-									value="#{usuarioModificaBean.usuario.password}"
-									toggleMask="true" match="RepiteClave" />
-							</p:column>
-						</p:row>
-						<p:row style="border-style: hidden;">
-							<p:column style="border-style: hidden;width:50px;"></p:column>
-							<p:column style="border-style: hidden; width:130px;">Confirme Contraseña para Sistema: </p:column>
-							<p:column style="border-style: hidden;">
-								<p:password id="RepiteClave" size="40"
-									value="#{usuarioModificaBean.usuario.password}"
-									toggleMask="true" />
-							</p:column>
-						</p:row>
-
-
-					</p:panelGrid>
-					<p:panelGrid columns="2" style="display:block; text-align:center"
-						columnClasses="centered">
+						</p:panelGrid>
+					</p:panel>
+					<p:panel id="pn_opciones" style="width:100%">
 						<p:commandButton icon="ui-icon-disk" id="btnGuardar"
-							value="Guardar" style="text-align: center"
+							value="Guardar" style="text-align: center;width:150px"
 							actionListener="#{usuarioModificaBean.modificar()}"
-							process="@form" update="@form"
+							process="@form" update="@form" 
 							disabled="#{usuarioModificaBean.estadeshabilitado}">
 						</p:commandButton>
+						<br />
 						<p:commandButton id="btnRegresar" value="Principal"
-							icon="fa fa-fw fa-hand-o-left"
+							icon="fa fa-fw fa-hand-o-left" style="width:150px;"
 							action="#{navegarVistasBean.principal()}" process="@this"
 							update="@this" />
-					</p:panelGrid>
-				</p:fieldset>
+					</p:panel>
+				</p:panelGrid>
 			</h:form>
 			<!-- Script de estilos para el contenido fel formulario-->
 			<h:outputStylesheet library="css" name="buscar.css" />

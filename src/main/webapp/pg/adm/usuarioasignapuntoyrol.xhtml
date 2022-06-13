@@ -12,45 +12,47 @@
 			<h:form id="frm" enctype="multipart/form-data"
 				onkeypress="if (event.keyCode == 13) { return false; }"
 				method="post" action="/form" autocomplete="off">
-				<h2 style="color: #003778; text-align: center">ASIGNAR A USUARIO PUNTO DE RECAUDACIÓN Y ROL </h2>
+				<h2 style="color: #003778; text-align: center">ASIGNAR ROL A USUARIOS</h2>
 				<p:growl id="growl" showDetail="true" sticky="true">
 					<p:autoUpdate />
 				</p:growl>
-				<p:panelGrid columns="7" style="display:block; text-align:center"
-					columnClasses="centered">
-					<p:commandButton id="btnRegresar" value="Principal"
-						icon="fa fa-fw fa-hand-o-left"
-						action="#{navegarVistasBean.principal()}" process="@this"
-						update="@this" />
+				<p:panelGrid columns="2" columnClasses="topAligned"
+					style="text-align: left;width:100%">
+					<p:panel id="pn_datosg" style="width:100%">
+						<p:dataTable id="dt" resizableColumns="true" var="e"
+							value="#{usuarioConsultaBean.listaUsuario}" rows="15"
+							paginator="true"
+							paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+							rowsPerPageTemplate="10,15,20" sortOrder="descending"
+							paginatorPosition="top"
+							emptyMessage="No hay ningún registro con esa opción">
+
+							<p:column headerText="No. Identificación"
+								filterBy="#{e.username}" filterMatchMode="contains"
+								style="width:80px">
+								<p:outputLabel value="#{e.username}" />
+							</p:column>
+
+							<p:column headerText="Apellidos y Nombres" filterBy="#{e.nombre}"
+								filterMatchMode="contains" style="width:80px">
+								<p:outputLabel value="#{e.nombre}" />
+							</p:column>
+
+							<p:column exportable="false" style="width: 50px">
+								<p:commandButton id="btnAsignaRol" value="Asignar Rol"
+									icon="fa fa-fw fa-universal-access "
+									action="#{navegarVistasBean.irDetalleUsuarioRol(e.id)}" />
+							</p:column>
+
+						</p:dataTable>
+					</p:panel>
+					<p:panel id="pn_opciones" style="width:100%">
+						<p:commandButton id="btnRegresar" value="Principal"
+							icon="fa fa-fw fa-hand-o-left"
+							action="#{navegarVistasBean.principal()}" process="@this"
+							update="@this" />
+					</p:panel>
 				</p:panelGrid>
-				<p:dataTable id="dt" resizableColumns="true" var="e"
-					value="#{usuarioConsultaBean.listaUsuario}" rows="15"
-					paginator="true"
-					paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
-					rowsPerPageTemplate="10,15,20" sortOrder="descending"
-					paginatorPosition="top"
-					emptyMessage="No hay ningún registro con esa opción">
-
-					<p:column headerText="No. Identificación" filterBy="#{e.username}"
-						filterMatchMode="contains" style="width:80px">
-						<p:outputLabel value="#{e.username}" />
-					</p:column>
-
-					<p:column headerText="Apellidos y Nombres"
-						filterBy="#{e.nombre}" filterMatchMode="contains"
-						style="width:80px">
-						<p:outputLabel value="#{e.nombre}" />
-					</p:column>
-					
-					<p:column exportable="false" style="width: 50px">
-						<p:commandButton id="btnAsignaRol" value="Asignar Rol"
-							icon="fa fa-fw fa-universal-access "
-							action="#{navegarVistasBean.irDetalleUsuarioRol(e.id)}" />
-					</p:column>
-
-				</p:dataTable>
-
-
 
 			</h:form>
 			<!-- Script de estilos para el contenido fel formulario-->

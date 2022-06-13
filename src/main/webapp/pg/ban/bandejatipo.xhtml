@@ -1,0 +1,123 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+<h:body>
+	<ui:composition template="/WEB-INF/templates/master.xhtml">
+		<ui:define name="content">
+			<h:form id="frm">
+				<h3 style="color: #003778; text-align: center">TIPO DE TRÁMITES</h3>
+				<p:growl id="mensaje" autoUpdate="false" showSummary="false"
+					showDetail="true" />
+
+				<p:panelGrid columns="2" columnClasses="topAligned"
+					style="text-align: left;width:100%">
+					<p:panel id="pn_datosg" style="width:100%">
+						<p:panelGrid columns="2" columnClasses="topAligned"
+							style="text-align: left;width:100%">
+							<p:dataTable id="dt"
+								value="#{banEntTipoBean.listaBanTipoTramite}" var="e"
+								emptyMessage="No hay ningún registro con esa opción"
+								widgetVar="wgvpar" rows="15" paginator="true"
+								paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+								rowsPerPageTemplate="10,15,20" sortOrder="descending"
+								paginatorPosition="top">
+
+								<p:column headerText="Id" filterBy="#{e.id}"
+									filterMatchMode="contains" style="width:20px">
+									<p:outputLabel value="#{e.id}" />
+								</p:column>
+								<p:column headerText="Nombre" filterBy="#{e.descripcion}"
+									filterMatchMode="contains" style="width:20px">
+									<p:outputLabel value="#{e.descripcion}" />
+								</p:column>
+								<p:column headerText="Estado" style="width:20px">
+									<p:selectBooleanCheckbox value="#{e.estado}" />
+								</p:column>
+
+								<p:column exportable="false" style="width: 10px">
+									<p:commandLink
+										actionListener="#{banEntTipoBean.mostrarData(e)}"
+										oncomplete="PF('wdlg_par').show()" immediate="true"
+										process="@this" update="frm:dlg">
+										<i class="ui-icon ui-icon-pencil"></i>
+									</p:commandLink>
+								</p:column>
+
+							</p:dataTable>
+
+							<p:dialog id="dlg" widgetVar="wdlg_par" resizable="false"
+								width="700" draggable="true" modal="true" position="center"
+								closeOnEscape="true" positionType="absolute">
+
+								<h2 style="color: #003778; text-align: center">Tipo de
+									Trámite</h2>
+								<p:fieldset legend="#{banEntTipoBean.tipoDialog}"
+									style="width:90%">
+
+									<p:panelGrid id="pg" columns="3" tyle="margin-left: 35%">
+
+										<p:column style="border-style: hidden;width:50px;"></p:column>
+										<p:column style="border-style: hidden; width:130px;">Descripción: </p:column>
+										<p:column style="border-style: hidden;">
+											<p:inputText id="txtNombres"
+												value="#{banEntTipoBean.banTipoTramite.descripcion}"
+												style="width:450px" onkeyup="mayusculas(this)" />
+											<p:messages for="txtNombre" display="icon" />
+										</p:column>
+										<p:column style="border-style: hidden;width:50px;"></p:column>
+										<p:column style="border-style: hidden; width:130px;">Estado: </p:column>
+										<p:column style="border-style: hidden;">
+											<p:selectBooleanCheckbox
+												value="#{banEntTipoBean.banTipoTramite.estado}" />
+										</p:column>
+										<p:column style="border-style: hidden;width:50px;"></p:column>
+										<p:column style="border-style: hidden; width:130px;">Siglas: </p:column>
+										<p:column style="border-style: hidden;">
+											<p:inputText id="txtSiglas"
+												value="#{banEntTipoBean.banTipoTramite.siglas}"
+												style="width:50px" onkeyup="mayusculas(this)" />
+											<p:messages for="txtSiglas" display="icon" />
+										</p:column>
+									</p:panelGrid>
+
+								</p:fieldset>
+								<p:panelGrid id="pgBotones" columns="3" style="margin-left: 35%">
+									<p:commandButton value="Registrar"
+										actionListener="#{banEntTipoBean.operar('R')}" ajax="true"
+										oncomplete="if (args &amp;&amp; !args.validationFailed) PF('wdlg_par').hide()"
+										update="pg, dt"
+										rendered="#{banEntTipoBean.tipoDialog == 'Nuevo Tipo de Trámite'}" />
+
+									<p:commandButton value="Modificar"
+										actionListener="#{banEntTipoBean.operar('M')}" ajax="true"
+										oncomplete="if (args &amp;&amp; !args.validationFailed) PF('wdlg_par').hide()"
+										update="pg, dt"
+										rendered="#{banEntTipoBean.tipoDialog == 'Modificar Tipo de Trámite'}" />
+								</p:panelGrid>
+							</p:dialog>
+
+
+						</p:panelGrid>
+					</p:panel>
+					<p:panel id="pn_opciones" style="width:100%">
+						<p:commandButton value="Nuevo Trámite"
+							oncomplete="PF('wdlg_par').show()" icon="ui-icon-newwin"
+							style="width:150px"
+							actionListener="#{banEntTipoBean.limpiarControles()}"
+							update="frm:dlg" process="@this" />
+						<p:commandButton id="btnRegresar" value="Principal"
+							icon="ui-icon-circle-arrow-w" style="width:150px"
+							action="#{navegarVistasBean.principal()}" />
+					</p:panel>
+				</p:panelGrid>
+			</h:form>
+		</ui:define>
+
+	</ui:composition>
+</h:body>
+</html>

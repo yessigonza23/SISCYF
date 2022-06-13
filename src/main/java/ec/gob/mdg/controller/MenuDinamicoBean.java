@@ -1,6 +1,7 @@
 package ec.gob.mdg.controller;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.annotation.PostConstruct;
@@ -22,8 +23,10 @@ public class MenuDinamicoBean implements Serializable{
 	@Inject
 	private IMenuSiscyfService serviceMenu;
 	
-	private List<MenuSiscyf> listaMenu;
-	private MenuSiscyf menu;
+	private List<MenuSiscyf> listaMenu=new ArrayList<MenuSiscyf>();
+	private List<MenuSiscyf> listaSubMenu=new ArrayList<MenuSiscyf>();
+	private MenuSiscyf submenu = new MenuSiscyf();
+	private MenuSiscyf menu= new MenuSiscyf();
 	private String tipoDialog;
 	
 	@PostConstruct
@@ -35,15 +38,19 @@ public class MenuDinamicoBean implements Serializable{
 	public void listar() {
 		try {
 			listaMenu = serviceMenu.listar();
+			listaSubMenu = serviceMenu.listar();
 		} catch (Exception e) { 
 			e.printStackTrace();
 		}
 	}
-	
+
 	public void operar(String accion) {
 		try {
 			if(accion.equalsIgnoreCase("R")) {
+				System.out.println(accion + " acción " + submenu);
+				menu.setSubmenu(submenu);
 				this.serviceMenu.registrar(this.menu);
+				System.out.println("registra termina");
 			}else if(accion.equalsIgnoreCase("M")) {
 				this.serviceMenu.modificar(this.menu);
 			}

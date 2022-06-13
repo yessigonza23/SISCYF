@@ -55,7 +55,9 @@ public class AsignarRolUsuarioBean implements Serializable {
 	public void listar() {
 		idUsuarios = (String) FacesContext.getCurrentInstance().getExternalContext().getFlash().get("idUsuario");
 		idUsuario = Integer.parseInt(idUsuarios);
-		usuario = serviceUsuario.mostrarUsuarioPorId(idUsuario);		
+		usuario = serviceUsuario.mostrarUsuarioPorId(idUsuario);
+		listaUsuarioRol = serviceUsuarioRol.listarRolesPorUsuario(usuario);
+		listaRol = serviceUsuarioRol.listarRolesPendientes(usuario);
 	}
 	
 	public void quitar(Integer id_usuario, Integer id_rol) {		

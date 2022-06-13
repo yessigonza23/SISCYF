@@ -1,0 +1,97 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+<h:body>
+	<ui:composition template="/WEB-INF/templates/master.xhtml">
+		<ui:define name="content">
+			<h:form id="frm">
+				<h3 style="color: #003778; text-align: center">TRÁMITES
+					DISPONIBLES EN BANDEJA DE ENTRADA</h3>
+				<p:growl id="mensaje" autoUpdate="false" showSummary="false"
+					showDetail="true" />
+
+				<p:panelGrid columns="2" columnClasses="topAligned"
+					style="text-align: left;width:100%">
+					<p:panel id="pn_datosg" style="width:100%">
+
+						<p:panelGrid columns="7" style="display:block; text-align:center"
+							columnClasses="centered">
+							<p:row>
+								<p:column style="border-style: hidden;width:50px;"></p:column>
+								<p:column style="border-style: hidden; width:130px;">Fecha Incio: </p:column>
+								<p:column style="border-style: hidden;">
+									<p:calendar id="txtFechaInicio" pattern="dd/MM/yyyy"
+										mask="true"
+										value="#{bandejaEntradaCalificacionesDetBean.fecha_inicio}">
+									</p:calendar>
+									<p:watermark for="txtFechaInicio" value="dd/MM/yyyy" />
+									<p:messages for="txtFechaInicio" />
+								</p:column>
+							</p:row>
+
+							<p:row>
+								<p:column style="border-style: hidden;width:50px;"></p:column>
+								<p:column style="border-style: hidden; width:130px;">Fecha Fin: </p:column>
+								<p:column style="border-style: hidden;">
+									<p:calendar id="txtFechaFin" pattern="dd/MM/yyyy" mask="true"
+										value="#{bandejaEntradaCalificacionesDetBean.fecha_fin}">
+									</p:calendar>
+									<p:watermark for="txtFechaFin" value="dd/MM/yyyy" />
+									<p:messages for="txtFechaFin" />
+								</p:column>
+							</p:row>
+
+							<p:commandButton icon="ui-icon-search" id="btnConsultar"
+								value="Consultar"
+								actionListener="#{bandejaEntradaCalificacionesDetBean.cargarDatos()}"
+								process="@form" update="ingCierreCaja:fact">
+							</p:commandButton>
+
+						</p:panelGrid>
+
+
+						<p:panelGrid columns="2" columnClasses="topAligned"
+							style="text-align: left;width:100%">
+							<p:dataTable id="dt" value="#{bandejaEntradaCalificacionesDetBean.listaBandejaEntrada}"
+								var="e" selectionMode="single"
+								selection="#{bandejaEntradaCalificacionesDetBean.bandejaEntrada}"
+								rowKey="#{e.id}" rowIndexVar="index">
+
+								<p:ajax event="rowSelect"
+									listener="#{bandejaEntradaCalificacionesDetBean.onRowSelect}" />
+								<p:ajax event="rowUnselect"
+									listener="#{bandejaEntradaCalificacionesDetBean.onRowUnselect}" />
+
+								<p:column headerText="Empresa" style="width:20px">
+									<p:outputLabel value="#{e.empresa.nombre}" />
+								</p:column>
+								<p:column headerText="Observación" style="width:20px">
+									<p:outputLabel value="#{e.observacion}" />
+								</p:column>
+								<p:column headerText="Usuario Asignado" style="width:20px">
+									<p:outputLabel value="#{e.usuario.nombre}" />
+								</p:column>
+
+							</p:dataTable>
+						</p:panelGrid>
+					</p:panel>
+					<p:panel id="pn_opciones" style="width:100%">
+						<p:commandButton id="btnRegresar" value="Regresar"
+							icon="ui-icon-arrowreturn-1-n" style="width:150px"
+							action="#{bandejaEntradaCalificacionesBean.regresarBandeja()}" />
+						<p:commandButton id="btnPrincipal" value="Principal"
+							icon="ui-icon-circle-arrow-w" style="width:150px"
+							action="#{navegarVistasBean.principal()}" />
+					</p:panel>
+				</p:panelGrid>
+			</h:form>
+		</ui:define>
+
+	</ui:composition>
+</h:body>
+</html>
