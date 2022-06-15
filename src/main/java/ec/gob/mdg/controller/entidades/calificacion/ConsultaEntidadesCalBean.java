@@ -1,6 +1,9 @@
 package ec.gob.mdg.controller.entidades.calificacion;
 
 import java.io.Serializable;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import javax.annotation.PostConstruct;
 import javax.faces.context.FacesContext;
@@ -9,7 +12,9 @@ import javax.faces.view.ViewScoped;
 import javax.inject.Inject;
 import javax.inject.Named;
 
+import ec.gob.mdg.control.ejb.modelo.BanTipoTramite;
 import ec.gob.mdg.control.ejb.modelo.Empresa;
+import ec.gob.mdg.control.ejb.service.IBanTipoTramiteService;
 import ec.gob.mdg.control.ejb.service.IEmpresaService;
 import ec.gob.mdg.control.ejb.utils.Utilitario;
 import lombok.Data;
@@ -24,9 +29,18 @@ public class ConsultaEntidadesCalBean implements Serializable {
 	@Inject
 	private IEmpresaService serviceEmpresa;
 
+	@Inject
+	private IBanTipoTramiteService serviceBanTipoTramite;
+
+	private BanTipoTramite banTipoTramite = new BanTipoTramite();
+
 	private Empresa empresa = new Empresa();
 
+	String siglasTramite;
 	String empresaS;
+
+	Date fecha_fin;
+	Date fecha_inicio;
 	Integer empresaId;
 	Boolean render_n = false;
 	Boolean render_j = false;
@@ -36,7 +50,15 @@ public class ConsultaEntidadesCalBean implements Serializable {
 
 	@PostConstruct
 	public void init() {
+
+		SimpleDateFormat formato = new SimpleDateFormat("dd/MM/yyyy");
+		siglasTramite = (String) FacesContext.getCurrentInstance().getExternalContext().getFlash().get("tramite");
+		banTipoTramite = serviceBanTipoTramite.muestraPorSiglas(siglasTramite);
 		try {
+			fecha_inicio = formato.parse(
+					(String) FacesContext.getCurrentInstance().getExternalContext().getFlash().get("fechaInicio"));
+			fecha_fin = formato
+					.parse((String) FacesContext.getCurrentInstance().getExternalContext().getFlash().get("fechaFin"));
 			cargarDatos();
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
@@ -73,8 +95,8 @@ public class ConsultaEntidadesCalBean implements Serializable {
 					render_p = true;
 				}
 			}
-		}		
-		
+		}
+
 	}
 
 	/// Ir a detalle calificaciones
@@ -85,14 +107,29 @@ public class ConsultaEntidadesCalBean implements Serializable {
 		flash.put("empresa", empresaS);
 		Utilitario.irAPagina("/pg/cal/calrenconsultacal");
 	}
-	
+
 	/// Ir a representantes
-	public void irRepresentantes() {		
+	public void irRepresentantes() {
 		empresaS = String.valueOf(empresa.getId());
 		final FacesContext context = FacesContext.getCurrentInstance();
 		final Flash flash = context.getExternalContext().getFlash();
 		flash.put("empresa", empresaS);
 		Utilitario.irAPagina("/pg/cal/representantescal");
+	}
+	
+	public void regresar()  {
+		DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+		String fecha_inicioS = dateFormat.format(fecha_inicio);
+		String fecha_finS = dateFormat.format(fecha_fin);
+
+		final FacesContext context = FacesContext.getCurrentInstance();
+		final Flash flash = context.getExternalContext().getFlash();
+		flash.put("tramite", siglasTramite);
+		flash.put("fechaInicio", fecha_inicioS);
+		flash.put("fechaFin", fecha_finS);
+
+		Utilitario.irAPagina("/pg/ban/bandejaentradaestcalificaciondetusuarios");
+
 	}
 
 }

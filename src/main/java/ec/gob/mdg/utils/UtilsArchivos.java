@@ -4,6 +4,8 @@ package ec.gob.mdg.utils;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.Properties;
 
 import javax.faces.context.FacesContext;
@@ -226,5 +228,24 @@ public class UtilsArchivos {
 	            ctx.responseComplete();
 	        }
 	}
+	
+	public static int calcularMesesAFecha(Date fechaInicio, Date fechaFin) {
+        try {
+            //Fecha inicio en objeto Calendar
+            Calendar startCalendar = Calendar.getInstance();
+            startCalendar.setTime(fechaInicio);
+            //Fecha finalización en objeto Calendar
+            Calendar endCalendar = Calendar.getInstance();
+            endCalendar.setTime(fechaFin);
+            //Cálculo de meses para las fechas de inicio y finalización
+            int startMes = (startCalendar.get(Calendar.YEAR) * 12) + startCalendar.get(Calendar.MONTH);
+            int endMes = (endCalendar.get(Calendar.YEAR) * 12) + endCalendar.get(Calendar.MONTH);
+            //Diferencia en meses entre las dos fechas
+            int diffMonth = endMes - startMes;
+            return diffMonth;
+        } catch (Exception e) {
+            return 0;
+        }
+ }
 
 }

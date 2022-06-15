@@ -10,7 +10,7 @@
 	<ui:composition template="/WEB-INF/templates/master.xhtml">
 		<ui:define name="content">
 			<h:form id="frm">
-				<h3 style="color: #003778; text-align: center">TRÁMITE: #{bandejaEntradaCalificacionesBean.banTipoTramite.descripcion}</h3>
+				<h3 style="color: #003778; text-align: center">TIPO DE TRÁMITES</h3>
 				<p:growl id="mensaje" autoUpdate="false" showSummary="false"
 					showDetail="true" />
 
@@ -20,15 +20,15 @@
 						<p:panelGrid columns="2" columnClasses="topAligned"
 							style="text-align: left;width:100%">
 							<p:dataTable id="dt" lazy="true"
-								value="#{bandejaEntradaCalificacionesBean.listaEstados}" var="e"
+								value="#{bandejaEntradaCalificacionesUsuarioBean.listaEstados}" var="e"
 								selectionMode="single"
-								selection="#{bandejaEntradaCalificacionesBean.banCatalogoEstados}"
+								selection="#{bandejaEntradaCalificacionesUsuarioBean.banCatalogoEstados}"
 								rowKey="#{e.id}" rowIndexVar="index">
 
 								<p:ajax event="rowSelect"
-									listener="#{bandejaEntradaCalificacionesBean.onRowSelect}" />
+									listener="#{bandejaEntradaCalificacionesUsuarioBean.onRowSelect}" />
 								<p:ajax event="rowUnselect"
-									listener="#{bandejaEntradaCalificacionesBean.onRowUnselect}" />
+									listener="#{bandejaEntradaCalificacionesUsuarioBean.onRowUnselect}" />
 
 								<p:column headerText="Nombre" filterBy="#{e.descripcion}"
 									filterMatchMode="contains" style="width:20px">
@@ -40,7 +40,7 @@
 					<p:panel id="pn_opciones" style="width:100%">
 						<p:commandButton id="btnRegresar" value="Regresar"
 							icon="ui-icon-arrowreturn-1-n" style="width:150px"
-							action="#{bandejaEntradaCalificacionesBean.regresarBandeja()}" />
+							action="#{bandejaEntradaCalificacionesUsuarioBean.regresarBandeja()}" />
 						<p:commandButton id="btnPrincipal" value="Principal"
 							icon="ui-icon-circle-arrow-w" style="width:150px"
 							action="#{navegarVistasBean.principal()}" />

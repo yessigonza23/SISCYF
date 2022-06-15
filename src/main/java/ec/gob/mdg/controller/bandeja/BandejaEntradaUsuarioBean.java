@@ -28,7 +28,7 @@ import lombok.Data;
 @Data
 @Named
 @ViewScoped
-public class BandejaEntradaBean implements Serializable {
+public class BandejaEntradaUsuarioBean implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
@@ -48,49 +48,54 @@ public class BandejaEntradaBean implements Serializable {
 
 	@PostConstruct
 	public void init() {
-		listarTramites(usuario);
+
 	}
 
-	public void listarTramites(Usuario usuario) {
-		if (fecha_inicio != null && fecha_fin != null) {
+	public void listarTramites() {
+		if (fecha_inicio!= null &&  fecha_fin!=null) {
 			num_meses = UtilsArchivos.calcularMesesAFecha(fecha_inicio, fecha_fin);
 			System.out.println("num meses " + num_meses);
-
-			if (num_meses > 3) {
+			
+			if(num_meses>3) {
 				FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO,
 						"El periodo de tiempo es hasta 3 meses ", "Aviso"));
-			} else {
-				this.listaTramites = serviceBanTipoTramite.listarTramites(usuario, fecha_inicio, fecha_fin);
+			}else {
+				this.listaTramites = serviceBanTipoTramite.listarTramitesUsuario(usuario, fecha_inicio, fecha_fin);
 			}
-		} else {
-			FacesContext.getCurrentInstance().addMessage(null,
-					new FacesMessage(FacesMessage.SEVERITY_ERROR, "Sin parametros", "Error"));
+		}else {
+			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,
+					"Sin parametros", "Error"));
 		}
-
+		
 	}
 
 	public void onRowSelect(SelectEvent<BanTipoTramite> event) throws Exception {
 		DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
 		String fecha_inicioS = dateFormat.format(fecha_inicio);
 		String fecha_finS = dateFormat.format(fecha_fin);
+
 		final FacesContext context = FacesContext.getCurrentInstance();
 		final Flash flash = context.getExternalContext().getFlash();
 		flash.put("tramite", ((BanTipoTramite) event.getObject()).getSiglas());
 		flash.put("fechaInicio", fecha_inicioS);
 		flash.put("fechaFin", fecha_finS);
-		Utilitario.irAPagina("/pg/ban/bandejaentradaestcalificacion");
+
+		Utilitario.irAPagina("/pg/ban/bandejaentradaestcalificaciondetusuarios");
+
 	}
 
 	public void onRowUnselect(UnselectEvent<BanTipoTramite> event) {
 		DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
 		String fecha_inicioS = dateFormat.format(fecha_inicio);
 		String fecha_finS = dateFormat.format(fecha_fin);
+
 		final FacesContext context = FacesContext.getCurrentInstance();
 		final Flash flash = context.getExternalContext().getFlash();
 		flash.put("tramite", ((BanTipoTramite) event.getObject()).getSiglas());
 		flash.put("fechaInicio", fecha_inicioS);
 		flash.put("fechaFin", fecha_finS);
-		Utilitario.irAPagina("/pg/ban/bandejaentradaestcalificacion");
+
+		Utilitario.irAPagina("/pg/ban/bandejaentradaestcalificaciondetusuarios");
 	}
 
 }
