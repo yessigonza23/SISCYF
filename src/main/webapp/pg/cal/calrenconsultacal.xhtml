@@ -12,8 +12,9 @@
 			<h:form id="frm">
 				<h3 style="color: #003778; text-align: center">EMPRESA:
 					#{consultaCalRenBean.empresa.nombre}</h3>
-				<p:growl id="mensaje" autoUpdate="false" showSummary="false"
-					showDetail="true" />
+				<p:growl id="growl" showDetail="true" sticky="true">
+					<p:autoUpdate />
+				</p:growl>
 
 				<p:panelGrid columns="2" columnClasses="topAligned">
 					<p:panel id="pn_datosCalificaciones" style="width:100%">

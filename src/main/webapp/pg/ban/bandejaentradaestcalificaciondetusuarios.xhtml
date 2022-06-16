@@ -10,14 +10,16 @@
 	<ui:composition template="/WEB-INF/templates/master.xhtml">
 		<ui:define name="content">
 			<h:form id="frm">
-				<h3 style="color: #003778; text-align: center">TIPO DE TRÁMITES</h3>
-				<p:growl id="mensaje" autoUpdate="false" showSummary="false"
-					showDetail="true" />
-
+				<h3 style="color: #003778; text-align: center">TRÁMITE:
+					#{bandejaEntradaCalificacionesDetUsuarioBean.banTipoTramite.descripcion} - 
+					TÉCNICO: #{bandejaEntradaUsuarioBean.usuario.nombre}</h3>
+				<p:growl id="growl" showDetail="true" sticky="true">
+					<p:autoUpdate />
+				</p:growl>
 				<p:panelGrid columns="2" columnClasses="topAligned"
 					style="text-align: left;width:100%">
 					<p:panel id="pn_datosg" style="width:100%">
-						
+
 						<p:dataTable id="dt"
 							value="#{bandejaEntradaCalificacionesDetUsuarioBean.listaBandejaEntrada}"
 							var="e" selectionMode="single"
@@ -40,8 +42,9 @@
 							<p:column headerText="Fecha Trámite" style="width:20px">
 								<p:outputLabel value="#{e.fecha}" />
 							</p:column>
-							<p:column headerText="Usuario asignado" filterBy="#{e.usuario.nombre}"
-								filterMatchMode="contains" style="width:20px">
+							<p:column headerText="Usuario asignado"
+								filterBy="#{e.usuario.nombre}" filterMatchMode="contains"
+								style="width:20px">
 								<p:outputLabel value="#{e.usuario.nombre}" />
 							</p:column>
 

@@ -8,14 +8,14 @@
 <h:body>
 	<ui:composition template="/WEB-INF/templates/master.xhtml">
 		<ui:define name="content">
-
 			<h:form id="frm" enctype="multipart/form-data"
 				onkeypress="if (event.keyCode == 13) { return false; }">
 				<h3 style="color: #003778; text-align: center">CONSULTA DE
-					ENTIDADES - TRÁMITE DE CALIFICACIÓN DE ENTIDADES</h3>
+					ENTIDADES - BANDEJA DE ENTRADA</h3>
 
-				<p:growl id="mensaje" autoUpdate="false" showSummary="false"
-					showDetail="true" />
+				<p:growl id="growl" showDetail="true" sticky="true">
+					<p:autoUpdate />
+				</p:growl>
 				<br />
 
 				<p:panel>
@@ -23,13 +23,13 @@
 						<p:outputLabel styleClass="especialstrong"
 							value="Seleccione la Entidad:" />
 						<p:inputText id="txtEmp" size="60"
-								style="text-transform: uppercase ;float:left"
-								value="#{consultaCalBean.nombre_emp}" />
+							style="text-transform: uppercase ;float:left"
+							value="#{bandejaEntradaPorEmpresaConsultaBean.nombre_emp}" />
 
 
 						<p:commandButton id="btnConsultar" value="Consultar"
 							icon="ui-icon-search"
-							actionListener="#{consultaCalBean.consultarListaEmpresas(consultaCalBean.nombre_emp)}"
+							actionListener="#{bandejaEntradaPorEmpresaConsultaBean.consultarListaEmpresas(bandejaEntradaPorEmpresaConsultaBean.nombre_emp)}"
 							process="@form" update=" @this, frm:dt">
 
 						</p:commandButton>
@@ -38,8 +38,8 @@
 							action="#{navegarVistasBean.principal()}" />
 					</p:panelGrid>
 					<p:panelGrid style="text-align: center" columns="4">
-						<p:dataTable id="dt" resizableColumns="true" var="e"
-							value="#{consultaCalBean.listaEmpresas}" rows="15"
+						<p:dataTable id="dt" resizableColumns="true" var="e" 
+							value="#{bandejaEntradaPorEmpresaConsultaBean.listaEmpresas}" rows="15"
 							paginator="true"
 							paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
 							rowsPerPageTemplate="10,15,20" sortOrder="descending"
@@ -59,7 +59,7 @@
 							<p:column headerText="Acción" style="width:20px">
 								<p:commandButton id="btnDetalle" value="Detalle"
 									icon="ui-icon-circle-arrow-e"
-									action="#{consultaCalBean.irDetalleEmpresa(e.id)}">
+									action="#{bandejaEntradaPorEmpresaConsultaBean.irDetalleEmpresa(e.id)}">
 								</p:commandButton>
 							</p:column>
 						</p:dataTable>
@@ -68,9 +68,6 @@
 
 			</h:form>
 
-			<!-- Script de estilos para el contenido fel formulario-->
-			<h:outputStylesheet library="css" name="buscar.css" />
-			<h:outputStylesheet library="css" name="registroUsuario.css" />
 		</ui:define>
 
 	</ui:composition>

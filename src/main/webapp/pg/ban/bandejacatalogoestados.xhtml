@@ -10,9 +10,11 @@
 	<ui:composition template="/WEB-INF/templates/master.xhtml">
 		<ui:define name="content">
 			<h:form id="frm">
-				<h3 style="color: #003778; text-align: center">CATÁLOGO DE ESTADOS</h3>
-				<p:growl id="mensaje" autoUpdate="false" showSummary="false"
-					showDetail="true" />
+				<h3 style="color: #003778; text-align: center">CATÁLOGO DE
+					ESTADOS</h3>
+				<p:growl id="growl" showDetail="true" sticky="true">
+					<p:autoUpdate />
+				</p:growl>
 
 				<p:panelGrid columns="2" columnClasses="topAligned"
 					style="text-align: left;width:100%">
@@ -20,8 +22,8 @@
 						<p:panelGrid columns="2" columnClasses="topAligned"
 							style="text-align: left;width:100%">
 							<p:dataTable id="dt"
-								value="#{banEntCatalogoEstadosBean.listaBanCatalogoEstados}" var="e"
-								emptyMessage="No hay ningún registro con esa opción"
+								value="#{banEntCatalogoEstadosBean.listaBanCatalogoEstados}"
+								var="e" emptyMessage="No hay ningún registro con esa opción"
 								widgetVar="wgvpar" rows="15" paginator="true"
 								paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
 								rowsPerPageTemplate="10,15,20" sortOrder="descending"
@@ -36,9 +38,9 @@
 									<p:outputLabel value="#{e.descripcion}" />
 								</p:column>
 								<p:column headerText="Estado" style="width:20px">
-									<p:selectBooleanCheckbox value="#{e.estado}" disabled="true"/>
+									<p:selectBooleanCheckbox value="#{e.estado}" disabled="true" />
 								</p:column>
-								<p:column headerText="Siglas"  style="width:10px">
+								<p:column headerText="Siglas" style="width:10px">
 									<p:outputLabel value="#{e.siglas}" />
 								</p:column>
 
@@ -56,7 +58,8 @@
 								width="700" draggable="true" modal="true" position="center"
 								closeOnEscape="true" positionType="absolute">
 
-								<h2 style="color: #003778; text-align: center">Catálogo de Estados</h2>
+								<h2 style="color: #003778; text-align: center">Catálogo de
+									Estados</h2>
 								<p:fieldset legend="#{banEntCatalogoEstadosBean.tipoDialog}"
 									style="width:90%">
 
@@ -89,13 +92,15 @@
 								</p:fieldset>
 								<p:panelGrid id="pgBotones" columns="3" style="margin-left: 35%">
 									<p:commandButton value="Registrar"
-										actionListener="#{banEntCatalogoEstadosBean.operar('R')}" ajax="true"
+										actionListener="#{banEntCatalogoEstadosBean.operar('R')}"
+										ajax="true"
 										oncomplete="if (args &amp;&amp; !args.validationFailed) PF('wdlg_par').hide()"
 										update="pg, dt"
 										rendered="#{banEntCatalogoEstadosBean.tipoDialog == 'Nuevo Catálogo'}" />
 
 									<p:commandButton value="Modificar"
-										actionListener="#{banEntCatalogoEstadosBean.operar('M')}" ajax="true"
+										actionListener="#{banEntCatalogoEstadosBean.operar('M')}"
+										ajax="true"
 										oncomplete="if (args &amp;&amp; !args.validationFailed) PF('wdlg_par').hide()"
 										update="pg, dt"
 										rendered="#{banEntCatalogoEstadosBean.tipoDialog == 'Modificar Catálogo'}" />

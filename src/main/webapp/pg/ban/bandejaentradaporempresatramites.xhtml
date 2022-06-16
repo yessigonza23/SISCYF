@@ -11,7 +11,7 @@
 		<ui:define name="content">
 			<h:form id="frm">
 				<h3 style="color: #003778; text-align: center">BANDEJA DE
-					ENTRADA GENERAL</h3>
+					ENTRADA POR EMPRESA : #{bandejaEntradaPorEmpresaTramitesBean.empresa.nombre}</h3>
 				<p:growl id="growl" showDetail="true" sticky="true">
 					<p:autoUpdate />
 				</p:growl>
@@ -23,30 +23,30 @@
 							style="text-align: left;width:100%">
 							<p:outputLabel styleClass="especialstrong" value="Fecha Incio:" />
 							<p:calendar id="txtFechaInicio" pattern="dd/MM/yyyy" mask="true"
-								value="#{bandejaEntradaBean.fecha_inicio}">
+								value="#{bandejaEntradaPorEmpresaTramitesBean.fecha_inicio}">
 							</p:calendar>
 
 							<p:outputLabel styleClass="especialstrong" value="Fecha Fin:" />
 							<p:calendar id="txtFechaFin" pattern="dd/MM/yyyy" mask="true"
-								value="#{bandejaEntradaBean.fecha_fin}">
+								value="#{bandejaEntradaPorEmpresaTramitesBean.fecha_fin}">
 							</p:calendar>
 
 							<p:commandButton icon="ui-icon-search" id="btnConsultar"
 								value="Consultar"
-								actionListener="#{bandejaEntradaBean.cargarDatos()}"
+								actionListener="#{bandejaEntradaPorEmpresaTramitesBean.cargarDatos()}"
 								process="@form" update="frm:dt">
 							</p:commandButton>
 						</p:panelGrid>
 
-						<p:dataTable id="dt" value="#{bandejaEntradaBean.listaTramites}"
+						<p:dataTable id="dt" value="#{bandejaEntradaPorEmpresaTramitesBean.listaTramites}"
 							var="e" selectionMode="single"
-							selection="#{bandejaEntradaBean.banTipoTramite}" rowKey="#{e.id}"
+							selection="#{bandejaEntradaPorEmpresaTramitesBean.banTipoTramite}" rowKey="#{e.id}"
 							rowIndexVar="index">
 
 							<p:ajax event="rowSelect"
-								listener="#{bandejaEntradaBean.onRowSelect}" />
+								listener="#{bandejaEntradaPorEmpresaTramitesBean.onRowSelect}" />
 							<p:ajax event="rowUnselect"
-								listener="#{bandejaEntradaBean.onRowUnselect}" />
+								listener="#{bandejaEntradaPorEmpresaTramitesBean.onRowUnselect}" />
 
 							<p:column headerText="Nombre" filterBy="#{e.descripcion}"
 								filterMatchMode="contains" style="width:20px">

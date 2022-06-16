@@ -19,8 +19,9 @@ import org.primefaces.event.SelectEvent;
 import org.primefaces.event.UnselectEvent;
 
 import ec.gob.mdg.control.ejb.modelo.BanTipoTramite;
-import ec.gob.mdg.control.ejb.modelo.Usuario;
+import ec.gob.mdg.control.ejb.modelo.Empresa;
 import ec.gob.mdg.control.ejb.service.IBanTipoTramiteService;
+import ec.gob.mdg.control.ejb.service.IEmpresaService;
 import ec.gob.mdg.control.ejb.utils.Utilitario;
 import ec.gob.mdg.utils.UtilsArchivos;
 import lombok.Data;
@@ -28,39 +29,54 @@ import lombok.Data;
 @Data
 @Named
 @ViewScoped
-public class BandejaEntradaUsuarioBean implements Serializable {
+public class BandejaEntradaPorEmpresaTramitesBean implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
 	@Inject
 	private IBanTipoTramiteService serviceBanTipoTramite;
+	
+	@Inject
+	private IEmpresaService serviceEmpresa;
 
 	private List<BanTipoTramite> listaTramites = new ArrayList<BanTipoTramite>();
 
 	private BanTipoTramite banTipoTramite = new BanTipoTramite();
+	private Empresa empresa = new Empresa();
 
 	String siglasTramite;
+	String empresaS;
+	Integer empresaInt;
 	Date fecha_inicio;
 	Date fecha_fin;
 	Integer num_meses = 0;
-
-	Usuario usuario = (Usuario) FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("usuario");
+	String codigo_emp;
+	
 
 	@PostConstruct
 	public void init() {
-
+		
 	}
-
-	public void listarTramites() {
+	
+	public String getParam() {
+		return (String) FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("codigo");
+	}
+	
+	
+	public void cargarDatos() {
 		if (fecha_inicio!= null &&  fecha_fin!=null) {
-			num_meses = UtilsArchivos.calcularMesesAFecha(fecha_inicio, fecha_fin);
-			
-			
+			num_meses = UtilsArchivos.calcularMesesAFecha(fecha_inicio, fecha_fin);			
 			if(num_meses>3) {
 				FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO,
 						"El periodo de tiempo es hasta 3 meses ", "Aviso"));
 			}else {
-				this.listaTramites = serviceBanTipoTramite.listarTramitesUsuario(usuario, fecha_inicio, fecha_fin);
+				empresaS=(String) FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("codigo");
+				System.out.println("empresaS : " + empresaS);
+				empresaInt=Integer.parseInt(empresaS);
+				empresa = serviceEmpresa.listarEmpresaPorId(empresaInt);
+				
+				System.out.println("empresa: " + empresa.getNombre());
+				this.listaTramites = serviceBanTipoTramite.listarTramitesEmpresa(empresa, fecha_inicio, fecha_fin);
 			}
 		}else {
 			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,
@@ -76,6 +92,7 @@ public class BandejaEntradaUsuarioBean implements Serializable {
 
 		final FacesContext context = FacesContext.getCurrentInstance();
 		final Flash flash = context.getExternalContext().getFlash();
+		flash.put("empresa", empresa.getId());
 		flash.put("tramite", ((BanTipoTramite) event.getObject()).getSiglas());
 		flash.put("fechaInicio", fecha_inicioS);
 		flash.put("fechaFin", fecha_finS);
@@ -91,6 +108,7 @@ public class BandejaEntradaUsuarioBean implements Serializable {
 
 		final FacesContext context = FacesContext.getCurrentInstance();
 		final Flash flash = context.getExternalContext().getFlash();
+		flash.put("empresa", empresa.getId());
 		flash.put("tramite", ((BanTipoTramite) event.getObject()).getSiglas());
 		flash.put("fechaInicio", fecha_inicioS);
 		flash.put("fechaFin", fecha_finS);

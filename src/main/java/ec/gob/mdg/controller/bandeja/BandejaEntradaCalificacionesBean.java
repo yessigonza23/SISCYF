@@ -70,8 +70,11 @@ public class BandejaEntradaCalificacionesBean implements Serializable {
 
 	/// DATOS DE LA EMPRESA DATOS GENERALES PRIMERA PESTAÑA
 	public void cargarDatos() {
-		listaEstados = serviceBanCatalogoEstados.listarEstadosPorTramite(siglasTramite, usuario, fecha_inicio,
-				fecha_fin);
+		if (siglasTramite!=null && usuario!=null && fecha_inicio!=null && fecha_fin!=null) {
+			listaEstados = serviceBanCatalogoEstados.listarEstadosPorTramite(siglasTramite, usuario, fecha_inicio,
+					fecha_fin);
+		}
+		
 	}
 
 	public void onRowSelect(SelectEvent<BanCatalogoEstados> event) throws Exception {

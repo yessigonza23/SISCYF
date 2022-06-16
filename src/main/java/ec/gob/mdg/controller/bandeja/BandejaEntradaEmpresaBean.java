@@ -28,7 +28,7 @@ import lombok.Data;
 @Data
 @Named
 @ViewScoped
-public class BandejaEntradaUsuarioBean implements Serializable {
+public class BandejaEntradaEmpresaBean implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
@@ -53,9 +53,7 @@ public class BandejaEntradaUsuarioBean implements Serializable {
 
 	public void listarTramites() {
 		if (fecha_inicio!= null &&  fecha_fin!=null) {
-			num_meses = UtilsArchivos.calcularMesesAFecha(fecha_inicio, fecha_fin);
-			
-			
+			num_meses = UtilsArchivos.calcularMesesAFecha(fecha_inicio, fecha_fin);			
 			if(num_meses>3) {
 				FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO,
 						"El periodo de tiempo es hasta 3 meses ", "Aviso"));

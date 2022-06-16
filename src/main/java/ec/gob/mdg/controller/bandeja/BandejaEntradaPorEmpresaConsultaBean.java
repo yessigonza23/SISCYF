@@ -1,4 +1,4 @@
-package ec.gob.mdg.controller.entidades.calificacion;
+package ec.gob.mdg.controller.bandeja;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -19,39 +19,39 @@ import lombok.Data;
 @Data
 @Named
 @ViewScoped
-public class ConsultaCalBean implements Serializable {
+public class BandejaEntradaPorEmpresaConsultaBean implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
 	@Inject
 	private IEmpresaService serviceEmpresa;
+	
 	private List<Empresa> listaEmpresas = new ArrayList<Empresa>();
 	private Empresa empresa = new Empresa();
 
 	String nombre_emp;
 	String id_emp;
-	String estado="ingresado";
+	String estado = "ingresado";
 
 	public void consultarListaEmpresas(String nombre) {
-		String estado="ingresado";
 		if (nombre != null) {
-			listaEmpresas = this.serviceEmpresa.listarEmpresasPorNombreEstado(nombre.toUpperCase(),estado);
+			listaEmpresas = this.serviceEmpresa.listarEmpresasPorNombre(nombre.toUpperCase());
 		}
 	}
 
 	/// Ir a detalle de empresa
 	public void irDetalleEmpresa(String codigo) {
-		if (codigo!=null) {
+		if (codigo != null) {
+			System.out.println("codigo: " + codigo);
 			final FacesContext context = FacesContext.getCurrentInstance();
 			final Flash flash = context.getExternalContext().getFlash();
-			flash.put("empresa", codigo);
-			Utilitario.irAPagina("/pg/cal/entprincipalcal");
-		}else {
-			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,
-					"No hay datos o No puede regresar", "Sin datos"));
+			flash.put("codigo", codigo);
+			Utilitario.irAPagina("/pg/ban/bandejaentradaporempresatramites");
+		} else {
+			FacesContext.getCurrentInstance().addMessage(null,
+					new FacesMessage(FacesMessage.SEVERITY_ERROR, "No hay datos o No puede regresar", "Sin datos"));
 		}
-		
+
 	}
-	
 
 }

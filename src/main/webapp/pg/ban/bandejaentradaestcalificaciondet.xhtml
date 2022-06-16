@@ -10,38 +10,18 @@
 	<ui:composition template="/WEB-INF/templates/master.xhtml">
 		<ui:define name="content">
 			<h:form id="frm">
+				<h3 style="color: #003778; text-align: center">BANDEJA DE
+					ENTRADA</h3>
 				<h3 style="color: #003778; text-align: center">TRÁMITE:
 					#{bandejaEntradaCalificacionesDetBean.banTipoTramite.descripcion} -
 					ESTADO:
 					#{bandejaEntradaCalificacionesDetBean.banCatalogoEstados.descripcion}</h3>
-				<p:growl id="mensaje" autoUpdate="false" showSummary="false"
-					showDetail="true" />
-
+				<p:growl id="growl" showDetail="true" sticky="true">
+					<p:autoUpdate />
+				</p:growl>
 				<p:panelGrid columns="2" columnClasses="topAligned"
 					style="text-align: left;width:100%">
 					<p:panel id="pn_datosg" style="width:100%">
-						<p:panelGrid columns="5" columnClasses="topAligned"
-							style="text-align: left;width:100%">
-							<p:outputLabel styleClass="especialstrong" value="Fecha Incio:" />
-							<p:calendar id="txtFechaInicio" pattern="dd/MM/yyyy" mask="true"
-								value="#{bandejaEntradaCalificacionesDetBean.fecha_inicio}">
-							</p:calendar>
-
-							<p:outputLabel styleClass="especialstrong" value="Fecha Fin:" />
-							<p:calendar id="txtFechaFin" pattern="dd/MM/yyyy" mask="true"
-								value="#{bandejaEntradaCalificacionesDetBean.fecha_fin}">
-							</p:calendar>
-
-							<p:commandButton icon="ui-icon-search" id="btnConsultar"
-								value="Consultar"
-								actionListener="#{bandejaEntradaCalificacionesDetBean.cargarDatos()}"
-								process="@form" update="frm:dt">
-							</p:commandButton>
-
-
-
-						</p:panelGrid>
-
 						<p:dataTable id="dt"
 							value="#{bandejaEntradaCalificacionesDetBean.listaBandejaEntrada}"
 							var="e">
@@ -56,16 +36,73 @@
 							<p:column headerText="Fecha Trámite" style="width:20px">
 								<p:outputLabel value="#{e.fecha}" />
 							</p:column>
-							<p:column headerText="Usuario asignado"
-								style="width:20px">
+							<p:column headerText="Usuario asignado" style="width:20px"
+								filterBy="#{e.usuario.nombre}" filterMatchMode="contains">
 								<p:outputLabel value="#{e.usuario.nombre}" />
 							</p:column>
 							<p:column headerText="Acción" style="width:20px">
-								<p:commandButton value="Asignar" 
-									icon="ui-icon-arrowreturn-1-n" style="width:150px"
-									rendered="#{bandejaEntradaCalificacionesDetBean.render}" />
+								<p:commandLink
+									actionListener="#{bandejaEntradaCalificacionesDetBean.mostrar(e)}"
+									oncomplete="PF('wdlg_par').show()" process="@this"
+									update="frm:dlg"
+									rendered="#{bandejaEntradaCalificacionesDetBean.render}">
+									<i class="ui-icon ui-icon-pencil"></i>
+								</p:commandLink>
 							</p:column>
 						</p:dataTable>
+
+						<p:dialog id="dlg" widgetVar="wdlg_par" resizable="false"
+							width="700" draggable="true" modal="true" position="center"
+							closeOnEscape="true" positionType="absolute">
+							<h2 style="color: #003778; text-align: center">Asignar
+								trámite</h2>
+
+							<p:fieldset legend="Asignación de trámites a técnicos"
+								style="width:90%">
+								<p:panelGrid id="pg" columns="3" tyle="margin-left: 35%">
+									<p:column style="border-style: hidden;width:50px;"></p:column>
+									<p:column style="border-style: hidden; width:130px;">Empresa: </p:column>
+									<p:column style="border-style: hidden;">
+										<p:outputLabel id="txtEmpresa"
+											value="#{bandejaEntradaCalificacionesDetBean.bandejaEntrada.empresa.nombre}"
+											style="width:450px" />
+									</p:column>
+
+									<p:column style="border-style: hidden;width:50px;"></p:column>
+									<p:column style="border-style: hidden; width:130px;">Fecha Envío trámite: </p:column>
+									<p:column style="border-style: hidden;">
+										<p:outputLabel id="txtFecha"
+											value="#{bandejaEntradaCalificacionesDetBean.bandejaEntrada.fecha}"
+											style="width:50px" />
+									</p:column>
+
+									<p:column style="border-style: hidden;width:50px;"></p:column>
+									<p:column style="border-style: hidden; width:130px;">Técnico: </p:column>
+									<p:column style="border-style: hidden;">
+										<p:selectOneMenu id="categorie_article"
+											value="#{bandejaEntradaCalificacionesDetBean.bandeja.usuario}"
+											converter="omnifaces.SelectItemsConverter" filter="true"
+											filterMatchMode="startsWith" tyle="width:100px">
+											<f:selectItem itemLabel="Seleccionar Técnico" noSelectionOption="true" />
+											<f:selectItems
+												value="#{bandejaEntradaCalificacionesDetBean.listaUsuarios}"
+												var="e" itemLabel="#{e.nombre}" itemValue="#{e}" />
+											<f:ajax render="selected_item" />
+										</p:selectOneMenu>
+										<p:messages for="cboUsuarios" />
+									</p:column>
+								</p:panelGrid>
+							</p:fieldset>
+
+							<p:panelGrid id="pgBotones" columns="3" style="margin-left: 35%">
+								<p:commandButton value="Asignar"
+									actionListener="#{bandejaEntradaCalificacionesDetBean.asignarUsuario()}"
+									ajax="true"
+									oncomplete="if (args &amp;&amp; !args.validationFailed) PF('wdlg_par').hide()"
+									update="pg,dt,@form" />
+							</p:panelGrid>
+						</p:dialog>
+
 
 					</p:panel>
 					<p:panel id="pn_opciones" style="width:100%">

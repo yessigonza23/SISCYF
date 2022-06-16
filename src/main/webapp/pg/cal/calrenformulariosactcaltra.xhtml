@@ -11,8 +11,9 @@
 			<h:form id="frm">
 				<h3 style="color: #003778; text-align: center">
 					#{consultaCalRenFormulariosTraCalBean.empresa.nombre}</h3>
-				<p:growl id="mensaje" autoUpdate="false" showSummary="false"
-					showDetail="true" />
+				<p:growl id="growl" showDetail="true" sticky="true">
+					<p:autoUpdate />
+				</p:growl>
 				<p:panelGrid columns="2" columnClasses="topAligned">
 					<p:panel id="pn_form_tra" style="width:100%;height:500px">
 						<p:panelGrid columns="6" columnClasses="topAligned"

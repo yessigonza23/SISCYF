@@ -11,8 +11,9 @@
 			<h:form id="frm">
 				<h3 style="color: #003778; text-align: center">
 					#{consultaCalRenFormulariosUsoCalBean.empresa.nombre}</h3>
-				<p:growl id="mensaje" autoUpdate="false" showSummary="false"
-					showDetail="true" />
+				<p:growl id="growl" showDetail="true" sticky="true">
+					<p:autoUpdate />
+				</p:growl>
 				<p:panelGrid columns="2" columnClasses="topAligned"
 					style="text-align: left;width:100%">
 					<p:panel id="pn_form_rec"

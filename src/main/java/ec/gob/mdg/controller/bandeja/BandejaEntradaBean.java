@@ -48,16 +48,16 @@ public class BandejaEntradaBean implements Serializable {
 
 	@PostConstruct
 	public void init() {
-		listarTramites(usuario);
+		
 	}
 
-	public void listarTramites(Usuario usuario) {
+	public void cargarDatos() {
 		if (fecha_inicio != null && fecha_fin != null) {
 			num_meses = UtilsArchivos.calcularMesesAFecha(fecha_inicio, fecha_fin);
-			System.out.println("num meses " + num_meses);
+		
 
 			if (num_meses > 3) {
-				FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO,
+				FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,
 						"El periodo de tiempo es hasta 3 meses ", "Aviso"));
 			} else {
 				this.listaTramites = serviceBanTipoTramite.listarTramites(usuario, fecha_inicio, fecha_fin);

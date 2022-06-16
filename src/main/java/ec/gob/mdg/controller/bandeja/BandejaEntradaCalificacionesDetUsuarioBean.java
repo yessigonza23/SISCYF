@@ -109,9 +109,17 @@ public class BandejaEntradaCalificacionesDetUsuarioBean implements Serializable 
 	public void onRowUnselect(UnselectEvent<BandejaEntrada> event) {
 		if (((BandejaEntrada) event.getObject()).getBanCatalogoEstados().getSiglas().equals("R")) {
 			empresaS = String.valueOf(((BandejaEntrada) event.getObject()).getEmpresa().getId());
+			DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+			String fecha_inicioS = dateFormat.format(fecha_inicio);
+			String fecha_finS = dateFormat.format(fecha_fin);
+			
+			
 			final FacesContext context = FacesContext.getCurrentInstance();
 			final Flash flash = context.getExternalContext().getFlash();
 			flash.put("empresa", empresaS);
+			flash.put("tramite", ((BandejaEntrada) event.getObject()).getBanTipoTramite().getSiglas());
+			flash.put("fechaInicio", fecha_inicioS);
+			flash.put("fechaFin", fecha_finS);
 			
 			if (((BandejaEntrada) event.getObject()).getBanTipoTramite().getSiglas().equals("C")) {
 				Utilitario.irAPagina("/pg/cal/entprincipalcal");

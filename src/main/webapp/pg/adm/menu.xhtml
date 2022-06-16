@@ -11,11 +11,10 @@
 
 			<h:form id="frm" enctype="multipart/form-data"
 				onkeypress="if (event.keyCode == 13) { return false; }">
-				<h2 style="color: #003778; text-align: center">
-					OPCIONES DE MENÚ</h2>
-				<p:growl id="growl" autoUpdate="true" showDetail="true"
-					sticky="true" />
-
+				<h2 style="color: #003778; text-align: center">OPCIONES DE MENÚ</h2>
+				<p:growl id="growl" showDetail="true" sticky="true">
+					<p:autoUpdate />
+				</p:growl>
 
 				<p:panelGrid columns="2" columnClasses="topAligned"
 					style="text-align: left;width:100%">
@@ -96,8 +95,8 @@
 											converter="omnifaces.SelectItemsConverter" filter="true"
 											filterMatchMode="startsWith" tyle="width:100px">
 											<f:selectItem itemLabel="Select One" noSelectionOption="true" />
-											<f:selectItems value="#{menuDinamicoBean.listaSubMenu}" var="e"
-												itemLabel="#{e.nombre}" itemValue="#{e}" />
+											<f:selectItems value="#{menuDinamicoBean.listaSubMenu}"
+												var="e" itemLabel="#{e.nombre}" itemValue="#{e}" />
 											<f:ajax render="selected_item" />
 										</p:selectOneMenu>
 										<p:messages for="cboMenu" />
@@ -107,8 +106,8 @@
 									<p:column style="border-style: hidden; width:130px;">Nombre Completo: </p:column>
 									<p:column style="border-style: hidden;">
 										<p:inputText id="txtNomCompleto"
-											value="#{menuDinamicoBean.menu.nombre_completo}" required="true"
-											style="width:300px" />
+											value="#{menuDinamicoBean.menu.nombre_completo}"
+											required="true" style="width:300px" />
 										<p:messages for="txtNomCompleto" display="icon" />
 									</p:column>
 
@@ -116,8 +115,7 @@
 									<p:column style="border-style: hidden; width:130px;">Link: </p:column>
 									<p:column style="border-style: hidden;">
 										<p:inputText id="txtLink"
-											value="#{menuDinamicoBean.menu.link}" 
-											style="width:300px" />
+											value="#{menuDinamicoBean.menu.link}" style="width:300px" />
 										<p:messages for="txtLink" display="icon" />
 									</p:column>
 
@@ -141,9 +139,9 @@
 
 					</p:panel>
 					<p:panel id="pn_opciones" style="width:100%">
-<!-- 						<p:commandButton value="Nuevo Menú" oncomplete="PF('wdlg').show()" -->
-<!-- 							actionListener="#{menuDinamicoBean.limpiarControles()}" -->
-<!-- 							update="frm:dlg" process="@this" /> -->
+						<!-- 						<p:commandButton value="Nuevo Menú" oncomplete="PF('wdlg').show()" -->
+						<!-- 							actionListener="#{menuDinamicoBean.limpiarControles()}" -->
+						<!-- 							update="frm:dlg" process="@this" /> -->
 						<p:commandButton id="btnRegresar" value="Principal"
 							icon="fa fa-fw fa-hand-o-left"
 							action="#{navegarVistasBean.principal()}" process="@this"
