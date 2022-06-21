@@ -45,7 +45,7 @@ public class BandejaEntradaPorEmpresaConsultaBean implements Serializable {
 			System.out.println("codigo: " + codigo);
 			final FacesContext context = FacesContext.getCurrentInstance();
 			final Flash flash = context.getExternalContext().getFlash();
-			flash.put("codigo", codigo);
+			flash.put("empresa", codigo);
 			Utilitario.irAPagina("/pg/ban/bandejaentradaporempresatramites");
 		} else {
 			FacesContext.getCurrentInstance().addMessage(null,

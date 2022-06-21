@@ -65,6 +65,18 @@
 								</p:selectOneMenu>
 								<p:messages for="Coordinacion" />
 							</p:column>
+							
+							<p:column style="border-style: hidden;width:50px;"></p:column>
+							<p:column style="border-style: hidden; width:130px;">Rol: </p:column>
+							<p:column style="border-style: hidden;">
+								<p:selectOneMenu id="tipoCert" disabled="#{usuarioBean.valida}"
+									value="#{usuarioBean.usuario.rol}" required="true"
+									style="width:100px">
+									<f:selectItem itemLabel="Dirección" itemValue="D" />
+									<f:selectItem itemLabel="Coordinación" itemValue="C" />
+									<f:selectItem itemLabel="Técnico" itemValue="T" />
+								</p:selectOneMenu>
+							</p:column>
 
 							<p:column style="border-style: hidden; width:130px;">Cargo: </p:column>
 							<p:column style="border-style: hidden;">

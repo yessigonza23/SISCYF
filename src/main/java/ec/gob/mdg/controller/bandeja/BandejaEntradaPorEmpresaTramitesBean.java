@@ -46,7 +46,7 @@ public class BandejaEntradaPorEmpresaTramitesBean implements Serializable {
 
 	String siglasTramite;
 	String empresaS;
-	Integer empresaInt;
+	Integer empresaId;
 	Date fecha_inicio;
 	Date fecha_fin;
 	Integer num_meses = 0;
@@ -55,13 +55,24 @@ public class BandejaEntradaPorEmpresaTramitesBean implements Serializable {
 
 	@PostConstruct
 	public void init() {
-		
+		cargaEmpresa();
 	}
 	
 	public String getParam() {
-		return (String) FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("codigo");
+		return (String) FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("empresa");
 	}
 	
+	public void cargaEmpresa() {
+		if (empresa != null) {
+			empresaS = (String) FacesContext.getCurrentInstance().getExternalContext().getFlash().get("empresa");
+		}
+		if (empresaS != null) {
+			empresaId = Integer.parseInt(empresaS);
+			if (empresaId != null) {
+				empresa = serviceEmpresa.listarEmpresaPorId(empresaId);
+			}
+		}		
+	}	
 	
 	public void cargarDatos() {
 		if (fecha_inicio!= null &&  fecha_fin!=null) {
@@ -70,19 +81,12 @@ public class BandejaEntradaPorEmpresaTramitesBean implements Serializable {
 				FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO,
 						"El periodo de tiempo es hasta 3 meses ", "Aviso"));
 			}else {
-				empresaS=(String) FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("codigo");
-				System.out.println("empresaS : " + empresaS);
-				empresaInt=Integer.parseInt(empresaS);
-				empresa = serviceEmpresa.listarEmpresaPorId(empresaInt);
-				
-				System.out.println("empresa: " + empresa.getNombre());
 				this.listaTramites = serviceBanTipoTramite.listarTramitesEmpresa(empresa, fecha_inicio, fecha_fin);
 			}
 		}else {
 			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,
 					"Sin parametros", "Error"));
 		}
-		
 	}
 
 	public void onRowSelect(SelectEvent<BanTipoTramite> event) throws Exception {
@@ -97,7 +101,7 @@ public class BandejaEntradaPorEmpresaTramitesBean implements Serializable {
 		flash.put("fechaInicio", fecha_inicioS);
 		flash.put("fechaFin", fecha_finS);
 
-		Utilitario.irAPagina("/pg/ban/bandejaentradaestcalificaciondetusuarios");
+		Utilitario.irAPagina("/pg/ban/bandejaentradaporempresadet");
 
 	}
 
@@ -113,7 +117,7 @@ public class BandejaEntradaPorEmpresaTramitesBean implements Serializable {
 		flash.put("fechaInicio", fecha_inicioS);
 		flash.put("fechaFin", fecha_finS);
 
-		Utilitario.irAPagina("/pg/ban/bandejaentradaestcalificaciondetusuarios");
+		Utilitario.irAPagina("/pg/ban/bandejaentradaporempresadet");
 	}
 
 }

@@ -88,9 +88,8 @@
 									<p:column style="border-style: hidden;width:50px;"></p:column>
 									<p:column style="border-style: hidden; width:130px;">No. Cédula: </p:column>
 									<p:column style="border-style: hidden;">
-										<p:inputText id="txtCedula" disabled="true" autocomplete="off"
+										<p:inputLabel id="txtCedula" disabled="true" autocomplete="off"
 											value="#{usuarioConsultaBean.usuario.username}" />
-										<p:message for="txtCedula" display="text" />
 									</p:column>
 
 									<p:column style="border-style: hidden;width:50px;"></p:column>
@@ -125,7 +124,17 @@
 										<p:message for="txtCargo" display="text" />
 									</p:column>
 
-
+									<p:column style="border-style: hidden;width:50px;"></p:column>
+									<p:column style="border-style: hidden; width:130px;">Rol: </p:column>
+									<p:column style="border-style: hidden;">
+										<p:selectOneMenu id="estado"
+											value="#{usuarioConsultaBean.usuario.rol}"
+											style="width:100px">
+											<f:selectItem itemLabel="Dirección" itemValue="D" />
+											<f:selectItem itemLabel="Coordinación" itemValue="C" />
+											<f:selectItem itemLabel="Técnico" itemValue="T" />
+										</p:selectOneMenu>
+									</p:column>
 
 									<p:column style="border-style: hidden;width:50px;"></p:column>
 									<p:column style="border-style: hidden; width:130px;">Estado: </p:column>
@@ -168,16 +177,15 @@
 
 						</p:dialog>
 					</p:panel>
-					<p:panel id="pn_opciones" style="width:100%">						
+					<p:panel id="pn_opciones" style="width:100%">
 						<p:commandButton id="btnRegresar" value="Principal"
 							icon="ui-icon-circle-arrow-w" style="width:150px"
-							action="#{navegarVistasBean.principal()}" process="@this" update="@this" />
+							action="#{navegarVistasBean.principal()}" process="@this"
+							update="@this" />
 					</p:panel>
 				</p:panelGrid>
 			</h:form>
-			<!-- Script de estilos para el contenido fel formulario-->
-			<h:outputStylesheet library="css" name="buscar.css" />
-			<h:outputStylesheet library="css" name="registroUsuario.css" />
+
 		</ui:define>
 
 	</ui:composition>

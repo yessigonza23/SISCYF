@@ -14,8 +14,9 @@
 				<p:growl id="growl" showDetail="true" sticky="true">
 					<p:autoUpdate />
 				</p:growl>
-				<p:panelGrid columns="2" columnClasses="topAligned">
-					<p:panel id="pn_form_tra" style="width:100%;height:500px">
+				<p:panelGrid columns="2"  layout="grid"
+							columnClasses="ui-grid-col-11,ui-grid-col-1">
+					<p:panel id="pn_form_tra">
 						<p:panelGrid columns="6" columnClasses="topAligned"
 							style="text-align: left;width:100%">
 							<f:facet name="header">
@@ -40,7 +41,7 @@
 						<ui:include src="/pg/cal/calrenformulariosactcaltracon.xhtml" />
 					</p:panel>
 
-					<p:panel id="pn_opc_form_pro" style="width:100%;height:500px">
+					<p:panel id="pn_opc_form_pro" >
 						<p:commandButton id="btnRegresar" value="Regresar"
 							style="width:120px" icon="ui-icon-circle-arrow-w"
 							actionListener="#{consultaCalRenFormulariosTraCalBean.irFormularios()}" />
