@@ -1,6 +1,5 @@
 package ec.gob.mdg.utils;
 
-
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -12,9 +11,6 @@ import javax.faces.context.FacesContext;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletResponse;
-
-
-
 
 public class UtilsArchivos {
 
@@ -191,61 +187,90 @@ public class UtilsArchivos {
 
 	@SuppressWarnings({ "resource", "unused" })
 	public static void verPDF(String nombre_ruta) throws IOException {
-		 FacesContext ctx;
-			ServletContext request;
-	        File archPDF;
-	        FileInputStream fisArch;
-	        byte[] bytes;
-	        int leer;
-	        String nombreArchivo;
+		FacesContext ctx;
+		ServletContext request;
+		File archPDF;
+		FileInputStream fisArch;
+		byte[] bytes;
+		int leer;
+		String nombreArchivo;
 
-	        ctx = FacesContext.getCurrentInstance();
-	        request = (ServletContext)ctx.getExternalContext().getContext();
-	        archPDF = new File(nombre_ruta);
-	        fisArch = new FileInputStream(archPDF);
-	        bytes = new byte[1000];
-	        leer = 0;
+		ctx = FacesContext.getCurrentInstance();
+		request = (ServletContext) ctx.getExternalContext().getContext();
+		archPDF = new File(nombre_ruta);
+		fisArch = new FileInputStream(archPDF);
+		bytes = new byte[1000];
+		leer = 0;
 
-	        if (!ctx.getResponseComplete()) {
+		if (!ctx.getResponseComplete()) {
 
-	            nombreArchivo = archPDF.getName();
-	            String contentType = "application/pdf";
-	            HttpServletResponse response =
-	                (HttpServletResponse)ctx.getExternalContext().getResponse();
+			nombreArchivo = archPDF.getName();
+			String contentType = "application/pdf";
+			HttpServletResponse response = (HttpServletResponse) ctx.getExternalContext().getResponse();
 
-	            response.setContentType(contentType);
-	            response.setHeader("Content-Disposition",
-	                               "attachment;filename=\"" + nombreArchivo );
-	            ServletOutputStream out = response.getOutputStream();
+			response.setContentType(contentType);
+			response.setHeader("Content-Disposition", "attachment;filename=\"" + nombreArchivo);
+			ServletOutputStream out = response.getOutputStream();
 
-	            while ((leer = fisArch.read(bytes)) != -1) {
-	                out.write(bytes, 0, leer);
-	            }
+			while ((leer = fisArch.read(bytes)) != -1) {
+				out.write(bytes, 0, leer);
+			}
 
-	            out.flush();
-	            out.close();
-	            System.out.println("\nLayout descargado...\n");
-	            ctx.responseComplete();
-	        }
+			out.flush();
+			out.close();
+			System.out.println("\nLayout descargado...\n");
+			ctx.responseComplete();
+		}
+	}
+
+	public static int calcularMesesAFecha(Date fechaInicio, Date fechaFin) {
+		try {
+			// Fecha inicio en objeto Calendar
+			Calendar startCalendar = Calendar.getInstance();
+			startCalendar.setTime(fechaInicio);
+			// Fecha finalización en objeto Calendar
+			Calendar endCalendar = Calendar.getInstance();
+			endCalendar.setTime(fechaFin);
+			// Cálculo de meses para las fechas de inicio y finalización
+			int startMes = (startCalendar.get(Calendar.YEAR) * 12) + startCalendar.get(Calendar.MONTH);
+			int endMes = (endCalendar.get(Calendar.YEAR) * 12) + endCalendar.get(Calendar.MONTH);
+			// Diferencia en meses entre las dos fechas
+			int diffMonth = endMes - startMes;
+			return diffMonth;
+		} catch (Exception e) {
+			return 0;
+		}
 	}
 	
-	public static int calcularMesesAFecha(Date fechaInicio, Date fechaFin) {
-        try {
-            //Fecha inicio en objeto Calendar
-            Calendar startCalendar = Calendar.getInstance();
-            startCalendar.setTime(fechaInicio);
-            //Fecha finalización en objeto Calendar
-            Calendar endCalendar = Calendar.getInstance();
-            endCalendar.setTime(fechaFin);
-            //Cálculo de meses para las fechas de inicio y finalización
-            int startMes = (startCalendar.get(Calendar.YEAR) * 12) + startCalendar.get(Calendar.MONTH);
-            int endMes = (endCalendar.get(Calendar.YEAR) * 12) + endCalendar.get(Calendar.MONTH);
-            //Diferencia en meses entre las dos fechas
-            int diffMonth = endMes - startMes;
-            return diffMonth;
-        } catch (Exception e) {
-            return 0;
-        }
- }
-
+	public static long daysBetween(Calendar FechaInicio, Calendar FechaFin) { 
+		Calendar fecha = (Calendar) FechaInicio.clone();
+		long dias =0;
+		while (fecha.before(FechaFin)) {
+			fecha.add(Calendar.DAY_OF_MONTH, 1);
+			dias++;
+		}
+		return dias;
+	}
+	
+	
+	public static String calcularFechasSemaforo(Date fechaInicio, Date fechaFin) {
+		try {
+			String respuesta="N";
+			Date fechaActual=UtilsDate.date(UtilsDate.fechaActual());
+			if (fechaActual.compareTo(fechaInicio)==0) {
+				respuesta="IGUAL";
+			}else if (fechaActual.compareTo(fechaFin)>0) {
+				respuesta="MAYOR";
+			}else if (fechaActual.compareTo(fechaInicio)>0 && fechaActual.compareTo(fechaFin)<0) {
+				respuesta="ENTRE";
+			}else if (fechaActual.compareTo(fechaInicio)<0 ) {
+				respuesta="ANTES";
+			}				
+			return respuesta;
+		} catch (Exception e) {
+			return "N";
+		}
+	}
+	
+	
 }

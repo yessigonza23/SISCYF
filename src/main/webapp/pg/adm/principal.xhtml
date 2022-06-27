@@ -6,22 +6,91 @@
 	xmlns:p="http://primefaces.org/ui">
 
 <h:head>
+
 </h:head>
 <body>
 	<ui:composition template="/WEB-INF/templates/master.xhtml">
-
 		<ui:define name="content">
 			<br></br>
 			<br></br>
 			<div align="center">
 				<p:clock pattern="HH:mm:ss dd.MM.yyyy" mode="server" />
 			</div>
+			<h3 style="color: #003778; text-align: center">RESUMEN DE
+				TRAMITES DE LA DIRECCIÓN DE CONTROL DE SUSTANCIAS - AÑO #{principalBean.anio}</h3>
+			<p:panelGrid id="png" columns="3" layout="grid"
+				columnClasses="ui-grid-col-4" >
+				<p:panel id="paneltra">
+					<p:pieChart model="#{principalBean.pieModelTram}"
+						style="width: 50%; height: 250px;"
+						rendered="#{principalBean.pieModelTram !=null}" />
 
-		
-			<h2 style="color: #003778; text-align: center">UBICACIÓN:
-				#{principalBean.us.coordinacion.nombre}</h2>
+				</p:panel>
+				<p:panel id="paneltab">
+					<p:dataTable id="dt_tramites" var="e" lazy="true"
+						value="#{principalBean.listaBanTipoTramite}"
+						selectionMode="single" rendered="#{principalBean.renderDir}"
+						selection="#{principalBean.banTipoTramitePorAnioDTO}"
+						rowKey="#{e.siglas}">
+
+						<p:ajax event="rowSelect" listener="#{principalBean.onRowSelect}"
+							update="panel" />
+						<p:ajax event="rowUnselect"
+							listener="#{principalBean.onRowUnselect}" update="panel" />
+
+						<p:column headerText="Actividad" style="width:80px">
+							<p:outputLabel value="#{e.descripcion}" />
+						</p:column>
+						<p:column headerText="No." style="width:80px">
+							<p:outputLabel value="#{e.valor}" />
+						</p:column>
+					</p:dataTable>
+					
+					<p:dataTable id="dt_tramitesCoo" var="g" lazy="true"
+						value="#{principalBean.listaBanTipoTramiteCoo}"
+						selectionMode="single" rendered="#{principalBean.renderCoo}"
+						selection="#{principalBean.banTipoTramitePorAnioDTOCoo}"
+						rowKey="#{g.siglas}">
+
+						<p:ajax event="rowSelect" listener="#{principalBean.onRowSelect}"
+							update="panel" />
+						<p:ajax event="rowUnselect"
+							listener="#{principalBean.onRowUnselect}" update="panel" />
+
+						<p:column headerText="Actividad" style="width:80px">
+							<p:outputLabel value="#{g.descripcion}" />
+						</p:column>
+						<p:column headerText="No." style="width:80px">
+							<p:outputLabel value="#{g.valor}" />
+						</p:column>
+					</p:dataTable>
+					
+					<p:dataTable id="dt_tramitesUsu" var="f" lazy="true"
+						value="#{principalBean.listaBanTipoTramiteUsu}"
+						selectionMode="single" rendered="#{principalBean.renderUsu}"
+						selection="#{principalBean.banTipoTramitePorAnioDTOUsu}"
+						rowKey="#{f.siglas}">
+
+						<p:ajax event="rowSelect" listener="#{principalBean.onRowSelect}"
+							update="panel" />
+						<p:ajax event="rowUnselect"
+							listener="#{principalBean.onRowUnselect}" update="panel" />
+
+						<p:column headerText="Actividad" style="width:80px">
+							<p:outputLabel value="#{f.descripcion}" />
+						</p:column>
+						<p:column headerText="No." style="width:80px">
+							<p:outputLabel value="#{f.valor}" />
+						</p:column>
+					</p:dataTable>
+				</p:panel>
+				<p:panel id="panel">
+					<p:pieChart id="pieEstado" model="#{principalBean.pieModel}"
+						style="width: 100%; height: 500px;"
+						rendered="#{principalBean.pieModel!=null}" />
+				</p:panel>
+			</p:panelGrid>
 		</ui:define>
-
 	</ui:composition>
 </body>
 </html>

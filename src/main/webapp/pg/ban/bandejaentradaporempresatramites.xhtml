@@ -11,56 +11,122 @@
 		<ui:define name="content">
 			<h:form id="frm">
 				<h3 style="color: #003778; text-align: center">BANDEJA DE
-					ENTRADA POR EMPRESA : #{bandejaEntradaPorEmpresaTramitesBean.empresa.nombre}</h3>
+					ENTRADA POR EMPRESA :
+					#{bandejaEntradaPorEmpresaTramitesBean.empresa.nombre}</h3>
 				<p:growl id="growl" showDetail="true" sticky="true">
 					<p:autoUpdate />
 				</p:growl>
 
-				<p:panelGrid columns="2" columnClasses="topAligned"
+				<p:panelGrid columns="2"
+					columnClasses="ui-grid-col-11,ui-grid-col-1"
 					style="text-align: left;width:100%">
 					<p:panel id="pn_datosg" style="width:100%">
-						<p:panelGrid columns="5" columnClasses="topAligned"
+
+						<p:panelGrid columns="2"
+							columnClasses="ui-grid-col-3,ui-grid-col-8"
 							style="text-align: left;width:100%">
-							<p:outputLabel styleClass="especialstrong" value="Fecha Incio:" />
-							<p:calendar id="txtFechaInicio" pattern="dd/MM/yyyy" mask="true"
-								value="#{bandejaEntradaPorEmpresaTramitesBean.fecha_inicio}">
-							</p:calendar>
+							<p:dataTable id="dt"
+								value="#{bandejaEntradaPorEmpresaTramitesBean.listaTramites}"
+								var="e" selectionMode="single"
+								selection="#{bandejaEntradaPorEmpresaTramitesBean.banTipoTramite}"
+								rowKey="#{e.id}" rowIndexVar="index">
 
-							<p:outputLabel styleClass="especialstrong" value="Fecha Fin:" />
-							<p:calendar id="txtFechaFin" pattern="dd/MM/yyyy" mask="true"
-								value="#{bandejaEntradaPorEmpresaTramitesBean.fecha_fin}">
-							</p:calendar>
+								<p:ajax event="rowSelect"
+									listener="#{bandejaEntradaPorEmpresaTramitesBean.onRowSelect}"
+									update=":frm:dt_tra" />
+								<p:ajax event="rowUnselect"
+									listener="#{bandejaEntradaPorEmpresaTramitesBean.onRowUnselect}"
+									update=":frm:dt_tra" />
 
-							<p:commandButton icon="ui-icon-search" id="btnConsultar"
-								value="Consultar"
-								actionListener="#{bandejaEntradaPorEmpresaTramitesBean.cargarDatos()}"
-								process="@form" update="frm:dt">
-							</p:commandButton>
+								<p:column headerText="Trámite" filterBy="#{e.descripcion}"
+									filterMatchMode="contains" style="width:20px">
+									<p:outputLabel value="#{e.descripcion}" />
+								</p:column>
+							</p:dataTable>
+
+							<p:dataTable id="dt_tra"
+								value="#{bandejaEntradaPorEmpresaTramitesBean.listaBandeja}"
+								var="e" selectionMode="single"
+								selection="#{bandejaEntradaPorEmpresaTramitesBean.bandejaEntrada}"
+								rowKey="#{e.id}" rowIndexVar="index" rows="5" paginator="true"
+								paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+								rowsPerPageTemplate="5,10,15" sortOrder="descending"
+								paginatorPosition="top"
+								emptyMessage="No hay ningún registro con esa opción">
+
+								<p:ajax event="rowSelect"
+									listener="#{bandejaEntradaPorEmpresaTramitesBean.onRowSelectTramite}"
+									update=":frm:dialogoTra" />
+								<p:ajax event="rowUnselect"
+									listener="#{bandejaEntradaPorEmpresaTramitesBean.onRowSelectTramite}"
+									update=":frm:dialogoTra" />
+
+								<p:column headerText="No. Trámite" filterBy="#{e.num_tramite}"
+									filterMatchMode="contains" style="width:20px">
+									<p:outputLabel value="#{e.num_tramite}" />
+								</p:column>
+								<p:column headerText="Estado"
+									filterBy="#{e.banCatalogoEstados.descripcion}"
+									filterMatchMode="contains" style="width:20px">
+									<p:outputLabel value="#{e.banCatalogoEstados.descripcion}" />
+								</p:column>
+								<p:column headerText="Fecha Estado" filterBy="#{e.fecha}"
+									filterMatchMode="contains" style="width:20px">
+									<p:outputLabel value="#{e.fecha}" />
+								</p:column>
+								<p:column headerText="Responsable"
+									filterBy="#{e.usuario.nombre}" filterMatchMode="contains"
+									style="width:20px">
+									<p:outputLabel value="#{e.usuario.nombre}" />
+								</p:column>
+							</p:dataTable>
 						</p:panelGrid>
-
-						<p:dataTable id="dt" value="#{bandejaEntradaPorEmpresaTramitesBean.listaTramites}"
-							var="e" selectionMode="single"
-							selection="#{bandejaEntradaPorEmpresaTramitesBean.banTipoTramite}" rowKey="#{e.id}"
-							rowIndexVar="index">
-
-							<p:ajax event="rowSelect"
-								listener="#{bandejaEntradaPorEmpresaTramitesBean.onRowSelect}" />
-							<p:ajax event="rowUnselect"
-								listener="#{bandejaEntradaPorEmpresaTramitesBean.onRowUnselect}" />
-
-							<p:column headerText="Nombre" filterBy="#{e.descripcion}"
-								filterMatchMode="contains" style="width:20px">
-								<p:outputLabel value="#{e.descripcion}" />
-							</p:column>
-						</p:dataTable>
 					</p:panel>
 					<p:panel id="pn_opciones" style="width:100%">
 
 						<p:commandButton id="btnRegresar" value="Principal"
-							icon="ui-icon-circle-arrow-w" style="width:150px"
+							icon="ui-icon-circle-arrow-w"
 							action="#{navegarVistasBean.principal()}" />
 					</p:panel>
 				</p:panelGrid>
+
+				<p:dialog id="dialogoTra" widgetVar="wdgTra" resizable="false"
+					width="1000" draggable="true" modal="true" position="center"
+					closeOnEscape="true" positionType="absolute">
+
+					<h2 style="color: #003778; text-align: center">DETALLE
+						TRÁMITE:
+						#{bandejaEntradaPorEmpresaTramitesBean.bandejaEntrada.num_tramite}</h2>
+
+					<p:dataTable id="dt_detalle" var="e"
+						value="#{bandejaEntradaPorEmpresaTramitesBean.listaBandejaDetalle}"
+						rows="5" paginator="true"
+						paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+						rowsPerPageTemplate="5,10,15" sortOrder="descending"
+						paginatorPosition="top"
+						emptyMessage="No hay ningún registro con esa opción">
+
+						<p:column headerText="Estado" style="width:50px">
+							<p:outputLabel value="#{e.banCatalogoEstados.descripcion}" />
+						</p:column>
+						<p:column headerText="Fecha" style="width:100px">
+							<p:outputLabel value="#{e.fecha}" />
+						</p:column>
+						<p:column headerText="Fecha Vencimiento" style="width:100px">
+							<p:outputLabel value="#{e.fecha_vencimiento}" />
+						</p:column>
+						<p:column headerText="Responsable" style="width:100px">
+							<p:outputLabel value="#{e.usuario.nombre}" />
+						</p:column>
+						<p:column headerText="Observación" style="width:500px">
+							<p:outputLabel value="#{e.observacion}" />
+						</p:column>
+
+
+					</p:dataTable>
+
+				</p:dialog>
+
 			</h:form>
 		</ui:define>
 
