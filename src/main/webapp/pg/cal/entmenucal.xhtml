@@ -8,19 +8,17 @@
 <p:panelGrid id="pg_opciones" style="text-align: left;width:100%"
 	columns="1">
 
-	<p:commandButton value="Calificación/Renovación" ajax="false"
-		icon="ui-icon-copy" action="#{consultaEntidadesCalBean.irCalRen()}">
+	<p:commandButton value="Calificación / Renovación" ajax="false"
+		icon="ui-icon-copy" style="width:150px;height:40px"
+		action="#{consultaEntidadesCalBean.irCalRen()}">
 	</p:commandButton>
 	<p:commandButton value="Representantes" ajax="false"
-		icon="ui-icon-contact" style="width:185px;"
+		icon="ui-icon-contact" style="width:150px;"
 		action="#{consultaEntidadesCalBean.irRepresentantes()}">
 	</p:commandButton>
 	<br />
-	<p:commandButton id="btnRegresar" value="Regresar"
-		icon="ui-icon-circle-arrow-w" style="width:185px;"
-		action="#{consultaEntidadesCalBean.regresar()}" />
 	<p:commandButton id="btnPrincipal" value="Principal"
-		icon="ui-icon-circle-arrow-w" style="width:185px;"
+		icon="ui-icon-circle-arrow-w" style="width:150px;"
 		action="#{navegarVistasBean.principal()}" />
 </p:panelGrid>
 </html>

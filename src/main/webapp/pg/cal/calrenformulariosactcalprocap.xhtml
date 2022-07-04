@@ -8,9 +8,9 @@
 
 <!--LLENAR CAPACIDADES -->
 <p:dataTable id="dt_formulario_prorecreu" var="e" 
-	value="#{consultaCalRenFormulariosProCalBean.listaCalRenSusActProRecReu}"
+	value="#{consultaCalRenFormulariosProCalBean.listaCalRenSustanciasAct}"
 	selectionMode="single"
-	selection="#{consultaCalRenFormulariosProCalBean.calRenSusActProRecReu}"
+	selection="#{consultaCalRenFormulariosProCalBean.calrenSustanciasActividades}"
 	rowKey="#{e.id}" 
 	 rows="5" paginator="true"
 	paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
@@ -30,7 +30,7 @@
 	</f:facet>
 	<p:column headerText="Sustancias" style="width:80px">
 		<p:outputLabel
-			value="#{e.calrenSustanciasActividades.calrenSustancias.sustancias.nombre}">
+			value="#{e.calrenSustancias.sustancias.nombre}">
 		</p:outputLabel>
 	</p:column>
 

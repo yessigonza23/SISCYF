@@ -44,7 +44,6 @@ public class BandejaEntradaCalificacionesDetBean implements Serializable {
 
 	@Inject
 	private IBandejaEntradaService serviceBandejaEntrada;
-	
 
 	private List<BandejaEntrada> listaBandejaEntrada = new ArrayList<>();
 	private List<Usuario> listaUsuarios = new ArrayList<>();
@@ -54,7 +53,7 @@ public class BandejaEntradaCalificacionesDetBean implements Serializable {
 	private BanCatalogoEstados banCatalogoEstados = new BanCatalogoEstados();
 	private BanCatalogoEstados banCatalogoEstadosSiglas = new BanCatalogoEstados();
 	private Usuario us = new Usuario();
-	BandejaEntrada bandeja = new BandejaEntrada();//nuevo registro
+	BandejaEntrada bandeja = new BandejaEntrada();// nuevo registro
 
 	Usuario usuario = (Usuario) FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("usuario");
 
@@ -87,8 +86,6 @@ public class BandejaEntradaCalificacionesDetBean implements Serializable {
 			e.printStackTrace();
 		}
 	}
-	
-
 
 	/// DATOS DE LA EMPRESA DATOS GENERALES PRIMERA PESTAÑA
 	public void cargarDatos() {
@@ -97,9 +94,10 @@ public class BandejaEntradaCalificacionesDetBean implements Serializable {
 				render = true;
 			}
 		}
-		if (siglasEstado!=null && siglasTramite!=null && usuario!=null && fecha_inicio!=null && fecha_fin!=null) {
-		listaBandejaEntrada = serviceBandejaEntrada.listarPorEstado(siglasTramite, siglasEstado, fecha_inicio,
-				fecha_fin, usuario);
+		if (siglasEstado != null && siglasTramite != null && usuario != null && fecha_inicio != null
+				&& fecha_fin != null) {
+			listaBandejaEntrada = serviceBandejaEntrada.listarPorEstado(siglasTramite, siglasEstado, fecha_inicio,
+					fecha_fin, usuario);
 		}
 	}
 
@@ -121,19 +119,20 @@ public class BandejaEntradaCalificacionesDetBean implements Serializable {
 
 		bandejaEntrada.setVer(false);
 		serviceBandejaEntrada.modificar(bandejaEntrada);
-		
+
 		bandeja.setBanCatalogoEstados(banCatalogoEstadosSiglas);
 		bandeja.setBanTipoTramite(banTipoTramite);
 		bandeja.setEmpresa(bandejaEntrada.getEmpresa());
 		bandeja.setUsuario(bandeja.getUsuario());
 		bandeja.setNum_tramite(bandejaEntrada.getNum_tramite());
-		bandeja.setObservacion("Se asigna el trámite al técnico: " + bandeja.getUsuario().getNombre());
+		bandeja.setObservacion("La solicitud " + bandeja.getNum_tramite()
+				+ ",para acceder al trámite Calificación para el manejo de sustancias catalogadas sujetas a fiscalización ha sido asignada a un técnico del área de Control de SCSF");
+				
 		bandeja.setFecha(ec.gob.mdg.utils.UtilsDate.fechaActual());
 		bandeja.setVer(true);
 		serviceBandejaEntrada.registrar(bandeja);
-		 cargarDatos();
+		cargarDatos();
 	}
-	
 
 	/// Regresar a bandeja de tramites
 	public void regresarBandeja() {
@@ -142,7 +141,7 @@ public class BandejaEntradaCalificacionesDetBean implements Serializable {
 
 	//// Regresar a bandeja de estados
 	public void regresarBandejaEstados() {
-		
+
 		DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
 		String fecha_inicioS = dateFormat.format(fecha_inicio);
 		String fecha_finS = dateFormat.format(fecha_fin);

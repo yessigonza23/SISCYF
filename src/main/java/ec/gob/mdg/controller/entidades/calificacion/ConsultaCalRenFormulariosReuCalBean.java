@@ -16,11 +16,11 @@ import ec.gob.mdg.control.ejb.modelo.CalificacionesRenovaciones;
 import ec.gob.mdg.control.ejb.modelo.CalrenActividadesCalificacion;
 import ec.gob.mdg.control.ejb.modelo.CalrenSustancias;
 import ec.gob.mdg.control.ejb.modelo.CalrenSustanciasActividades;
-import ec.gob.mdg.control.ejb.modelo.CalrenSustanciasActividadesProRecReu;
+import ec.gob.mdg.control.ejb.modelo.CalrenSustanciasActividadesMateriaPrima;
 import ec.gob.mdg.control.ejb.modelo.Empresa;
 import ec.gob.mdg.control.ejb.service.ICalificacionesRenovacionesService;
 import ec.gob.mdg.control.ejb.service.ICalrenActividadesCalificacionService;
-import ec.gob.mdg.control.ejb.service.ICalrenSustanciasActividadesProRecReuService;
+import ec.gob.mdg.control.ejb.service.ICalrenSustanciasActividadesMateriaPrimaService;
 import ec.gob.mdg.control.ejb.service.ICalrenSustanciasActividadesService;
 import ec.gob.mdg.control.ejb.service.IEmpresaService;
 import ec.gob.mdg.control.ejb.utils.Utilitario;
@@ -46,17 +46,17 @@ public class ConsultaCalRenFormulariosReuCalBean implements Serializable {
 	private ICalrenActividadesCalificacionService serviceCalRenActCal;
 
 	@Inject
-	private ICalrenSustanciasActividadesProRecReuService serviceCalRenSusActProRecReu;
+	private ICalrenSustanciasActividadesMateriaPrimaService serviceCalrenSusActProRecReuMateriaPrima;
 
 	private List<CalrenSustancias> listaCalRenSustancias = new ArrayList<>();
 	private List<CalrenSustanciasActividades> listaCalRenSustanciasAct = new ArrayList<>();
-	private List<CalrenSustanciasActividadesProRecReu> listaCalRenSustanciasActividadesProRecReu = new ArrayList<>();
+	private List<CalrenSustanciasActividadesMateriaPrima> listaCalRenSusActProRecReuMateriaPrima = new ArrayList<>();
 
 	private Empresa empresa = new Empresa();
 	private CalificacionesRenovaciones calRen = new CalificacionesRenovaciones();
 	private CalrenSustanciasActividades calrenSustanciasActividades = new CalrenSustanciasActividades();
 	private CalrenActividadesCalificacion calRenActCal = new CalrenActividadesCalificacion();
-	private CalrenSustanciasActividadesProRecReu calRenSusActProRecReu = new CalrenSustanciasActividadesProRecReu();
+	private CalrenSustanciasActividadesMateriaPrima calRenSusActMateriaPrima = new CalrenSustanciasActividadesMateriaPrima();
 
 	String calrenactS;
 	Integer calrenactId;
@@ -92,15 +92,12 @@ public class ConsultaCalRenFormulariosReuCalBean implements Serializable {
 				if (calRen != null) {
 					listaCalRenSustanciasAct = serviceCalRenSusAct.listaSustActiPorAbreviatura(calRen.getId(),
 							abreviatura);
-					empresa = serviceEmpresa.listarEmpresaPorId(calRen.getEmpresa().getId());
 					
-					if (listaCalRenSustanciasAct != null && !listaCalRenSustanciasAct.isEmpty()) {
-						calrenSustanciasActividades = listaCalRenSustanciasAct.get(0);
-						if (calrenSustanciasActividades != null) {
-							cargarListaCapacidad(calrenSustanciasActividades.getId());
-							
-						}
-					}
+					System.out.println("lista bean "+listaCalRenSustanciasAct);
+					
+					empresa = serviceEmpresa.listarEmpresaPorId(calRen.getEmpresa().getId());						
+					
+					
 				}
 			}
 		} else {
@@ -108,15 +105,7 @@ public class ConsultaCalRenFormulariosReuCalBean implements Serializable {
 					new FacesMessage(FacesMessage.SEVERITY_ERROR, "No hay datos", "No puede continuar"));
 		}
 	}
-	
-	public void cargarListaCapacidad(Integer id_CalRenSusAct) {
-		String tipo_actividad="RU";
-		if (id_CalRenSusAct!=null) {
-			listaCalRenSustanciasActividadesProRecReu = serviceCalRenSusActProRecReu.listarCalrenActividadesProRecReu(id_CalRenSusAct,tipo_actividad);
-		
-		}
-		
-	}
+
 
 
 	/// Ir a Formularios actividades
@@ -129,5 +118,4 @@ public class ConsultaCalRenFormulariosReuCalBean implements Serializable {
 			Utilitario.irAPagina("/pg/cal/calrenformulariosactcal");
 		}
 	}
-
 }

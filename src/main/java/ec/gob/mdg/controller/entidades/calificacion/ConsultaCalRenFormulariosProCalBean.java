@@ -19,13 +19,11 @@ import ec.gob.mdg.control.ejb.modelo.CalificacionesRenovaciones;
 import ec.gob.mdg.control.ejb.modelo.CalrenActividadesCalificacion;
 import ec.gob.mdg.control.ejb.modelo.CalrenSustancias;
 import ec.gob.mdg.control.ejb.modelo.CalrenSustanciasActividades;
-import ec.gob.mdg.control.ejb.modelo.CalrenSustanciasActividadesProRecReu;
-import ec.gob.mdg.control.ejb.modelo.CalrenSustanciasActividadesProRecReuMateriaPrima;
+import ec.gob.mdg.control.ejb.modelo.CalrenSustanciasActividadesMateriaPrima;
 import ec.gob.mdg.control.ejb.modelo.Empresa;
 import ec.gob.mdg.control.ejb.service.ICalificacionesRenovacionesService;
 import ec.gob.mdg.control.ejb.service.ICalrenActividadesCalificacionService;
-import ec.gob.mdg.control.ejb.service.ICalrenSustanciasActividadesProRecReuMateriaPrimaService;
-import ec.gob.mdg.control.ejb.service.ICalrenSustanciasActividadesProRecReuService;
+import ec.gob.mdg.control.ejb.service.ICalrenSustanciasActividadesMateriaPrimaService;
 import ec.gob.mdg.control.ejb.service.ICalrenSustanciasActividadesService;
 import ec.gob.mdg.control.ejb.service.IEmpresaService;
 import ec.gob.mdg.control.ejb.utils.Utilitario;
@@ -51,22 +49,17 @@ public class ConsultaCalRenFormulariosProCalBean implements Serializable {
 	private ICalrenActividadesCalificacionService serviceCalRenActCal;
 
 	@Inject
-	private ICalrenSustanciasActividadesProRecReuService serviceCalrenSusActProRecReu;
-
-	@Inject
-	private ICalrenSustanciasActividadesProRecReuMateriaPrimaService serviceCalrenSusActProRecReuMateriaPrima;
+	private ICalrenSustanciasActividadesMateriaPrimaService serviceCalrenSusActProRecReuMateriaPrima;
 
 	private List<CalrenSustancias> listaCalRenSustancias = new ArrayList<>();
 	private List<CalrenSustanciasActividades> listaCalRenSustanciasAct = new ArrayList<>();
-	private List<CalrenSustanciasActividadesProRecReu> listaCalRenSusActProRecReu = new ArrayList<>();
-	private List<CalrenSustanciasActividadesProRecReuMateriaPrima> listaCalRenSusActProRecReuMateriaPrima = new ArrayList<>();
+	private List<CalrenSustanciasActividadesMateriaPrima> listaCalRenSusActMateriaPrima = new ArrayList<>();
 
 	private Empresa empresa = new Empresa();
 	private CalificacionesRenovaciones calRen = new CalificacionesRenovaciones();
 	private CalrenSustanciasActividades calrenSustanciasActividades = new CalrenSustanciasActividades();
 	private CalrenActividadesCalificacion calRenActCal = new CalrenActividadesCalificacion();
-	private CalrenSustanciasActividadesProRecReu calRenSusActProRecReu = new CalrenSustanciasActividadesProRecReu();
-	private CalrenSustanciasActividadesProRecReuMateriaPrima calRenSusActMateriaPrima = new CalrenSustanciasActividadesProRecReuMateriaPrima();
+	private CalrenSustanciasActividadesMateriaPrima calRenSusActMateriaPrima = new CalrenSustanciasActividadesMateriaPrima();
 
 	String calrenactS;
 	Integer calrenactId;
@@ -102,18 +95,12 @@ public class ConsultaCalRenFormulariosProCalBean implements Serializable {
 				if (calRen != null) {
 					listaCalRenSustanciasAct = serviceCalRenSusAct.listaSustActiPorAbreviatura(calRen.getId(),
 							abreviatura);
-					empresa = serviceEmpresa.listarEmpresaPorId(calRen.getEmpresa().getId());
-
+					empresa = serviceEmpresa.listarEmpresaPorId(calRen.getEmpresa().getId());	
+					
 					if (listaCalRenSustanciasAct != null && !listaCalRenSustanciasAct.isEmpty()) {
 						calrenSustanciasActividades = listaCalRenSustanciasAct.get(0);
 						if (calrenSustanciasActividades != null) {
-							cargarListaCapacidad(calrenSustanciasActividades.getId());
-							if (listaCalRenSusActProRecReu != null && !listaCalRenSusActProRecReu.isEmpty()) {
-								calRenSusActProRecReu = listaCalRenSusActProRecReu.get(0);
-								if (calRenSusActProRecReu != null) {
-									cargarListaMateriaPrima(calRenSusActProRecReu.getId());
-								}
-							}
+							cargarListaMateriaPrima(calrenSustanciasActividades.getId());
 						}
 					}
 				}
@@ -124,27 +111,22 @@ public class ConsultaCalRenFormulariosProCalBean implements Serializable {
 		}
 	}
 
-	public void cargarListaCapacidad(Integer id_CalRenSusAct) {
-		String tipo_actividad = "P";
+	public void cargarListaMateriaPrima(Integer id_CalRenSusAct) {
+		System.out.println("calrensusact " +  id_CalRenSusAct);
 		if (id_CalRenSusAct != null) {
-			listaCalRenSusActProRecReu = serviceCalrenSusActProRecReu.listarCalrenActividadesProRecReu(id_CalRenSusAct, tipo_actividad);
-		}
-	}
-
-	public void cargarListaMateriaPrima(Integer id_CalRenSusActProRecReu) {
-		if (id_CalRenSusActProRecReu != null) {
-			listaCalRenSusActProRecReuMateriaPrima = serviceCalrenSusActProRecReuMateriaPrima
-					.listarCalrenActividadesMateriaPrima(id_CalRenSusActProRecReu);
+			listaCalRenSusActMateriaPrima = serviceCalrenSusActProRecReuMateriaPrima
+					.listarCalrenActividadesMateriaPrima(id_CalRenSusAct);
+			System.out.println("list5a de materia prima " + listaCalRenSusActMateriaPrima);
 		}
 	}
 
 
-	public void onRowSelect(SelectEvent<CalrenSustanciasActividadesProRecReu> event) {
-		cargarListaMateriaPrima(((CalrenSustanciasActividadesProRecReu) event.getObject()).getId());
+	public void onRowSelect(SelectEvent<CalrenSustanciasActividades> event) {
+		cargarListaMateriaPrima(((CalrenSustanciasActividades) event.getObject()).getId());
 	}
 
-	public void onRowUnselect(UnselectEvent<CalrenSustanciasActividadesProRecReu> event) {
-		cargarListaMateriaPrima(((CalrenSustanciasActividadesProRecReu) event.getObject()).getId());
+	public void onRowUnselect(UnselectEvent<CalrenSustanciasActividades> event) {
+		cargarListaMateriaPrima(((CalrenSustanciasActividades) event.getObject()).getId());
 	}
 
 	/// Ir a Formularios actividades

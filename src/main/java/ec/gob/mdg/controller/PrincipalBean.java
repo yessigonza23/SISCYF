@@ -76,7 +76,6 @@ public class PrincipalBean implements Serializable {
 		renderDir = false;
 		renderCoo = false;
 		renderUsu = false;
-		System.out.println("3");
 		if (usuario.getRol().equals("D")) {
 			renderDir = true;
 			listarTramites();

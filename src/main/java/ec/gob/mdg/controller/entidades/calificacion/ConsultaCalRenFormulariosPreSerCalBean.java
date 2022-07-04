@@ -18,18 +18,16 @@ import org.primefaces.event.UnselectEvent;
 import ec.gob.mdg.control.ejb.modelo.CalificacionesRenovaciones;
 import ec.gob.mdg.control.ejb.modelo.CalrenActividadesCalificacion;
 import ec.gob.mdg.control.ejb.modelo.CalrenIntervenciones;
+import ec.gob.mdg.control.ejb.modelo.CalrenIntervencionesComponentes;
 import ec.gob.mdg.control.ejb.modelo.CalrenSustancias;
 import ec.gob.mdg.control.ejb.modelo.CalrenSustanciasActividades;
-import ec.gob.mdg.control.ejb.modelo.CalrenSustanciasEmpleo;
 import ec.gob.mdg.control.ejb.modelo.Empresa;
-import ec.gob.mdg.control.ejb.modelo.Producto;
 import ec.gob.mdg.control.ejb.service.ICalificacionesRenovacionesService;
 import ec.gob.mdg.control.ejb.service.ICalrenActividadesCalificacionService;
+import ec.gob.mdg.control.ejb.service.ICalrenIntervencionesComponentesService;
 import ec.gob.mdg.control.ejb.service.ICalrenIntervencionesService;
 import ec.gob.mdg.control.ejb.service.ICalrenSustanciasActividadesService;
-import ec.gob.mdg.control.ejb.service.ICalrenSustanciasEmpleoService;
 import ec.gob.mdg.control.ejb.service.IEmpresaService;
-import ec.gob.mdg.control.ejb.service.IProductoService;
 import ec.gob.mdg.control.ejb.utils.Utilitario;
 import lombok.Data;
 
@@ -56,24 +54,18 @@ public class ConsultaCalRenFormulariosPreSerCalBean implements Serializable {
 	private ICalrenIntervencionesService serviceCalRenIntervenciones;
 
 	@Inject
-	private ICalrenSustanciasEmpleoService serviceCalRenSusEmpleo;
-	
-	@Inject
-	private IProductoService serviceProducto;
+	private ICalrenIntervencionesComponentesService serviceCalRenIntComponentes;
 
 	private List<CalrenSustancias> listaCalRenSustancias = new ArrayList<>();
 	private List<CalrenSustanciasActividades> listaCalRenSustanciasAct = new ArrayList<>();
-	private List<CalrenSustanciasEmpleo> listaCalRenSustanciasEmpleo = new ArrayList<>();
 	private List<CalrenIntervenciones> listaCalrenIntervenciones = new ArrayList<>();
-	private List<Producto> listaCalrenIntProductos = new ArrayList<>();
+	private List<CalrenIntervencionesComponentes> listaCalrenIntComponentes = new ArrayList<>();
 
 	private Empresa empresa = new Empresa();
 	private CalificacionesRenovaciones calRen = new CalificacionesRenovaciones();
 	private CalrenSustanciasActividades calrenSustanciasActividades = new CalrenSustanciasActividades();
 	private CalrenActividadesCalificacion calRenActCal = new CalrenActividadesCalificacion();
-	private CalrenSustanciasEmpleo calRenSustanciasEmpleo = new CalrenSustanciasEmpleo();
 	private CalrenIntervenciones calrenIntervenciones = new CalrenIntervenciones();
-	private Producto calRenProductos = new Producto();
 
 	String calrenactS;
 	Integer calrenactId;
@@ -81,7 +73,7 @@ public class ConsultaCalRenFormulariosPreSerCalBean implements Serializable {
 	String actividad;
 	String calrenS;
 	Integer calrenId;
-	Double total_porcentaje=0.0;
+	Double total_porcentaje = 0.0;;
 
 	@PostConstruct
 	public void init() {
@@ -97,12 +89,12 @@ public class ConsultaCalRenFormulariosPreSerCalBean implements Serializable {
 		return (String) FacesContext.getCurrentInstance().getExternalContext().getFlash().get("calrenact");
 	}
 
-	/// DATOS DE LA EMPRESA DATOS GENERALES PRIMERA PESTAÑA
+
 	public void cargarDatos() {
 		abreviatura = "PS";
 		calrenactS = (String) FacesContext.getCurrentInstance().getExternalContext().getFlash().get("calrenact");
 		calrenactId = Integer.parseInt(calrenactS);
-		
+
 		if (calrenactId != null) {
 			calRenActCal = serviceCalRenActCal.listaCalrenActividadesId(calrenactId);
 
@@ -114,12 +106,17 @@ public class ConsultaCalRenFormulariosPreSerCalBean implements Serializable {
 							abreviatura);
 					empresa = serviceEmpresa.listarEmpresaPorId(calRen.getEmpresa().getId());
 
-					cargarListaEmpleo(calRen.getId());
-					cargarListaIntProductos(calRen.getId());
-					if (listaCalrenIntProductos != null && !listaCalrenIntProductos.isEmpty()) {
-						calRenProductos = listaCalrenIntProductos.get(0);
-						if (calRenProductos != null) {
-							cargarListaIntervenciones(calRenProductos.getId());
+					if (listaCalRenSustanciasAct != null && !listaCalRenSustanciasAct.isEmpty()) {
+						calrenSustanciasActividades = listaCalRenSustanciasAct.get(0);
+						if (calrenSustanciasActividades != null) {
+							cargarListaIntervenciones(calRen.getId());
+							if (listaCalrenIntervenciones != null && !listaCalrenIntervenciones.isEmpty()) {
+								calrenIntervenciones = listaCalrenIntervenciones.get(0);
+								if (calrenIntervenciones != null) {
+									cargarListaIntComponentes(calrenIntervenciones.getId());
+								}
+							}
+
 						}
 					}
 				}
@@ -130,37 +127,30 @@ public class ConsultaCalRenFormulariosPreSerCalBean implements Serializable {
 		}
 	}
 
-	public void cargarListaIntProductos(Integer id_calren) {
-		actividad = "PS";
+	public void cargarListaIntervenciones(Integer id_calren) {
+		String tipo="P";
 		if (id_calren != null) {
-			listaCalrenIntProductos = serviceProducto.listaProductosPorIdCalren(id_calren,actividad);
+			listaCalrenIntervenciones = serviceCalRenIntervenciones.listaPorIdCalren(id_calren,tipo);
+			
 		}
 	}
 
-	public void cargarListaIntervenciones(Integer id_producto) {
-		total_porcentaje =0.0;
-		
-		if (id_producto != null) {
-			listaCalrenIntervenciones = serviceCalRenIntervenciones.listaPorIdCalren(id_producto);
-			for(CalrenIntervenciones c : listaCalrenIntervenciones) {
-				total_porcentaje = total_porcentaje  +  c.getPorcentaje();
+	public void cargarListaIntComponentes(Integer id_intervenciones) {
+		total_porcentaje = 0.0;
+		if (id_intervenciones != null) {
+			listaCalrenIntComponentes = serviceCalRenIntComponentes.listarIntervencionesComponentes(id_intervenciones);
+			for (CalrenIntervencionesComponentes c : listaCalrenIntComponentes) {
+				total_porcentaje = total_porcentaje + c.getPorcentaje();
 			}
 		}
 	}
 
-	public void cargarListaEmpleo(Integer id_calren) {
-		actividad = "PS";
-		if (id_calren != null) {
-			listaCalRenSustanciasEmpleo = serviceCalRenSusEmpleo.listarPorIdCalren(id_calren,actividad);
-		}
+	public void onRowSelect(SelectEvent<CalrenIntervenciones> event) {
+		cargarListaIntComponentes(((CalrenIntervenciones) event.getObject()).getId());
 	}
 
-	public void onRowSelect(SelectEvent<Producto> event) {
-		cargarListaIntervenciones(((Producto) event.getObject()).getId());
-	}
-
-	public void onRowUnselect(UnselectEvent<Producto> event) {
-		cargarListaIntervenciones(((Producto) event.getObject()).getId());
+	public void onRowUnselect(UnselectEvent<CalrenIntervenciones> event) {
+		cargarListaIntComponentes(((CalrenIntervenciones) event.getObject()).getId());
 	}
 
 	/// Ir a Formularios actividades
@@ -173,5 +163,4 @@ public class ConsultaCalRenFormulariosPreSerCalBean implements Serializable {
 			Utilitario.irAPagina("/pg/cal/calrenformulariosactcal");
 		}
 	}
-
 }

@@ -39,7 +39,7 @@
 						</p:panelGrid>
 						<!-- INFORMACIÓN DE USO Y EMPLEO DE SUSTANCIAS -->
 						<p:dataTable id="dt_formulario_emp" var="e"
-							value="#{consultaCalRenFormulariosUsoCalBean.listaCalRenSustanciasEmpleo}"
+							value="#{consultaCalRenFormulariosUsoCalBean.listaCalRenSustanciasAct}"
 							rows="5" paginator="true"
 							paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
 							rowsPerPageTemplate="5,10,15" sortOrder="descending"
@@ -70,11 +70,11 @@
 						</p:dataTable>
 
 
-						<!-- INFORMACIÓN DE PRODUCTOS -->
+						<!-- INFORMACIÓN DE INTERVENCIONES - PRODUCTOS -->
 						<p:dataTable id="dt_formulario_pro" var="e"
-							value="#{consultaCalRenFormulariosUsoCalBean.listaCalrenIntProductos}"
+							value="#{consultaCalRenFormulariosUsoCalBean.listaCalrenIntervenciones}"
 							selectionMode="single"
-							selection="#{consultaCalRenFormulariosUsoCalBean.calRenProductos}"
+							selection="#{consultaCalRenFormulariosUsoCalBean.calrenIntervenciones}"
 							rowKey="#{e.id}" rows="5" paginator="true"
 							paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
 							rowsPerPageTemplate="5,10,15" sortOrder="descending"
@@ -90,67 +90,43 @@
 
 							<f:facet name="header">
 								<h:outputText
-									value="PRODUCTOS A ELABORAR EN LA ACTIVIDAD DE USO" />
-							</f:facet>
-							<p:column headerText="Productos elaborado" style="width:80px">
-								<p:outputLabel value="#{e.nombre}">
-								</p:outputLabel>
-							</p:column>
-						</p:dataTable>
-
-						<!--LLENAR INTERVENCIONES -->
-						<p:dataTable id="dt_formulario_int" var="e"
-							value="#{consultaCalRenFormulariosUsoCalBean.listaCalrenIntervenciones}"
-							rowIndexVar="index" rows="5" paginator="true"
-							paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
-							rowsPerPageTemplate="5,10,15" sortOrder="descending"
-							paginatorPosition="top" scrollable="true">
-
-							<f:facet name="header">
-								<h:outputText
 									value="INTERVENCIONES Y FORMULACIONES PARA ELABORACIÓN DE PRODUCTOS TERMINADOS/INTERMEDIOS Y DILUCIONES" />
 							</f:facet>
+							<p:column headerText="Productos elaborado" style="width:80px">
+								<p:outputLabel value="#{e.nombre_producto}">
+								</p:outputLabel>
+							</p:column>
+							<p:column headerText="Cantidad de Producto" style="width:80px">
+								<p:outputLabel value="#{e.cantidad_producto_elaborado}">
+								</p:outputLabel>
+							</p:column>
 							<p:column headerText="Tipo de producto" style="width:80px">
-								<p:outputLabel value="#{e.tipo_producto}">
+								<p:outputLabel value="#{e.tipo}">
 									<f:converter converterId="tipoProducto" />
 								</p:outputLabel>
 							</p:column>
-							<p:column headerText="Sustancia Catalogada" style="width:80px">
-								<p:outputLabel value="#{e.calrenSustancias.sustancias.nombre}">
-								</p:outputLabel>
-							</p:column>
-							<p:column headerText="Otras No Controladas" style="width:80px">
-								<p:outputLabel value="#{e.sustanciasNoControladas.nombre}">
-								</p:outputLabel>
-							</p:column>
-
-							<p:column headerText="Porcentaje" style="width:80px;text-align:right">
-								<p:outputLabel value="#{e.porcentaje}">
-									<f:convertNumber type="number" groupingUsed="true"
-										minFractionDigits="2" pattern="#0.00" />
-								</p:outputLabel>
-							</p:column>
-
-							<p:column headerText="Relacion" style="width:80px;text-align:center">
+							<p:column headerText="Relacion"
+								style="width:80px;text-align:center">
 								<p:outputLabel value="#{e.relacion_porcentual}">
 								</p:outputLabel>
 							</p:column>
 
 							<p:column headerText="Capacidad Instalada Nominal (CN) - kg/año"
 								style="width:80px;text-align:right">
-								<p:outputLabel value="#{e.cap_ins_nominal}">
+								<p:outputLabel value="#{e.capacidad_nominal}">
 									<f:convertNumber type="number" groupingUsed="true"
 										minFractionDigits="2" pattern="#0.00" />
 								</p:outputLabel>
 							</p:column>
 							<p:column headerText="Capacidad Instalada Real (CR) - kg/año"
 								style="width:80px;text-align:right">
-								<p:outputLabel value="#{e.cap_ins_real}">
+								<p:outputLabel value="#{e.capacidad_real}">
 									<f:convertNumber type="number" groupingUsed="true"
 										minFractionDigits="2" pattern="#0.00" />
 								</p:outputLabel>
 							</p:column>
-							<p:column headerText="Rendimiento (CR/CN)" style="width:80px;text-align:right">
+							<p:column headerText="Rendimiento (CR/CN)"
+								style="width:80px;text-align:right">
 								<p:outputLabel value="#{e.rendimiento}">
 									<f:convertNumber type="number" groupingUsed="true"
 										minFractionDigits="2" pattern="#0.00" />
@@ -160,9 +136,9 @@
 							<p:columnGroup type="header">
 								<p:row>
 									<p:row>
+										<p:column rowspan="1" headerText="Producto" />
+										<p:column rowspan="1" headerText="Cantidad de Producto" />
 										<p:column rowspan="1" headerText="Tipo de producto" />
-										<p:column colspan="2" headerText="Componentes" />
-										<p:column colspan="1" headerText="Porcentaje" />
 										<p:column colspan="1" headerText="Relación Porcentual" />
 										<p:column colspan="2"
 											headerText="Capacidad Instalada - kg/año" />
@@ -171,8 +147,7 @@
 								</p:row>
 								<p:row>
 									<p:column></p:column>
-									<p:column headerText="Sustancia Catalogada" />
-									<p:column headerText="Otras No controladas" />
+									<p:column></p:column>
 									<p:column></p:column>
 									<p:column></p:column>
 									<p:column headerText="Nominal de uso" />
@@ -180,14 +155,43 @@
 									<p:column></p:column>
 								</p:row>
 							</p:columnGroup>
+						</p:dataTable>
 
+						<!--LLENAR INTERVENCIONES COMPONENTES -->
+						<p:dataTable id="dt_formulario_int" var="e"
+							value="#{consultaCalRenFormulariosUsoCalBean.listaCalrenIntComponentes}"
+							rowIndexVar="index" rows="5" paginator="true"
+							paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+							rowsPerPageTemplate="5,10,15" sortOrder="descending"
+							paginatorPosition="top" scrollable="true">
 
+							<f:facet name="header">
+								<h:outputText value="COMPONENTES" />
+							</f:facet>
 
-							<p:columnGroup type="footer">
+							<p:column headerText="Sustancia Catalogada" style="width:80px">
+								<p:outputLabel
+									value="#{e.calrenSustanciasActividades.calrenSustancias.sustancias.nombre}">
+								</p:outputLabel>
+							</p:column>
+							<p:column headerText="Otras No Controladas" style="width:80px">
+								<p:outputLabel value="#{e.sustanciasNoControladas.nombre}">
+								</p:outputLabel>
+							</p:column>
+
+							<p:column headerText="Porcentaje"
+								style="width:80px;text-align:right">
+								<p:outputLabel value="#{e.porcentaje}">
+									<f:convertNumber type="number" groupingUsed="true"
+										minFractionDigits="2" pattern="#0.00" />
+								</p:outputLabel>
+							</p:column>
+
+						<p:columnGroup type="footer">
 								<p:row>
 									<p:column />
-									<p:column />
-																		
+								
+
 									<p:column colspan="1" style="text-align:right"
 										footerText="Total:" />
 									<p:column style="text-align:right">
@@ -198,10 +202,6 @@
 											</p:outputLabel>
 										</f:facet>
 									</p:column>
-									<p:column />
-									<p:column />
-									<p:column />
-									<p:column />
 								</p:row>
 							</p:columnGroup>
 

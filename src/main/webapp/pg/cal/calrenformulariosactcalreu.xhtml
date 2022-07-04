@@ -40,9 +40,9 @@
 
 						<!--LLENAR CAPACIDADES -->
 						<p:dataTable id="dt_formulario_prorecreu" var="e"
-							value="#{consultaCalRenFormulariosReuCalBean.listaCalRenSustanciasActividadesProRecReu}"
+							value="#{consultaCalRenFormulariosReuCalBean.listaCalRenSustanciasAct}"
 							selectionMode="single"
-							selection="#{consultaCalRenFormulariosReuCalBean.calRenSusActProRecReu}"
+							selection="#{consultaCalRenFormulariosReuCalBean.calrenSustanciasActividades}"
 							rowKey="#{e.id}" rowIndexVar="index" rows="5" paginator="true"
 							paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
 							rowsPerPageTemplate="5,10,15" sortOrder="descending"
@@ -53,7 +53,7 @@
 							</f:facet>
 							<p:column headerText="Sustancias"
 								style="width:80px">
-								<p:outputLabel value="#{e.calrenSustanciasActividades.calrenSustancias.sustancias.nombre}">
+								<p:outputLabel value="#{e.calrenSustancias.sustancias.nombre}">
 								</p:outputLabel>
 							</p:column>
 

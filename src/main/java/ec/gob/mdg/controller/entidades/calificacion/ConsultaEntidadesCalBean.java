@@ -1,9 +1,6 @@
 package ec.gob.mdg.controller.entidades.calificacion;
 
 import java.io.Serializable;
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import javax.annotation.PostConstruct;
@@ -30,7 +27,7 @@ public class ConsultaEntidadesCalBean implements Serializable {
 
 	@Inject
 	private IEmpresaService serviceEmpresa;
-	
+
 	@Inject
 	private IBanTipoTramiteService serviceBanTipoTramite;
 
@@ -48,23 +45,10 @@ public class ConsultaEntidadesCalBean implements Serializable {
 	String siglasTramite;
 	Date fecha_fin;
 	Date fecha_inicio;
-	
+
 	@PostConstruct
 	public void init() {
 		try {
-			SimpleDateFormat formato = new SimpleDateFormat("dd/MM/yyyy");
-			siglasTramite = (String) FacesContext.getCurrentInstance().getExternalContext().getFlash().get("tramite");
-			banTipoTramite=serviceBanTipoTramite.muestraPorSiglas(siglasTramite);
-			try {
-				fecha_inicio = formato.parse(
-						(String) FacesContext.getCurrentInstance().getExternalContext().getFlash().get("fechaInicio"));
-				fecha_fin = formato
-						.parse((String) FacesContext.getCurrentInstance().getExternalContext().getFlash().get("fechaFin"));
-				cargarDatos();
-			} catch (ParseException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
 			cargarDatos();
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
@@ -101,40 +85,28 @@ public class ConsultaEntidadesCalBean implements Serializable {
 					render_p = true;
 				}
 			}
-		}		
-		
+		}
+
 	}
 
 	/// Ir a detalle calificaciones
 	public void irCalRen() {
 		empresaS = String.valueOf(empresa.getId());
+
 		final FacesContext context = FacesContext.getCurrentInstance();
 		final Flash flash = context.getExternalContext().getFlash();
 		flash.put("empresa", empresaS);
+
 		Utilitario.irAPagina("/pg/cal/calrenconsultacal");
 	}
-	
+
 	/// Ir a representantes
-	public void irRepresentantes() {		
+	public void irRepresentantes() {
 		empresaS = String.valueOf(empresa.getId());
 		final FacesContext context = FacesContext.getCurrentInstance();
 		final Flash flash = context.getExternalContext().getFlash();
 		flash.put("empresa", empresaS);
 		Utilitario.irAPagina("/pg/cal/representantescal");
-	}
-	
-	public void regresar() {
-		DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
-		String fecha_inicioS = dateFormat.format(fecha_inicio);
-		String fecha_finS = dateFormat.format(fecha_fin);
-
-		final FacesContext context = FacesContext.getCurrentInstance();
-		final Flash flash = context.getExternalContext().getFlash();
-		flash.put("tramite", siglasTramite);
-		flash.put("fechaInicio", fecha_inicioS);
-		flash.put("fechaFin", fecha_finS);
-
-		Utilitario.irAPagina("/pg/ban/bandejaentradaestcalificaciondetusuarios");
 	}
 
 }
