@@ -61,6 +61,7 @@ public class BandejaEntradaCalificacionesDetUsuarioBean implements Serializable 
 
 	private BanCatalogoEstados banCatalogoEstadosSiglas = new BanCatalogoEstados();
 	BandejaEntrada bandeja = new BandejaEntrada();// nuevo registro
+	BandejaEntrada bandejaHistorial = new BandejaEntrada();// sacar información antes de grabar
 	private Correo correo = new Correo();
 
 	String siglasTramite;
@@ -136,88 +137,111 @@ public class BandejaEntradaCalificacionesDetUsuarioBean implements Serializable 
 			if (((BandejaEntrada) event.getObject()).getBanTipoTramite().getSiglas().equals("C")) {
 				Utilitario.irAPagina("/pg/cal/entprincipalcal");
 			}
-		} else {
-			FacesContext.getCurrentInstance().addMessage(null,
-					new FacesMessage(FacesMessage.SEVERITY_INFO, "El trámite aun no ha sido procesado ", "Aviso, "));
 		}
 	}
 
 	public void cambiarAEstadoTramite(BandejaEntrada b) throws Exception {
 		if (b != null) {
 			estado = "T";
-			observacion = "La solicitud " + b.getNum_tramite() + " para acceder al trámite Calificación para el manejo"
-					+ " de sustancias catalogadas sujetas a fiscalización "
-					+ " se encuentra en trámite por el técnico del área de Control de SCSF: "
-					+ b.getUsuario().getNombre();
-
 			detalle = "La solicitud " + b.getNum_tramite() + ", para acceder al trámite Calificación para el manejo\r\n"
 					+ " de sustancias catalogadas sujetas a fiscalización \r\n"
 					+ " se encuentra en trámite por el técnico del área de Control de SCSF" + b.getUsuario().getNombre()
 					+ "<div>" + "</div>" + "<br/>" + "<div>" + "Atentamente" + "</div>" + "<div>"
 					+ correo.getMail_nombre_institucion() + "</div>";
+
+			observacion = "La solicitud " + b.getNum_tramite() + " para acceder al trámite Calificación para el manejo"
+					+ " de sustancias catalogadas sujetas a fiscalización "
+					+ " se encuentra en trámite por el técnico del área de Control de SCSF: "
+					+ b.getUsuario().getNombre();
+
 			cambiarEstado(b, estado, observacion);
 			enviarCorreo(b, detalle);
+		} else {
+			FacesContext.getCurrentInstance().addMessage(null,
+					new FacesMessage(FacesMessage.SEVERITY_ERROR, "Sin datos", "Error, "));
 		}
 	}
 
 	public void devolverTramite(BandejaEntrada b, String observacion) throws Exception {
-		System.out.println(observacion + " Observación");
-		System.out.println(b + " Bandeja de entrada");
-//		if (b != null && observacion!=null) {
-//			estado = "D";
-//			observacion = "Existen observaciones a la solicitud: " + b.getNum_tramite()
-//					+ " para acceder al trámite Calificación para el manejo de sustancias catalogadas sujetas a fiscalización. "
-//					+ "Realizar las correcciones solicitadas y volver a enviar el trámite. "
-//					+ "Las observaciones son las siguientes: " + observacion;
-//
-//			detalle = "Existen observaciones a la solicitud: " + b.getNum_tramite()
-//					+ " para acceder al trámite Calificación para el manejo de sustancias catalogadas sujetas a fiscalización.\r\n"
-//					+ "Realizar las correcciones solicitadas y volver a enviar el trámite.\r\n"
-//					+ "Las observaciones son las siguientes: " + observacion + "<div>" + "</div>" + "<br/>" + "<div>"
-//					+ "Atentamente" + "</div>" + "<div>" + correo.getMail_nombre_institucion() + "</div>";
-//			cambiarEstado(b, estado, observacion);
-//			enviarCorreo(b, detalle);
-//		}
+
+		if (b != null && observacion != null) {
+			bandejaHistorial = serviceBandejaEntrada.listarPorId(b);
+			if (b.getObservacion().equals(bandejaHistorial.getObservacion())) {
+				FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,
+						"Debe cambiar la observacion, borre y vuelva a escribir las observaciones", "Error "));
+			} else {
+				estado = "D";
+				detalle = "Existen observaciones a la solicitud: " + b.getNum_tramite()
+						+ " para acceder al trámite Calificación para el manejo de sustancias catalogadas sujetas a fiscalización.\r\n"
+						+ "Realizar las correcciones solicitadas y volver a enviar el trámite.\r\n" + "<div>"
+						+ "Las observaciones son las siguientes: " + "</div>" + observacion + "<div>" + "</div>"
+						+ "<br/>" + "<div>" + "Atentamente" + "</div>" + "<div>" + correo.getMail_nombre_institucion()
+						+ "</div>";
+
+				observacion = "Existen observaciones a la solicitud: " + b.getNum_tramite()
+						+ " para acceder al trámite Calificación para el manejo de sustancias catalogadas sujetas a fiscalización. "
+						+ "Realizar las correcciones solicitadas y volver a enviar el trámite. "
+						+ "Las observaciones son las siguientes: " + observacion;
+
+				cambiarEstado(b, estado, observacion);
+				enviarCorreo(b, detalle);
+			}
+
+		} else {
+			FacesContext.getCurrentInstance().addMessage(null,
+					new FacesMessage(FacesMessage.SEVERITY_ERROR, "Sin datos", "Error, "));
+		}
 	}
 
 	public void cambiarEstado(BandejaEntrada b, String estado, String observacion) throws Exception {
-		b.setVer(false);
-		serviceBandejaEntrada.modificar(b);
+		if (b != null && estado != null && observacion != null) {
+			b.setVer(false);
+			serviceBandejaEntrada.modificar(b);
 
-		banCatalogoEstadosSiglas = serviceBanCatalogoEstados.muestraPorSiglas(estado);
+			banCatalogoEstadosSiglas = serviceBanCatalogoEstados.muestraPorSiglas(estado);
 
-		bandeja.setBanCatalogoEstados(banCatalogoEstadosSiglas);
-		bandeja.setBanTipoTramite(b.getBanTipoTramite());
-		bandeja.setEmpresa(b.getEmpresa());
-		if (estado.equals("D")) {
-			bandeja.setUsuario(null);
+			bandeja.setBanCatalogoEstados(banCatalogoEstadosSiglas);
+			bandeja.setBanTipoTramite(b.getBanTipoTramite());
+			bandeja.setEmpresa(b.getEmpresa());
+			if (estado.equals("D")) {
+				bandeja.setUsuario(null);
+			} else {
+				bandeja.setUsuario(b.getUsuario());
+			}
+
+			bandeja.setNum_tramite(b.getNum_tramite());
+			bandeja.setObservacion(observacion);
+			bandeja.setFecha(ec.gob.mdg.utils.UtilsDate.fechaActual());
+			bandeja.setVer(true);
+			serviceBandejaEntrada.registrar(bandeja);
+
+			cargarDatos();
 		} else {
-			bandeja.setUsuario(b.getUsuario());
+			FacesContext.getCurrentInstance().addMessage(null,
+					new FacesMessage(FacesMessage.SEVERITY_ERROR, "Sin datos", "Error, "));
 		}
 
-		bandeja.setNum_tramite(b.getNum_tramite());
-		bandeja.setObservacion(observacion);
-		bandeja.setFecha(ec.gob.mdg.utils.UtilsDate.fechaActual());
-		bandeja.setVer(true);
-		serviceBandejaEntrada.registrar(bandeja);
-
-		cargarDatos();
 	}
 
 	public void enviarCorreo(BandejaEntrada bandejaEntrada, String detalle) {
+		if (bandejaEntrada != null && detalle != null) {
+			Map<String, Object> parametros = new HashMap<>();
+			parametros.put("institution", correo.getMail_nombre_institucion());
+			parametros.put("system", "DE CONTROL DE SUSTANCIAS - CALIFICACIÓN DE SUSTANCIAS");
+			parametros.put("from", correo.getMailEmisor());
+			parametros.put("to", bandejaEntrada.getEmpresa().getCorreo_electronico());
+			parametros.put("subject",
+					banTipoTramite.getDescripcion_corta() + " - " + correo.getMail_nombre_institucion());
+			parametros.put("message", Base64.getEncoder().encodeToString(detalle.getBytes(StandardCharsets.UTF_8)));
+			parametros.put("cco", bandejaEntrada.getUsuario().getCorreo_electronico());
+			parametros.put("includeTemplate", "true");
 
-		Map<String, Object> parametros = new HashMap<>();
-		parametros.put("institution", correo.getMail_nombre_institucion());
-		parametros.put("system", "DE CONTROL DE SUSTANCIAS - CALIFICACIÓN DE SUSTANCIAS");
-		parametros.put("from", correo.getMailEmisor());
-		parametros.put("to", bandejaEntrada.getEmpresa().getCorreo_electronico());
-		parametros.put("subject", banTipoTramite.getDescripcion_corta() + " - " + correo.getMail_nombre_institucion());
-		parametros.put("message", Base64.getEncoder().encodeToString(detalle.getBytes(StandardCharsets.UTF_8)));
-		parametros.put("cco", bandejaEntrada.getUsuario().getCorreo_electronico());
-		parametros.put("includeTemplate", "true");
-
-		String json = GenerarJson.generarJson(parametros);
-		ServiciosWeb.enviarCorreo(json);
+			String json = GenerarJson.generarJson(parametros);
+			ServiciosWeb.enviarCorreo(json);
+		} else {
+			FacesContext.getCurrentInstance().addMessage(null,
+					new FacesMessage(FacesMessage.SEVERITY_ERROR, "Sin datos", "Error, "));
+		}
 	}
 
 	//// Regresar a bandeja de estados

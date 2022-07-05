@@ -25,39 +25,41 @@
 							var="e" selectionMode="single"
 							selection="#{bandejaEntradaCalificacionesDetUsuarioBean.bandejaEntrada}"
 							rowKey="#{e.id}" rowIndexVar="index">
-
 							<p:ajax event="rowSelect"
 								listener="#{bandejaEntradaCalificacionesDetUsuarioBean.onRowSelect}" />
 							<p:ajax event="rowUnselect"
 								listener="#{bandejaEntradaCalificacionesDetUsuarioBean.onRowUnselect}" />
 
 							<p:column headerText="RUC" filterBy="#{e.empresa.ruc}"
-								filterMatchMode="contains" style="width:20px">
+								filterMatchMode="contains" style="width:10px;">
 								<p:outputLabel value="#{e.empresa.ruc}" />
 							</p:column>
 							<p:column headerText="Empresa" filterBy="#{e.empresa.nombre}"
-								filterMatchMode="contains" style="width:20px">
+								filterMatchMode="contains" style="width:50px;">
 								<p:outputLabel value="#{e.empresa.nombre}" />
 							</p:column>
-							<p:column headerText="Fecha Trámite" style="width:20px">
+							<p:column headerText="Fecha Trámite" style="width:10px;">
 								<p:outputLabel value="#{e.fecha}" />
 							</p:column>
 							<p:column headerText="Usuario asignado"
 								filterBy="#{e.usuario.nombre}" filterMatchMode="contains"
-								style="width:20px">
+								style="width:30px;">
 								<p:outputLabel value="#{e.usuario.nombre}" />
 							</p:column>
-							<p:column headerText="Cambiar Estado" style="width:10px">
-								<p:commandLink
-									actionListener="#{bandejaEntradaCalificacionesDetUsuarioBean.mostrarData(e)}"
-									oncomplete="PF('wdlg').show()" update="frm:dlg"
-									immediate="true" process="@this">
-									<i class="fa fa-fw fa-edit"></i>
-								</p:commandLink>
+							<p:column headerText="Cambiar Estado" style="width:100px">
+								<p:inputTextarea type="text" style="width:400px; height:100px"
+									value="#{e.observacion}" rows="5" cols="30" counter="display"
+									maxlength="1000" counterTemplate="{0} characters remaining."
+									autoResize="false" id="intexarea" />
+								<p:column></p:column>
+								<h:outputText id="display" class="p-d-block" />
+								<p:tooltip for="intexarea" value="Cambie la observación antes de devolver el trámite" position="top"/>
+								<p:commandButton icon="fa fa-fw fa-edit" update="dt" id="btnDev"
+									actionListener="#{bandejaEntradaCalificacionesDetUsuarioBean.devolverTramite(e,e.observacion)}">
+								</p:commandButton>
+								<p:tooltip for="btnDev" value="Cambie la observación antes de devolver el trámite" position="top"/>
 							</p:column>
-
 						</p:dataTable>
-
 					</p:panel>
 					<p:panel id="pn_opciones" style="width:100%">
 						<p:commandButton value="Regresar" icon="ui-icon-arrowreturn-1-n"
@@ -69,33 +71,7 @@
 					</p:panel>
 				</p:panelGrid>
 
-				<!-- DIALOGO PARA EDITAR TRAMITE -->
-				<p:dialog id="dlg" widgetVar="wdlg" resizable="false" width="800"
-					draggable="true" modal="true" position="center"
-					closeOnEscape="true" positionType="absolute">
-
-					<h2 style="color: #003778; text-align: center">Devolver
-						trámite</h2>
-
-					<p:panelGrid id="pg" columns="2" columnClasses="topAligned"
-						style="text-align: left;width:100%">
-						<p:outputLabel styleClass="especialstrong" value="Observaciones:" />
-						<p:inputTextarea type="text" style="width:500px; height:100px"
-							value="#{bandejaEntradaCalificacionesDetUsuarioBean.bandejaEntrada.observacion}"
-							rows="5" cols="30" counter="display" maxlength="10"
-							counterTemplate="{0} characters remaining." autoResize="false" />
-							<h:outputText id="display" class="p-d-block" />
-
-						<p:commandButton value="Devolver el trámite"
-							actionListener="#{bandejaEntradaCalificacionesDetUsuarioBean.devolverTramite(bandejaEntradaCalificacionesDetUsuarioBean.bandejaEntrada,bandejaEntradaCalificacionesDetUsuarioBean.bandejaEntrada.observacion)}"
-							ajax="true"
-							oncomplete="if (args &amp;&amp; !args.validationFailed) PF('wdlg').hide()"
-							update="pg, dt" icon="fa-solid fa-building-circle-arrow-right" />
-
-
-					</p:panelGrid>
-
-				</p:dialog>
+			
 			</h:form>
 		</ui:define>
 

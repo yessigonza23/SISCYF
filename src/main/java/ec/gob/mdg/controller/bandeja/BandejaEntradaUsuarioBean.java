@@ -7,7 +7,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import javax.annotation.PostConstruct;
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
 import javax.faces.context.Flash;
@@ -45,11 +44,6 @@ public class BandejaEntradaUsuarioBean implements Serializable {
 	Integer num_meses = 0;
 
 	Usuario usuario = (Usuario) FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("usuario");
-
-	@PostConstruct
-	public void init() {
-
-	}
 
 	public void listarTramites() {
 		if (fecha_inicio!= null &&  fecha_fin!=null) {

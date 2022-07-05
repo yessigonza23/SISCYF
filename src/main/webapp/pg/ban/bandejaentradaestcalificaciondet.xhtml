@@ -40,6 +40,14 @@
 								filterBy="#{e.usuario.nombre}" filterMatchMode="contains">
 								<p:outputLabel value="#{e.usuario.nombre}" />
 							</p:column>
+							<p:column headerText="Observación" style="width:100px">
+								<p:inputTextarea type="text" style="width:400px; height:100px"
+									value="#{e.observacion}" rows="5" cols="30" counter="display"
+									maxlength="1000" counterTemplate="{0} characters remaining."
+									autoResize="false" readonly="true" />
+								<p:column></p:column>
+								<h:outputText id="display" class="p-d-block" />
+							</p:column>
 							<p:column headerText="Acción" style="width:20px">
 								<p:commandLink
 									actionListener="#{bandejaEntradaCalificacionesDetBean.mostrar(e)}"
@@ -96,7 +104,7 @@
 
 							<p:panelGrid id="pgBotones" columns="3" style="margin-left: 35%">
 								<p:commandButton value="Asignar"
-									actionListener="#{bandejaEntradaCalificacionesDetBean.asignarUsuario()}"
+									actionListener="#{bandejaEntradaCalificacionesDetBean.asignarUsuario(bandejaEntradaCalificacionesDetBean.bandejaEntrada)}"
 									ajax="true"
 									oncomplete="if (args &amp;&amp; !args.validationFailed) PF('wdlg_par').hide()"
 									update="pg,dt,@form" />

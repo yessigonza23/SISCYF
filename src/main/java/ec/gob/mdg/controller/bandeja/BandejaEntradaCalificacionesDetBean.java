@@ -1,14 +1,19 @@
 package ec.gob.mdg.controller.bandeja;
 
 import java.io.Serializable;
+import java.nio.charset.StandardCharsets;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.annotation.PostConstruct;
+import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
 import javax.faces.context.Flash;
 import javax.faces.view.ViewScoped;
@@ -18,12 +23,16 @@ import javax.inject.Named;
 import ec.gob.mdg.control.ejb.modelo.BanCatalogoEstados;
 import ec.gob.mdg.control.ejb.modelo.BanTipoTramite;
 import ec.gob.mdg.control.ejb.modelo.BandejaEntrada;
+import ec.gob.mdg.control.ejb.modelo.Correo;
 import ec.gob.mdg.control.ejb.modelo.Usuario;
 import ec.gob.mdg.control.ejb.service.IBanCatalogoEstadosService;
 import ec.gob.mdg.control.ejb.service.IBanTipoTramiteService;
 import ec.gob.mdg.control.ejb.service.IBandejaEntradaService;
+import ec.gob.mdg.control.ejb.service.ICorreoService;
 import ec.gob.mdg.control.ejb.service.IUsuarioService;
 import ec.gob.mdg.control.ejb.utils.Utilitario;
+import ec.gob.mdg.dinardap.servicios.ServiciosWeb;
+import ec.gob.mdg.utils.GenerarJson;
 import lombok.Data;
 
 @Data
@@ -45,6 +54,9 @@ public class BandejaEntradaCalificacionesDetBean implements Serializable {
 	@Inject
 	private IBandejaEntradaService serviceBandejaEntrada;
 
+	@Inject
+	private ICorreoService serviceCorreo;
+
 	private List<BandejaEntrada> listaBandejaEntrada = new ArrayList<>();
 	private List<Usuario> listaUsuarios = new ArrayList<>();
 
@@ -54,6 +66,7 @@ public class BandejaEntradaCalificacionesDetBean implements Serializable {
 	private BanCatalogoEstados banCatalogoEstadosSiglas = new BanCatalogoEstados();
 	private Usuario us = new Usuario();
 	BandejaEntrada bandeja = new BandejaEntrada();// nuevo registro
+	private Correo correo = new Correo();
 
 	Usuario usuario = (Usuario) FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("usuario");
 
@@ -63,11 +76,13 @@ public class BandejaEntradaCalificacionesDetBean implements Serializable {
 	Date fecha_inicio;
 	Date fecha_fin;
 	String renderAsigna;
+	String detalle;
 	Boolean render;
 
 	@PostConstruct
 	public void init() {
 		try {
+			correo = serviceCorreo.obtenerDatosCorreo();
 			listarUsuarios();
 			siglasTramite = (String) FacesContext.getCurrentInstance().getExternalContext().getFlash().get("tramite");
 			siglasEstado = (String) FacesContext.getCurrentInstance().getExternalContext().getFlash().get("est_siglas");
@@ -89,15 +104,81 @@ public class BandejaEntradaCalificacionesDetBean implements Serializable {
 
 	/// DATOS DE LA EMPRESA DATOS GENERALES PRIMERA PESTAÑA
 	public void cargarDatos() {
+		System.out.println("5");
 		if (renderAsigna != null) {
 			if (renderAsigna.equals("T")) {
 				render = true;
 			}
 		}
+		System.out.println("6: " + siglasEstado + "-"+siglasTramite + "-"+ usuario+ "-"+fecha_inicio+ "-"+fecha_fin);
 		if (siglasEstado != null && siglasTramite != null && usuario != null && fecha_inicio != null
 				&& fecha_fin != null) {
+			System.out.println("entra a cargar");
 			listaBandejaEntrada = serviceBandejaEntrada.listarPorEstado(siglasTramite, siglasEstado, fecha_inicio,
 					fecha_fin, usuario);
+		}else {
+			FacesContext.getCurrentInstance().addMessage(null,
+					new FacesMessage(FacesMessage.SEVERITY_ERROR, "Sin datos", "Error, "));
+		}
+	}
+
+	public void asignarUsuario(BandejaEntrada bandejaEntrada) throws Exception {
+		if (bandejaEntrada != null) {
+			System.out.println("asigna usuario: " + bandejaEntrada.getObservacion());
+			banCatalogoEstadosSiglas = serviceBanCatalogoEstados.muestraPorSiglas("R");
+System.out.println("1");
+			bandejaEntrada.setVer(false);
+			serviceBandejaEntrada.modificar(bandejaEntrada);
+
+			bandeja.setBanCatalogoEstados(banCatalogoEstadosSiglas);
+			bandeja.setBanTipoTramite(banTipoTramite);
+			bandeja.setEmpresa(bandejaEntrada.getEmpresa());
+			bandeja.setUsuario(bandeja.getUsuario());
+			bandeja.setNum_tramite(bandejaEntrada.getNum_tramite());
+			bandeja.setObservacion("La solicitud " + bandeja.getNum_tramite()
+					+ ",para acceder al trámite Calificación para el manejo de sustancias catalogadas sujetas a fiscalización ha sido asignada a un técnico del área de Control de SCSF");
+
+			bandeja.setFecha(ec.gob.mdg.utils.UtilsDate.fechaActual());
+			bandeja.setVer(true);
+			System.out.println("2");
+			serviceBandejaEntrada.registrar(bandeja);
+			System.out.println("3");
+			detalle = "La solicitud " + bandejaEntrada.getNum_tramite()
+					+ ", para acceder al trámite Calificación para el manejo\r\n"
+					+ " de sustancias catalogadas sujetas a fiscalización \r\n"
+					+ " se encuentra asignada al técnico del área de Control de SCSF: "
+					+ bandejaEntrada.getUsuario().getNombre() + "<div>" + "</div>" + "<br/>" + "<div>" + "Atentamente"
+					+ "</div>" + "<div>" + correo.getMail_nombre_institucion() + "</div>";
+			renderAsigna = "F";
+			System.out.println("4");
+			cargarDatos();
+			enviarCorreo(bandejaEntrada, detalle);
+		}else {
+			FacesContext.getCurrentInstance().addMessage(null,
+					new FacesMessage(FacesMessage.SEVERITY_ERROR, "Sin datos", "Error, "));
+		}
+	}
+
+	public void enviarCorreo(BandejaEntrada bandejaEntrada, String detalle) {
+		System.out.println("entra a correo: " + bandejaEntrada);
+		System.out.println("detalle: " + detalle);
+		if (bandejaEntrada != null && detalle != null) {
+			Map<String, Object> parametros = new HashMap<>();
+			parametros.put("institution", correo.getMail_nombre_institucion());
+			parametros.put("system", "DE CONTROL DE SUSTANCIAS - CALIFICACIÓN DE SUSTANCIAS");
+			parametros.put("from", correo.getMailEmisor());
+			parametros.put("to", bandejaEntrada.getEmpresa().getCorreo_electronico());
+			parametros.put("subject",
+					banTipoTramite.getDescripcion_corta() + " - " + correo.getMail_nombre_institucion());
+			parametros.put("message", Base64.getEncoder().encodeToString(detalle.getBytes(StandardCharsets.UTF_8)));
+			parametros.put("cco", bandejaEntrada.getUsuario().getCorreo_electronico());
+			parametros.put("includeTemplate", "true");
+
+			String json = GenerarJson.generarJson(parametros);
+			ServiciosWeb.enviarCorreo(json);
+		}else {
+			FacesContext.getCurrentInstance().addMessage(null,
+					new FacesMessage(FacesMessage.SEVERITY_ERROR, "Sin datos", "Error, "));
 		}
 	}
 
@@ -114,26 +195,6 @@ public class BandejaEntradaCalificacionesDetBean implements Serializable {
 		bandejaEntrada = i;
 	}
 
-	public void asignarUsuario() throws Exception {
-		banCatalogoEstadosSiglas = serviceBanCatalogoEstados.muestraPorSiglas("R");
-
-		bandejaEntrada.setVer(false);
-		serviceBandejaEntrada.modificar(bandejaEntrada);
-
-		bandeja.setBanCatalogoEstados(banCatalogoEstadosSiglas);
-		bandeja.setBanTipoTramite(banTipoTramite);
-		bandeja.setEmpresa(bandejaEntrada.getEmpresa());
-		bandeja.setUsuario(bandeja.getUsuario());
-		bandeja.setNum_tramite(bandejaEntrada.getNum_tramite());
-		bandeja.setObservacion("La solicitud " + bandeja.getNum_tramite()
-				+ ",para acceder al trámite Calificación para el manejo de sustancias catalogadas sujetas a fiscalización ha sido asignada a un técnico del área de Control de SCSF");
-				
-		bandeja.setFecha(ec.gob.mdg.utils.UtilsDate.fechaActual());
-		bandeja.setVer(true);
-		serviceBandejaEntrada.registrar(bandeja);
-		cargarDatos();
-	}
-
 	/// Regresar a bandeja de tramites
 	public void regresarBandeja() {
 		Utilitario.irAPagina("/pg/ban/bandejaentrada");
@@ -141,7 +202,6 @@ public class BandejaEntradaCalificacionesDetBean implements Serializable {
 
 	//// Regresar a bandeja de estados
 	public void regresarBandejaEstados() {
-
 		DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
 		String fecha_inicioS = dateFormat.format(fecha_inicio);
 		String fecha_finS = dateFormat.format(fecha_fin);
