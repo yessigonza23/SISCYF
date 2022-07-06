@@ -48,15 +48,17 @@
 								<p:column></p:column>
 								<h:outputText id="display" class="p-d-block" />
 							</p:column>
-							<p:column headerText="Acción" style="width:20px">
-								<p:commandLink
+							<p:column headerText="Acción" style="width:5px">
+								<p:commandLink id="comdlg"
 									actionListener="#{bandejaEntradaCalificacionesDetBean.mostrar(e)}"
 									oncomplete="PF('wdlg_par').show()" process="@this"
 									update="frm:dlg"
 									rendered="#{bandejaEntradaCalificacionesDetBean.render}">
-									<i class="ui-icon ui-icon-pencil"></i>
+									<i class="fa fa-fw fa-edit"></i>
 								</p:commandLink>
+								<p:tooltip for="comdlg" value="Asignar trámite" position="top"/>
 							</p:column>
+							
 						</p:dataTable>
 
 						<p:dialog id="dlg" widgetVar="wdlg_par" resizable="false"

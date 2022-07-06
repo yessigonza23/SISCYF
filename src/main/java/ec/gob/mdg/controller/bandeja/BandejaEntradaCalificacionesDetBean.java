@@ -102,21 +102,17 @@ public class BandejaEntradaCalificacionesDetBean implements Serializable {
 		}
 	}
 
-	/// DATOS DE LA EMPRESA DATOS GENERALES PRIMERA PESTAÑA
 	public void cargarDatos() {
-		System.out.println("5");
 		if (renderAsigna != null) {
 			if (renderAsigna.equals("T")) {
 				render = true;
 			}
 		}
-		System.out.println("6: " + siglasEstado + "-"+siglasTramite + "-"+ usuario+ "-"+fecha_inicio+ "-"+fecha_fin);
 		if (siglasEstado != null && siglasTramite != null && usuario != null && fecha_inicio != null
 				&& fecha_fin != null) {
-			System.out.println("entra a cargar");
 			listaBandejaEntrada = serviceBandejaEntrada.listarPorEstado(siglasTramite, siglasEstado, fecha_inicio,
 					fecha_fin, usuario);
-		}else {
+		} else {
 			FacesContext.getCurrentInstance().addMessage(null,
 					new FacesMessage(FacesMessage.SEVERITY_ERROR, "Sin datos", "Error, "));
 		}
@@ -124,9 +120,7 @@ public class BandejaEntradaCalificacionesDetBean implements Serializable {
 
 	public void asignarUsuario(BandejaEntrada bandejaEntrada) throws Exception {
 		if (bandejaEntrada != null) {
-			System.out.println("asigna usuario: " + bandejaEntrada.getObservacion());
 			banCatalogoEstadosSiglas = serviceBanCatalogoEstados.muestraPorSiglas("R");
-System.out.println("1");
 			bandejaEntrada.setVer(false);
 			serviceBandejaEntrada.modificar(bandejaEntrada);
 
@@ -136,32 +130,27 @@ System.out.println("1");
 			bandeja.setUsuario(bandeja.getUsuario());
 			bandeja.setNum_tramite(bandejaEntrada.getNum_tramite());
 			bandeja.setObservacion("La solicitud " + bandeja.getNum_tramite()
-					+ ",para acceder al trámite Calificación para el manejo de sustancias catalogadas sujetas a fiscalización ha sido asignada a un técnico del área de Control de SCSF");
-
+					+ " para acceder al trámite Calificación para el manejo de sustancias catalogadas sujetas a fiscalización ha sido asignada a un técnico del área de Control de SCSF " + bandeja.getUsuario().getNombre() );
 			bandeja.setFecha(ec.gob.mdg.utils.UtilsDate.fechaActual());
 			bandeja.setVer(true);
-			System.out.println("2");
 			serviceBandejaEntrada.registrar(bandeja);
-			System.out.println("3");
-			detalle = "La solicitud " + bandejaEntrada.getNum_tramite()
-					+ ", para acceder al trámite Calificación para el manejo\r\n"
+
+			detalle = "La solicitud " + bandeja.getNum_tramite()
+					+ " para acceder al trámite Calificación para el manejo\r\n"
 					+ " de sustancias catalogadas sujetas a fiscalización \r\n"
-					+ " se encuentra asignada al técnico del área de Control de SCSF: "
-					+ bandejaEntrada.getUsuario().getNombre() + "<div>" + "</div>" + "<br/>" + "<div>" + "Atentamente"
+					+ " se encuentra asignada al técnico del área de Control de SCSF: " + bandeja.getUsuario().getNombre()+"." 
+					+ "</div>" + "<div>" + "<br/>" + "<div>" + "Atentamente"
 					+ "</div>" + "<div>" + correo.getMail_nombre_institucion() + "</div>";
 			renderAsigna = "F";
-			System.out.println("4");
 			cargarDatos();
-			enviarCorreo(bandejaEntrada, detalle);
-		}else {
+			enviarCorreo(bandeja, detalle);
+		} else {
 			FacesContext.getCurrentInstance().addMessage(null,
 					new FacesMessage(FacesMessage.SEVERITY_ERROR, "Sin datos", "Error, "));
 		}
 	}
 
 	public void enviarCorreo(BandejaEntrada bandejaEntrada, String detalle) {
-		System.out.println("entra a correo: " + bandejaEntrada);
-		System.out.println("detalle: " + detalle);
 		if (bandejaEntrada != null && detalle != null) {
 			Map<String, Object> parametros = new HashMap<>();
 			parametros.put("institution", correo.getMail_nombre_institucion());
@@ -173,10 +162,9 @@ System.out.println("1");
 			parametros.put("message", Base64.getEncoder().encodeToString(detalle.getBytes(StandardCharsets.UTF_8)));
 			parametros.put("cco", bandejaEntrada.getUsuario().getCorreo_electronico());
 			parametros.put("includeTemplate", "true");
-
 			String json = GenerarJson.generarJson(parametros);
 			ServiciosWeb.enviarCorreo(json);
-		}else {
+		} else {
 			FacesContext.getCurrentInstance().addMessage(null,
 					new FacesMessage(FacesMessage.SEVERITY_ERROR, "Sin datos", "Error, "));
 		}
