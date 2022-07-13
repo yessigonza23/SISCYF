@@ -126,7 +126,7 @@ public class BandejaEntradaCalificacionesDetBean implements Serializable {
 
 			bandeja.setBanCatalogoEstados(banCatalogoEstadosSiglas);
 			bandeja.setBanTipoTramite(banTipoTramite);
-			bandeja.setEmpresa(bandejaEntrada.getEmpresa());
+			bandeja.setCalificacionesRenovaciones(bandejaEntrada.getCalificacionesRenovaciones());
 			bandeja.setUsuario(bandeja.getUsuario());
 			bandeja.setNum_tramite(bandejaEntrada.getNum_tramite());
 			bandeja.setObservacion("La solicitud " + bandeja.getNum_tramite()
@@ -156,7 +156,7 @@ public class BandejaEntradaCalificacionesDetBean implements Serializable {
 			parametros.put("institution", correo.getMail_nombre_institucion());
 			parametros.put("system", "DE CONTROL DE SUSTANCIAS - CALIFICACIÓN DE SUSTANCIAS");
 			parametros.put("from", correo.getMailEmisor());
-			parametros.put("to", bandejaEntrada.getEmpresa().getCorreo_electronico());
+			parametros.put("to", bandejaEntrada.getCalificacionesRenovaciones().getEmpresa().getCorreo_electronico());
 			parametros.put("subject",
 					banTipoTramite.getDescripcion_corta() + " - " + correo.getMail_nombre_institucion());
 			parametros.put("message", Base64.getEncoder().encodeToString(detalle.getBytes(StandardCharsets.UTF_8)));

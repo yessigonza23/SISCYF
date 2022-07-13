@@ -8,17 +8,25 @@
 <p:panelGrid id="pg_opciones" style="text-align: left;width:100%"
 	columns="1">
 
-	<p:commandButton value="Calificación / Renovación" ajax="false"
-		icon="ui-icon-copy" style="width:150px;height:40px"
-		action="#{consultaEntidadesCalBean.irCalRen()}">
-	</p:commandButton>
-	<p:commandButton value="Representantes" ajax="false"
-		icon="ui-icon-contact" style="width:150px;"
-		action="#{consultaEntidadesCalBean.irRepresentantes()}">
-	</p:commandButton>
+	<p:commandLink action="#{consultaEntidadesCalBean.irCalRen()}"
+		id="cmdlink_cal">
+		<h:graphicImage library="images" name="calificacion.png" />
+	</p:commandLink>
+	<p:tooltip for="cmdlink_cal" value="Ir a Calificaciones" position="bottom" />
 	<br />
-	<p:commandButton id="btnPrincipal" value="Principal"
-		icon="ui-icon-circle-arrow-w" style="width:150px;"
-		action="#{navegarVistasBean.principal()}" />
+
+	<p:commandLink action="#{consultaEntidadesCalBean.irRepresentantes()}"
+		id="cmdlink_agen">
+		<h:graphicImage library="images" name="representante.png" />
+	</p:commandLink>
+	<p:tooltip for="cmdlink_agen" value="Ir a Representantes"
+		position="bottom" />
+	<br />
+	<p:commandLink action="#{navegarVistasBean.principal()}"
+		id="cmdlink_prin">
+		<h:graphicImage library="images" name="home.png" />
+	</p:commandLink>
+	<p:tooltip for="cmdlink_prin" value="Ir Pantalla Principal"
+		position="bottom" />
 </p:panelGrid>
 </html>

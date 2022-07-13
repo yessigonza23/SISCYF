@@ -9,8 +9,7 @@
 	<ui:composition template="/WEB-INF/templates/master.xhtml">
 		<ui:define name="content">
 			<h:form id="frm">
-				<h4 style="color: #003778; text-align: center">TRAMITE:
-					#{consultaEntidadesCalBean.banTipoTramite.descripcion}</h4>
+				<h4 style="color: #003778; text-align: center">TRAMITE CALIFICACIÓN DE ENTIDADES</h4>
 				<h3 style="color: #003778; text-align: center">EMPRESA:
 					#{consultaEntidadesCalBean.empresa.nombre}</h3>
 				<p:growl id="growl" showDetail="true" sticky="true">
@@ -18,7 +17,7 @@
 				</p:growl>
 
 				<p:panelGrid columns="2" layout="grid"
-							columnClasses="ui-grid-col-10,ui-grid-col-2">
+					columnClasses="ui-grid-col-11,ui-grid-col-1">
 					<p:panel id="pn_datosg" >
 						<ui:include src="/pg/cal/entdatosgeneralescal.xhtml" />
 					</p:panel>

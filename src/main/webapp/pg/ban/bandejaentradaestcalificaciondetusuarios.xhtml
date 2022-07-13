@@ -16,8 +16,8 @@
 				<p:growl id="growl" showDetail="true" sticky="true">
 					<p:autoUpdate />
 				</p:growl>
-				<p:panelGrid columns="2" columnClasses="topAligned"
-					style="text-align: left;width:100%">
+				<p:panelGrid columns="2" layout="grid"
+					columnClasses="ui-grid-col-11,ui-grid-col-1">
 					<p:panel id="pn_datosg" style="width:100%">
 
 						<p:dataTable id="dt"
@@ -30,13 +30,17 @@
 							<p:ajax event="rowUnselect"
 								listener="#{bandejaEntradaCalificacionesDetUsuarioBean.onRowUnselect}" />
 
-							<p:column headerText="RUC" filterBy="#{e.empresa.ruc}"
+							<p:column headerText="RUC"
+								filterBy="#{e.calificacionesRenovaciones.empresa.ruc}"
 								filterMatchMode="contains" style="width:10px;">
-								<p:outputLabel value="#{e.empresa.ruc}" />
+								<p:outputLabel
+									value="#{e.calificacionesRenovaciones.empresa.ruc}" />
 							</p:column>
-							<p:column headerText="Empresa" filterBy="#{e.empresa.nombre}"
+							<p:column headerText="Empresa"
+								filterBy="#{e.calificacionesRenovaciones.empresa.nombre}"
 								filterMatchMode="contains" style="width:50px;">
-								<p:outputLabel value="#{e.empresa.nombre}" />
+								<p:outputLabel
+									value="#{e.calificacionesRenovaciones.empresa.nombre}" />
 							</p:column>
 							<p:column headerText="Fecha Trámite" style="width:10px;">
 								<p:outputLabel value="#{e.fecha}" />
@@ -53,25 +57,40 @@
 									autoResize="false" id="intexarea" />
 								<p:column></p:column>
 								<h:outputText id="display" class="p-d-block" />
-								<p:tooltip for="intexarea" value="Cambie la observación antes de devolver el trámite" position="top"/>
+								<p:tooltip for="intexarea"
+									value="Cambie la observación antes de devolver el trámite"
+									position="bottom" />
 								<p:commandButton icon="fa fa-fw fa-edit" update="dt" id="btnDev"
 									actionListener="#{bandejaEntradaCalificacionesDetUsuarioBean.devolverTramite(e,e.observacion)}">
 								</p:commandButton>
-								<p:tooltip for="btnDev" value="Cambie la observación antes de devolver el trámite" position="top"/>
+								<p:tooltip for="btnDev"
+									value="Cambie la observación antes de devolver el trámite"
+									position="bottom" />
 							</p:column>
 						</p:dataTable>
 					</p:panel>
 					<p:panel id="pn_opciones" style="width:100%">
-						<p:commandButton value="Regresar" icon="ui-icon-arrowreturn-1-n"
-							style="width:150px"
-							action="#{bandejaEntradaCalificacionesDetUsuarioBean.regresarBandejaEntrada() }" />
-						<p:commandButton id="btnRegresar" value="Principal"
-							icon="ui-icon-circle-arrow-w" style="width:150px"
-							action="#{navegarVistasBean.principal()}" />
+
+						<p:commandLink
+							action="#{bandejaEntradaCalificacionesDetUsuarioBean.regresarBandejaEntrada()}"
+							id="cmdlink_regr">
+							<h:graphicImage library="images" name="back.png" />
+						</p:commandLink>
+						<p:tooltip for="cmdlink_regr" value="Regresar"
+							position="bottom" />
+						<br />
+						<p:commandLink action="#{navegarVistasBean.principal()}"
+							id="cmdlink_prin">
+							<h:graphicImage library="images" name="home.png" />
+						</p:commandLink>
+						<p:tooltip for="cmdlink_prin" value="Pantalla Principal"
+							position="bottom" />
+
+
 					</p:panel>
 				</p:panelGrid>
 
-			
+
 			</h:form>
 		</ui:define>
 

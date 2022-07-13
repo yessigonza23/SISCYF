@@ -10,13 +10,14 @@
 	<ui:composition template="/WEB-INF/templates/master.xhtml">
 		<ui:define name="content">
 			<h:form id="frm">
-				<h3 style="color: #003778; text-align: center">BANDEJA DE ENTRADA - TÉCNICO: #{bandejaEntradaUsuarioBean.usuario.nombre}</h3>
+				<h3 style="color: #003778; text-align: center">BANDEJA DE
+					ENTRADA - TÉCNICO: #{bandejaEntradaUsuarioBean.usuario.nombre}</h3>
 				<p:growl id="growl" showDetail="true" sticky="true">
 					<p:autoUpdate />
 				</p:growl>
 
-				<p:panelGrid columns="2" columnClasses="topAligned"
-					style="text-align: left;width:100%">
+				<p:panelGrid columns="2" layout="grid"
+					columnClasses="ui-grid-col-11,ui-grid-col-1">
 					<p:panel id="pn_datosg" style="width:100%">
 
 						<p:panelGrid columns="5" columnClasses="topAligned"
@@ -31,11 +32,13 @@
 								value="#{bandejaEntradaUsuarioBean.fecha_fin}">
 							</p:calendar>
 
-							<p:commandButton icon="ui-icon-search" id="btnConsultar"
-								value="Consultar"
-								actionListener="#{bandejaEntradaUsuarioBean.listarTramites()}"
-								process="@form" update="frm:dt">
-							</p:commandButton>
+					
+							<p:commandLink action="#{bandejaEntradaUsuarioBean.listarTramites()}"
+								id="cmdlink_buscar" process="@form" update="frm:dt">
+								<h:graphicImage library="images" name="views.png" />
+							</p:commandLink>
+							<p:tooltip for="cmdlink_buscar" value="Consultar"
+								position="bottom" />
 						</p:panelGrid>
 
 
@@ -58,10 +61,12 @@
 
 					</p:panel>
 					<p:panel id="pn_opciones" style="width:100%">
-
-						<p:commandButton id="btnRegresar" value="Principal"
-							icon="ui-icon-circle-arrow-w" style="width:150px"
-							action="#{navegarVistasBean.principal()}" />
+						<p:commandLink action="#{navegarVistasBean.principal()}"
+							id="cmdlink_prin">
+							<h:graphicImage library="images" name="home.png" />
+						</p:commandLink>
+						<p:tooltip for="cmdlink_prin" value="Pantalla Principal"
+							position="bottom" />
 					</p:panel>
 				</p:panelGrid>
 			</h:form>

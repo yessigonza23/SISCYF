@@ -80,6 +80,7 @@ public class ConsultaCalRenSitiosBean implements Serializable {
 	String empresaS;
 	String calrenS;
 	Integer calrenId;
+	String sitiosS;
 
 	@PostConstruct
 	public void init() {
@@ -111,8 +112,7 @@ public class ConsultaCalRenSitiosBean implements Serializable {
 
 	////////////////////////////////////// SITIOS
 	public void cargarListaSitios(CalificacionesRenovaciones calren) {
-		if (calren != null) {
-		
+		if (calren != null) {		
 			listaSitios = serviceSitios.listarSitiosCalren(calren);
 		} else {
 			listaSitios = null;
@@ -132,20 +132,19 @@ public class ConsultaCalRenSitiosBean implements Serializable {
 
 	public void onRowSelectSitio(SelectEvent<Sitios> event) throws Exception {
 		if (((Sitios) event.getObject()).getId() != null) {
-			mostrarData(((Sitios) event.getObject()));			
+			mostrarData(((Sitios) event.getObject()));
 			cargarListaPesaje(((Sitios) event.getObject()).getId());
 			cargarListaMedicionVolumetrica(((Sitios) event.getObject()).getId());
 			cargarListaOtrosInstrumentos(((Sitios) event.getObject()).getId());
-			if (sitios!=null) {
-				render = true;
-			}
-			if (listaPesaje != null) {
+			System.out.println("1: "+((Sitios) event.getObject()).getId());
+			render = true;
+			if (listaPesaje != null) {				
 				render_pe = true;
 			}
-			if (listaMedicionVolumetrica != null) {
+			if (listaMedicionVolumetrica != null) {				
 				render_mv = true;
 			}
-			if (listaOtrosInstrumentosMedicion != null) {
+			if (listaOtrosInstrumentosMedicion != null) {				
 				render_oi = true;
 			}
 		}
@@ -165,13 +164,15 @@ public class ConsultaCalRenSitiosBean implements Serializable {
 			cargarListaPesaje(((Sitios) event.getObject()).getId());
 			cargarListaMedicionVolumetrica(((Sitios) event.getObject()).getId());
 			cargarListaOtrosInstrumentos(((Sitios) event.getObject()).getId());
-			if (listaPesaje != null) {
+			System.out.println("1: "+((Sitios) event.getObject()).getId());
+			render = true;
+			if (listaPesaje != null) {				
 				render_pe = true;
 			}
-			if (listaMedicionVolumetrica != null) {
+			if (listaMedicionVolumetrica != null) {				
 				render_mv = true;
 			}
-			if (listaOtrosInstrumentosMedicion != null) {
+			if (listaOtrosInstrumentosMedicion != null) {				
 				render_oi = true;
 			}
 		}
@@ -202,6 +203,7 @@ public class ConsultaCalRenSitiosBean implements Serializable {
 		}
 
 	}
+
 	
 	//inicializar render
 	public void limpiar() {
@@ -225,4 +227,18 @@ public class ConsultaCalRenSitiosBean implements Serializable {
 		}
 	}
 
+	/// Ir a Inspecciones
+		public void irInspecciones(Sitios sitios) {
+			
+			if (sitios != null) {
+				sitiosS = String.valueOf(sitios.getId());
+				final FacesContext context = FacesContext.getCurrentInstance();
+				final Flash flash = context.getExternalContext().getFlash();
+				flash.put("sitios", sitiosS);
+				Utilitario.irAPagina("/pg/cal/calrensitiosinspeccionescal");
+			} else {
+				FacesContext.getCurrentInstance().addMessage(null,
+						new FacesMessage(FacesMessage.SEVERITY_ERROR, "No hay datos no puede continuar", "Sin datos"));
+			}
+		}
 }

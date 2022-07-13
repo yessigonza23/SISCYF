@@ -13,8 +13,9 @@
 				<p:growl id="growl" showDetail="true" sticky="true">
 					<p:autoUpdate />
 				</p:growl>
-				<p:panelGrid columns="2" columnClasses="topAligned">
-					<p:panel id="pn_datosRep" style="width:100%">
+				<p:panelGrid columns="2" layout="grid"
+					columnClasses="ui-grid-col-11,ui-grid-col-1">
+					<p:panel id="pn_rep" style="width:100%">
 						<p:dataTable id="dt_reptec" var="e"
 							value="#{consultaRepresentantesCalBean.listaEmpresaRepresentantesRT}"
 							rendered="#{consultaRepresentantesCalBean.render_rt}">
@@ -217,12 +218,21 @@
 						</p:dataTable>
 					</p:panel>
 					<p:panel id="pn_opciones" style="width:100%">
-						<p:commandButton id="btnRegresar" value="Regresar"
-							icon="ui-icon-circle-arrow-w" style="width:120px"
-							actionListener="#{consultaRepresentantesCalBean.irDetalleEmpresa()}" />
-						<p:commandButton id="btnPrincipal" value="Principal"
-							icon="ui-icon-circle-arrow-w" style="width:120px"
-							action="#{navegarVistasBean.principal()}" />
+													
+						<p:commandLink
+							action="#{consultaRepresentantesCalBean.irDetalleEmpresa()}"
+							id="cmdlink_regr">
+							<h:graphicImage library="images" name="back.png" />
+						</p:commandLink>
+						<p:tooltip for="cmdlink_regr" value="Ir a Empresa"
+							position="bottom" />
+						<br />
+						<p:commandLink action="#{navegarVistasBean.principal()}"
+							id="cmdlink_prin">
+							<h:graphicImage library="images" name="home.png" />
+						</p:commandLink>
+						<p:tooltip for="cmdlink_prin" value="Ir Pantalla Principal"
+							position="bottom" />	
 					</p:panel>
 
 				</p:panelGrid>

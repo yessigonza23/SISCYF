@@ -25,13 +25,13 @@
 						<p:dataTable id="dt"
 							value="#{bandejaEntradaCalificacionesDetBean.listaBandejaEntrada}"
 							var="e">
-							<p:column headerText="RUC" filterBy="#{e.empresa.ruc}"
+							<p:column headerText="RUC" filterBy="#{e.calificacionesRenovaciones.empresa.ruc}"
 								filterMatchMode="contains" style="width:20px">
-								<p:outputLabel value="#{e.empresa.ruc}" />
+								<p:outputLabel value="#{e.calificacionesRenovaciones.empresa.ruc}" />
 							</p:column>
-							<p:column headerText="Empresa" filterBy="#{e.empresa.nombre}"
+							<p:column headerText="Empresa" filterBy="#{e.calificacionesRenovaciones.empresa.nombre}"
 								filterMatchMode="contains" style="width:20px">
-								<p:outputLabel value="#{e.empresa.nombre}" />
+								<p:outputLabel value="#{e.calificacionesRenovaciones.empresa.nombre}" />
 							</p:column>
 							<p:column headerText="Fecha Trámite" style="width:20px">
 								<p:outputLabel value="#{e.fecha}" />
@@ -74,7 +74,7 @@
 									<p:column style="border-style: hidden; width:130px;">Empresa: </p:column>
 									<p:column style="border-style: hidden;">
 										<p:outputLabel id="txtEmpresa"
-											value="#{bandejaEntradaCalificacionesDetBean.bandejaEntrada.empresa.nombre}"
+											value="#{bandejaEntradaCalificacionesDetBean.bandejaEntrada.calificacionesRenovaciones.empresa.nombre}"
 											style="width:450px" />
 									</p:column>
 

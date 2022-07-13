@@ -112,6 +112,7 @@ public class ConsultaCalRenTipoSustBean implements Serializable {
 	/// DATOS DE LA EMPRESA DATOS GENERALES PRIMERA PESTAÑA
 	public CalificacionesRenovaciones cargarDatos() {		
 		calrenS = (String) FacesContext.getCurrentInstance().getExternalContext().getFlash().get("calren");
+		
 		calrenId = Integer.parseInt(calrenS);
 		if (calrenId != null) {
 			calRen = serviceCalRen.calrenPorId(calrenId);			

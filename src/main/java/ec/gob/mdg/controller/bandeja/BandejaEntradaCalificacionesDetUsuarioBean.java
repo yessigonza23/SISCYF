@@ -111,7 +111,7 @@ public class BandejaEntradaCalificacionesDetUsuarioBean implements Serializable 
 			if (estado.equals("R")) {
 				cambiarAEstadoTramite(((BandejaEntrada) event.getObject()));
 			}
-			empresaS = String.valueOf(((BandejaEntrada) event.getObject()).getEmpresa().getId());
+			empresaS = String.valueOf(((BandejaEntrada) event.getObject()).getCalificacionesRenovaciones().getEmpresa().getId());
 			final FacesContext context = FacesContext.getCurrentInstance();
 			final Flash flash = context.getExternalContext().getFlash();
 			flash.put("empresa", empresaS);
@@ -130,7 +130,7 @@ public class BandejaEntradaCalificacionesDetUsuarioBean implements Serializable 
 			if (estado.equals("R")) {
 				cambiarAEstadoTramite(((BandejaEntrada) event.getObject()));
 			}
-			empresaS = String.valueOf(((BandejaEntrada) event.getObject()).getEmpresa().getId());
+			empresaS = String.valueOf(((BandejaEntrada) event.getObject()).getCalificacionesRenovaciones().getEmpresa().getId());
 			final FacesContext context = FacesContext.getCurrentInstance();
 			final Flash flash = context.getExternalContext().getFlash();
 			flash.put("empresa", empresaS);
@@ -202,7 +202,7 @@ public class BandejaEntradaCalificacionesDetUsuarioBean implements Serializable 
 
 			bandeja.setBanCatalogoEstados(banCatalogoEstadosSiglas);
 			bandeja.setBanTipoTramite(b.getBanTipoTramite());
-			bandeja.setEmpresa(b.getEmpresa());
+			bandeja.setCalificacionesRenovaciones(b.getCalificacionesRenovaciones());
 			if (estado.equals("D")) {
 				bandeja.setUsuario(null);
 			} else {
@@ -229,7 +229,7 @@ public class BandejaEntradaCalificacionesDetUsuarioBean implements Serializable 
 			parametros.put("institution", correo.getMail_nombre_institucion());
 			parametros.put("system", "DE CONTROL DE SUSTANCIAS - CALIFICACIÓN DE SUSTANCIAS");
 			parametros.put("from", correo.getMailEmisor());
-			parametros.put("to", bandejaEntrada.getEmpresa().getCorreo_electronico());
+			parametros.put("to", bandejaEntrada.getCalificacionesRenovaciones().getEmpresa().getCorreo_electronico());
 			parametros.put("subject",
 					banTipoTramite.getDescripcion_corta() + " - " + correo.getMail_nombre_institucion());
 			parametros.put("message", Base64.getEncoder().encodeToString(detalle.getBytes(StandardCharsets.UTF_8)));

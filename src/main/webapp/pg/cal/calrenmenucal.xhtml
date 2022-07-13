@@ -6,21 +6,33 @@
 	xmlns:f="http://xmlns.jcp.org/jsf/core">
 
 <p:panelGrid id="pg_opciones" style="text-align: left" columns="1">
-
-	<p:commandButton value="Sitios" ajax="false" icon="ui-icon-home"
-		style="width:120px;" action="#{consultaCalRenTipoSustBean.irSitios()}">
-	</p:commandButton>
-	<p:commandButton value="Actividades" ajax="false"
-		icon="ui-icon-clipboard" style="width:120px;"
-		action="#{consultaCalRenTipoSustBean.irFormularios()}">
-	</p:commandButton>
-
+	
+	<p:commandLink action="#{consultaCalRenTipoSustBean.irSitios()}"
+		id="cmdlink_siti">
+		<h:graphicImage library="images" name="sitios.png" />
+	</p:commandLink>
+	<p:tooltip for="cmdlink_siti" value="Ir a Sitios" position="bottom" />
 	<br />
-	<p:commandButton id="btnRegresar" value="Regresar"
-		icon="ui-icon-circle-arrow-w" style="width:120px"
-		action="#{consultaCalRenTipoSustBean.irCalRen()}" />
-	<p:commandButton id="btnPrincipal" value="Principal"
-		icon="ui-icon-circle-arrow-w" style="width:120px"
-		action="#{navegarVistasBean.principal()}" />
+	
+	<p:commandLink action="#{consultaCalRenTipoSustBean.irFormularios()}"
+		id="cmdlink_form">
+		<h:graphicImage library="images" name="actividades.png" />
+	</p:commandLink>
+	<p:tooltip for="cmdlink_form" value="Ir a Actividades" position="bottom" />
+	
+	<br />
+	<p:commandLink action="#{consultaCalRenTipoSustBean.irCalRen()}"
+		id="cmdlink_regr">
+		<h:graphicImage library="images" name="back.png" />
+	</p:commandLink>
+	<p:tooltip for="cmdlink_regr" value="Ir a Calificaciones" position="bottom" />
+	<br />
+	<p:commandLink action="#{navegarVistasBean.principal()}"
+		id="cmdlink_prin">
+		<h:graphicImage library="images" name="home.png" />
+	</p:commandLink>
+	<p:tooltip for="cmdlink_prin" value="Ir Pantalla Principal"
+		position="bottom" />
+
 </p:panelGrid>
 </html>
