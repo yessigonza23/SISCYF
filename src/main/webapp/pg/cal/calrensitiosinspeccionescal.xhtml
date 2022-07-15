@@ -27,10 +27,8 @@
 							value="#{consultaCalRenSitiosInspeccionesBean.listaSitiosInspecciones}"
 							rowIndexVar="index" rows="5" paginator="true"
 							paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
-							rowsPerPageTemplate="5,10,15" sortOrder="descending"
-							paginatorPosition="top"
-							emptyMessage="No hay ningún registro con esa opción"
-							sortMode="multiple">
+							rowsPerPageTemplate="5,10,15" paginatorPosition="top"
+							emptyMessage="No hay ningún registro con esa opción">
 
 							<f:facet name="header">
 								<h:outputText value=" INFORMACIÓN DE INSPECCIONES" />
@@ -59,12 +57,9 @@
 									<f:convertDateTime pattern="dd/MM/yyyy HH:mm:ss" />
 								</p:outputLabel>
 							</p:column>
-
 							<p:column headerText="Estado" style="width:10px">
-
 								<p:selectBooleanCheckbox style="width:10px;text-align: center"
 									value="#{e.estado}" disabled="true" />
-
 							</p:column>
 							<p:column headerText="Observaciones" style="width:50px">
 								<p:inputTextarea type="text" style="width:200px; height:100px"
@@ -85,10 +80,10 @@
 									style="width:150px" update="frm:dlg_check" process="@this">
 									<h:graphicImage library="images" name="checkPeq.png" />
 								</p:commandLink>
-								<p:tooltip for="cmdlink_check" value="Editar" position="bottom" />
+								<p:tooltip for="cmdlink_check" value="Ver Check"
+									position="bottom" />
 							</p:column>
 						</p:dataTable>
-
 					</p:panel>
 					<p:panel id="pn_opciones"
 						style="width:100%;height:1000px;position:relative;">
@@ -130,11 +125,12 @@
 					<p:fieldset
 						legend="#{consultaCalRenSitiosInspeccionesBean.tipoDialog}"
 						style="width:90%">
-						<p:panelGrid id="pg" columns="3" tyle="margin-left: 35%">
+						<p:panelGrid id="pg" columns="3" style="text-align: left;width:100%">
 							<p:column style="border-style: hidden;width:50px;"></p:column>
 							<p:column style="border-style: hidden; width:130px;">Coordinación: </p:column>
 							<p:column style="border-style: hidden;">
 								<p:selectOneMenu id="categorie_article"
+									disabled="#{consultaCalRenSitiosInspeccionesBean.tipoDialog == 'Modificar Inspección'}"
 									value="#{consultaCalRenSitiosInspeccionesBean.sitiosInspecciones.coordinacion}"
 									converter="omnifaces.SelectItemsConverter" filter="true"
 									filterMatchMode="startsWith" tyle="width:100px">
@@ -146,26 +142,42 @@
 								</p:selectOneMenu>
 								<p:messages for="cboCoordinacion" />
 							</p:column>
-
 							<p:column style="border-style: hidden;width:50px;"></p:column>
 							<p:column style="border-style: hidden; width:130px;">Fecha Inspección: </p:column>
 							<p:column style="border-style: hidden;">
 								<p:calendar id="txtFecha" pattern="dd/MM/yyyy HH:mm:ss"
+									disabled="#{consultaCalRenSitiosInspeccionesBean.tipoDialog == 'Modificar Inspección'}"
 									value="#{consultaCalRenSitiosInspeccionesBean.sitiosInspecciones.fecha_inspeccion}">
-
 								</p:calendar>
 								<p:watermark for="txtFecha" value="dd/MM/yyyy HH:mm:ss" />
-
 							</p:column>
-
+						</p:panelGrid>
+						<p:panelGrid id="pg_" columns="3" style="text-align: left;width:100%"
+							rendered="#{consultaCalRenSitiosInspeccionesBean.tipoDialog == 'Modificar Inspección'}">
 							<p:column style="border-style: hidden;width:50px;"></p:column>
 							<p:column style="border-style: hidden; width:130px;">Observaciones: </p:column>
 							<p:column style="border-style: hidden;">
 								<p:inputText id="txtobs"
 									value="#{consultaCalRenSitiosInspeccionesBean.sitiosInspecciones.observaciones}"
+									style="width:450px" onkeyup="mayusculas(this)"
+									rendered="#{consultaCalRenSitiosInspeccionesBean.render}" />
+							</p:column>
+							<p:column style="border-style: hidden;width:50px;"></p:column>
+							<p:column style="border-style: hidden; width:130px;">Conclusiones: </p:column>
+							<p:column style="border-style: hidden;">
+								<p:inputText id="txtcon"
+									value="#{consultaCalRenSitiosInspeccionesBean.sitiosInspecciones.conclusiones}"
+									style="width:450px" onkeyup="mayusculas(this)"
+									rendered="#{consultaCalRenSitiosInspeccionesBean.render}" />
+							</p:column>
+							<p:column style="border-style: hidden;width:50px;"></p:column>
+							<p:column style="border-style: hidden; width:130px;">Recomendaciones: </p:column>
+							<p:column style="border-style: hidden;">
+								<p:inputText id="txtrec"
+									rendered="#{consultaCalRenSitiosInspeccionesBean.render}"
+									value="#{consultaCalRenSitiosInspeccionesBean.sitiosInspecciones.recomendaciones}"
 									style="width:450px" onkeyup="mayusculas(this)" />
 							</p:column>
-
 							<p:column style="border-style: hidden;width:50px;"></p:column>
 							<p:column style="border-style: hidden; width:130px;">Estado: </p:column>
 							<p:column style="border-style: hidden;">
@@ -173,6 +185,7 @@
 									value="#{consultaCalRenSitiosInspeccionesBean.sitiosInspecciones.estado}" />
 							</p:column>
 						</p:panelGrid>
+
 					</p:fieldset>
 					<p:panelGrid id="pgBotones" columns="3" style="margin-left: 35%">
 						<p:commandButton value="Registrar"
@@ -192,91 +205,58 @@
 
 				</p:dialog>
 
-                 <!-- DIALOGO PARA NUEVA INSPECCIÓN CHECK-->
+				<!-- DIALOGO PARA NUEVA INSPECCIÓN CHECK-->
 				<p:dialog id="dlg_check" widgetVar="wdlg_check" resizable="false"
-					width="800" draggable="true" modal="true" position="center"
+					width="1000" draggable="true" modal="true" position="center"
 					closeOnEscape="true" positionType="absolute">
 
-					<h2 style="color: #003778; text-align: center">Check de cumplimiento</h2>
-					<p:fieldset
-						legend="#{consultaCalRenSitiosInspeccionesBean.tipoDialog}"
-						style="width:90%">
-						<p:panelGrid id="pg" columns="3" tyle="margin-left: 35%">
-							<p:column style="border-style: hidden;width:50px;"></p:column>
-							<p:column style="border-style: hidden; width:130px;">Coordinación: </p:column>
-							<p:column style="border-style: hidden;">
-								<p:selectOneMenu id="categorie_article"
-									value="#{consultaCalRenSitiosInspeccionesBean.sitiosInspecciones.coordinacion}"
-									converter="omnifaces.SelectItemsConverter" filter="true"
-									filterMatchMode="startsWith" tyle="width:100px">
-									<f:selectItem itemLabel="Select One" noSelectionOption="true" />
-									<f:selectItems
-										value="#{consultaCalRenSitiosInspeccionesBean.listaCoordinacion}"
-										var="e" itemLabel="#{e.nombre}" itemValue="#{e}" />
-									<f:ajax render="selected_item" />
-								</p:selectOneMenu>
-								<p:messages for="cboCoordinacion" />
-							</p:column>
+					<h2 style="color: #003778; text-align: center">Check de
+						cumplimiento</h2>
+					<p:dataTable id="dt_check" var="f"
+						value="#{consultaCalRenSitiosInspeccionesBean.listaSitiosInspCheck}"
+						editable="true" rows="5" paginator="true"
+							paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+							rowsPerPageTemplate="5,10,15" paginatorPosition="top"
+							emptyMessage="No hay ningún registro con esa opción">
 
-							<p:column style="border-style: hidden;width:50px;"></p:column>
-							<p:column style="border-style: hidden; width:130px;">Fecha Inspección: </p:column>
-							<p:column style="border-style: hidden;">
-								<p:calendar id="txtFecha" pattern="dd/MM/yyyy HH:mm:ss"
-									value="#{consultaCalRenSitiosInspeccionesBean.sitiosInspecciones.fecha_inspeccion}">
+						<p:column style="width:10px" headerText="Editar">
+							<p:rowEditor />
+						</p:column>
+						<p:ajax event="rowEdit"
+							listener="#{consultaCalRenSitiosInspeccionesBean.modificarCheck(f)}"
+							update=":frm:dt_check" />
 
-								</p:calendar>
-								<p:watermark for="txtFecha" value="dd/MM/yyyy HH:mm:ss" />
+						<p:column headerText="Detalle" style="width:40px">
+							<p:outputLabel value="#{f.banTipoTramiteDetalle.descripcion}" />
+						</p:column>
+						<p:column headerText="Cumple/No Cumple" style="width:20px">
+							<p:cellEditor>
+								<f:facet name="output">
+									<p:selectBooleanCheckbox style="width:10px;text-align: center"
+										value="#{f.cumple}" disabled="true" />
+								</f:facet>
 
-							</p:column>
+								<f:facet name="input">
+									<p:selectBooleanCheckbox style="width:10px;text-align: center"
+										value="#{f.cumple}" />
+								</f:facet>
+							</p:cellEditor>
+						</p:column>
+						<p:column headerText="Observaciones" style="width:50px;">
+							<p:cellEditor >
+								<f:facet name="output">
+									<p:inputTextarea type="text" style="width:300px; height:100px"
+										value="#{f.observacion}" rows="3" cols="10" readonly="true" />
+								</f:facet>
+								<f:facet name="input">
+									<p:inputTextarea type="text" style="width:300px; height:100px"
+										value="#{f.observacion}" rows="3" cols="10"
+										onkeyup="mayusculas(this)" />
+								</f:facet>
+							</p:cellEditor>
+						</p:column>
 
-							<p:column style="border-style: hidden;width:50px;"></p:column>
-							<p:column style="border-style: hidden; width:130px;">Observaciones: </p:column>
-							<p:column style="border-style: hidden;">
-								<p:inputText id="txtobs"
-									value="#{consultaCalRenSitiosInspeccionesBean.sitiosInspecciones.observaciones}"
-									style="width:450px" onkeyup="mayusculas(this)" />
-							</p:column>
-							
-							<p:column style="border-style: hidden;width:50px;"></p:column>
-							<p:column style="border-style: hidden; width:130px;">Conclusiones: </p:column>
-							<p:column style="border-style: hidden;">
-								<p:inputText id="txtobs"
-									value="#{consultaCalRenSitiosInspeccionesBean.sitiosInspecciones.conclusiones}"
-									style="width:450px" onkeyup="mayusculas(this)" />
-							</p:column>
-							
-								<p:column style="border-style: hidden;width:50px;"></p:column>
-							<p:column style="border-style: hidden; width:130px;">Recomendaciones: </p:column>
-							<p:column style="border-style: hidden;">
-								<p:inputText id="txtobs"
-									value="#{consultaCalRenSitiosInspeccionesBean.sitiosInspecciones.recomendaciones}"
-									style="width:450px" onkeyup="mayusculas(this)" />
-							</p:column>
-
-							<p:column style="border-style: hidden;width:50px;"></p:column>
-							<p:column style="border-style: hidden; width:130px;">Estado: </p:column>
-							<p:column style="border-style: hidden;">
-								<p:selectBooleanCheckbox
-									value="#{consultaCalRenSitiosInspeccionesBean.sitiosInspecciones.estado}" />
-							</p:column>
-						</p:panelGrid>
-					</p:fieldset>
-					<p:panelGrid id="pgBotones" columns="3" style="margin-left: 35%">
-						<p:commandButton value="Registrar"
-							actionListener="#{consultaCalRenSitiosInspeccionesBean.operar('R')}"
-							ajax="true"
-							oncomplete="if (args &amp;&amp; !args.validationFailed) PF('wdlg_insp').hide()"
-							update="pg, dt_Insp"
-							rendered="#{consultaCalRenSitiosInspeccionesBean.tipoDialog == 'Nueva Inspección'}" />
-
-						<p:commandButton value="Modificar"
-							actionListener="#{consultaCalRenSitiosInspeccionesBean.operar('M')}"
-							ajax="true"
-							oncomplete="if (args &amp;&amp; !args.validationFailed) PF('wdlg_insp').hide()"
-							update="pg, dt_Insp"
-							rendered="#{consultaCalRenSitiosInspeccionesBean.tipoDialog == 'Modificar Inspección'}" />
-					</p:panelGrid>
-
+					</p:dataTable>
 				</p:dialog>
 			</h:form>
 			<!-- Script de estilos para el contenido fel formulario-->

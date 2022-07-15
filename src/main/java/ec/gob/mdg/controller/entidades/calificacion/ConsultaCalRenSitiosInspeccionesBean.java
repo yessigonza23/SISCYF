@@ -2,6 +2,7 @@ package ec.gob.mdg.controller.entidades.calificacion;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 import javax.annotation.PostConstruct;
@@ -12,7 +13,10 @@ import javax.faces.view.ViewScoped;
 import javax.inject.Inject;
 import javax.inject.Named;
 
+import ec.gob.mdg.control.ejb.modelo.BanCatalogoEstados;
+import ec.gob.mdg.control.ejb.modelo.BanTipoTramite;
 import ec.gob.mdg.control.ejb.modelo.BanTipoTramiteDetalle;
+import ec.gob.mdg.control.ejb.modelo.BandejaEntradaInspecciones;
 import ec.gob.mdg.control.ejb.modelo.CalificacionesRenovaciones;
 import ec.gob.mdg.control.ejb.modelo.Coordinacion;
 import ec.gob.mdg.control.ejb.modelo.Empresa;
@@ -20,7 +24,11 @@ import ec.gob.mdg.control.ejb.modelo.Sitios;
 import ec.gob.mdg.control.ejb.modelo.SitiosInspecciones;
 import ec.gob.mdg.control.ejb.modelo.SitiosInspeccionesCheck;
 import ec.gob.mdg.control.ejb.modelo.Usuario;
+import ec.gob.mdg.control.ejb.operaciones.OperacionesConEmpresas;
+import ec.gob.mdg.control.ejb.service.IBanCatalogoEstadosService;
 import ec.gob.mdg.control.ejb.service.IBanTipoTramiteDetalleService;
+import ec.gob.mdg.control.ejb.service.IBanTipoTramiteService;
+import ec.gob.mdg.control.ejb.service.IBandejaEntradaInspeccionesService;
 import ec.gob.mdg.control.ejb.service.ICalificacionesRenovacionesService;
 import ec.gob.mdg.control.ejb.service.ICoordinacionService;
 import ec.gob.mdg.control.ejb.service.IEmpresaService;
@@ -56,7 +64,19 @@ public class ConsultaCalRenSitiosInspeccionesBean implements Serializable {
 	private ICoordinacionService serviceCoordinacion;
 
 	@Inject
+	private IBanTipoTramiteService serviceBanTipoTramite;
+
+	@Inject
+	private IBanCatalogoEstadosService serviceBanCatalogoEstados;
+
+	@Inject
 	private IBanTipoTramiteDetalleService serviceBanTipTraDet;
+
+	@Inject
+	private OperacionesConEmpresas serviceOpEmpresas;
+
+	@Inject
+	private IBandejaEntradaInspeccionesService serviceBandejaInspecciones;
 
 	private List<CalificacionesRenovaciones> listaCalRenovaciones = new ArrayList<>();
 	private List<Sitios> listaSitios = new ArrayList<>();
@@ -69,16 +89,23 @@ public class ConsultaCalRenSitiosInspeccionesBean implements Serializable {
 	private Empresa empresa = new Empresa();
 	private Sitios sitios = new Sitios();
 	private SitiosInspecciones sitiosInspecciones = new SitiosInspecciones();
+	private SitiosInspecciones sitiosIns = new SitiosInspecciones();
 	private SitiosInspeccionesCheck sitiosInspeccionesCheck = new SitiosInspeccionesCheck();
 	private Coordinacion coordinacion = new Coordinacion();
 	private Coordinacion coordinacionUsuario = new Coordinacion();
 	private BanTipoTramiteDetalle banTipoTramiteDetalle = new BanTipoTramiteDetalle();
+	private BanTipoTramite banTipoTramite = new BanTipoTramite();
+	private BanCatalogoEstados banCatalogoEstados = new BanCatalogoEstados();
+	private BandejaEntradaInspecciones bandejaEntradaInspecciones = new BandejaEntradaInspecciones();
 
 	String sitiosS;
 	String calrenS;
 	Integer sitiosId;
 	private String tipoDialog = null;
-	Boolean render = false;
+	Boolean render = true;
+	Long numActTra;
+	Long numActOtr;
+	String observaciones = null;
 
 	Usuario usuario = (Usuario) FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("usuario");
 
@@ -89,6 +116,9 @@ public class ConsultaCalRenSitiosInspeccionesBean implements Serializable {
 			listarCoordinacion();
 			this.tipoDialog = "Nueva";
 			sitiosInspecciones = new SitiosInspecciones();
+
+			banTipoTramite = serviceBanTipoTramite.muestraPorSiglas("C");
+			banCatalogoEstados = serviceBanCatalogoEstados.muestraPorSiglas("R");
 			cargarDatos();
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
@@ -108,16 +138,27 @@ public class ConsultaCalRenSitiosInspeccionesBean implements Serializable {
 			sitios = serviceSitios.sitioPorId(sitiosId);
 			calren = serviceCalRen.calrenPorId(sitios.getCalificacionesRenovaciones().getId());
 			empresa = serviceEmpresa.listarEmpresaPorId(calren.getEmpresa().getId());
+			cuentaAct(empresa);
 			cargarListaInspecciones(sitios);
-			if (listaSitiosInspecciones != null && !listaSitiosInspecciones.isEmpty()) {
-				sitiosInspecciones = listaSitiosInspecciones.get(0);
-				if (sitiosInspecciones != null) {
-					cargarListaCheck(sitiosInspecciones);
-				}
-			}
+//			if (listaSitiosInspecciones != null && !listaSitiosInspecciones.isEmpty()) {
+//				sitiosInspecciones = listaSitiosInspecciones.get(0);
+//				if (sitiosInspecciones != null) {
+//					cargarListaCheck(sitiosInspecciones);
+//				}
+//			}
 		} else {
 			empresa = null;
 		}
+	}
+
+	private void cuentaAct(Empresa empresa) throws Exception {
+
+		if (empresa != null) {
+			numActTra = serviceOpEmpresas.cuentaActividadesTra(empresa);
+			numActOtr = serviceOpEmpresas.cuentaActividadesOtr(empresa);
+
+		}
+
 	}
 
 	////////////////////////////////////// SITIOS
@@ -127,6 +168,7 @@ public class ConsultaCalRenSitiosInspeccionesBean implements Serializable {
 		} else {
 			listaSitiosInspecciones = null;
 		}
+
 	}
 
 	public void limpiarInspecciones() {
@@ -136,20 +178,24 @@ public class ConsultaCalRenSitiosInspeccionesBean implements Serializable {
 		tipoDialog = "Nueva Inspección";
 	}
 
-	public void mostrarInspecciones(SitiosInspecciones i) {
-
-		if (usuario.getRol().equals("C") && i.getEstado() == true) {
-			this.sitiosInspecciones = i;
+	public void mostrarInspecciones(SitiosInspecciones i) {		
+		this.sitiosInspecciones = i;
+		sitiosIns = i;
+		if (usuario.getRol().equals("C") && i.getEstado() == false) {
+			tipoDialog = "Modificar Inspección";
+		} else if (i.getEstado() != false && usuario==i.getUsuario()) {
 			tipoDialog = "Modificar Inspección";
 		} else {
 			FacesContext.getCurrentInstance().addMessage(null,
-					new FacesMessage(FacesMessage.SEVERITY_INFO, "No puede modificar", "Inspección inactivada"));
+					new FacesMessage(FacesMessage.SEVERITY_INFO, "No puede modificar", "Inspección inactivada o Ud no es el responsable de este Sitio"));
 		}
 	}
 
 	public void operar(String accion) {
 		try {
 			if (accion.equalsIgnoreCase("R")) {
+				render = false;
+				//// REGISTRAR EN SITIOS INSPECCIONES
 				cambiarEstado();
 				SitiosInspecciones sitiosIns = new SitiosInspecciones();
 				if (coordinacion.getNombre().equals(coordinacionUsuario.getNombre())) {
@@ -161,8 +207,23 @@ public class ConsultaCalRenSitiosInspeccionesBean implements Serializable {
 				sitiosIns.setSitios(sitios);
 				sitiosIns.setFecha_inspeccion(sitiosInspecciones.getFecha_inspeccion());
 				this.serviceSitiosInsp.registrar(sitiosIns);
-			} else if (accion.equalsIgnoreCase("M")) {
-				this.serviceSitiosInsp.modificar(sitiosInspecciones);
+
+				/// REGISTRAR EN BANDEJA INSPECCIONES
+				BandejaEntradaInspecciones banEntInsp = new BandejaEntradaInspecciones();
+				banEntInsp.setBanTipoTramite(banTipoTramite);
+				banEntInsp.setBanCatalogoEstados(banCatalogoEstados);
+				banEntInsp.setSitios(sitios);
+				banEntInsp.setUsuario(sitiosIns.getUsuario());
+				banEntInsp.setObservacion("Se registra la inspección para este sitio, asignada a la Coordinación "
+						+ sitiosIns.getCoordinacion().getNombre() + ", a cargo del técnico: " + usuario.getNombre()
+						+ " o a espera de su asignación ");
+				banEntInsp.setFecha(ec.gob.mdg.utils.UtilsDate.fechaActual());
+				banEntInsp.setVer(true);
+				serviceBandejaInspecciones.registrar(banEntInsp);
+
+			} else if (accion.equalsIgnoreCase("M")) {		
+				
+				this.serviceSitiosInsp.modificar(sitiosInspecciones);			
 			}
 			this.cargarListaInspecciones(sitios);
 		} catch (Exception e) {
@@ -179,42 +240,81 @@ public class ConsultaCalRenSitiosInspeccionesBean implements Serializable {
 			}
 		}
 	}
+	
+	//VERIFICAR LISTA VACÍA
+	public static boolean isEmpty(Collection<?> collection) {
+        return collection == null || collection.isEmpty();
+    }
 
 	// LISTAR CHECK DE INSPECCIONES
 	public void cargarListaCheck(SitiosInspecciones si) throws Exception {
-
+	
 		if (si != null) {
-			this.listaSitiosInspCheck = serviceSitiosInspCheck.buscarPorIdSitioIns(si);
-			if (listaSitiosInspCheck == null) {
+			cuentaAct(si.getSitios().getCalificacionesRenovaciones().getEmpresa());
+			
+			///LISTAR TIPO DE TRAMITE DETALLE PARA CREAR SITIOS DE INSPECCIONES CHECK
+			if (numActOtr != 0 && numActTra != 0) {
 				listaBanTipoTramiteDetalle = serviceBanTipTraDet.listaPorTramite("C");
-				if (listaBanTipoTramiteDetalle != null) {
+			} else if (numActOtr == 0 && numActTra != 0) {
+				listaBanTipoTramiteDetalle = serviceBanTipTraDet.listaPorTramiteTra("C");
+			} else if (numActOtr != 0 && numActTra == 0) {
+				listaBanTipoTramiteDetalle = serviceBanTipTraDet.listaPorTramiteOtr("C");
+			}
+			
+			if (listaBanTipoTramiteDetalle != null ) {
+				this.listaSitiosInspCheck = serviceSitiosInspCheck.buscarPorIdSitioIns(si);
+				boolean isEmpty = isEmpty(listaSitiosInspCheck);
+				if (isEmpty ) {
 					for (BanTipoTramiteDetalle b : listaBanTipoTramiteDetalle) {
 						SitiosInspeccionesCheck check = new SitiosInspeccionesCheck();
 						check.setBanTipoTramiteDetalle(b);
 						check.setSitiosInspecciones(si);
 						listaSitiosInspCheck.add(check);
 					}
-					for(SitiosInspeccionesCheck s : listaSitiosInspCheck) {
-						serviceSitiosInspCheck.registrar(s);
+					for (SitiosInspeccionesCheck c : listaSitiosInspCheck) {
+						SitiosInspeccionesCheck sicheck = new SitiosInspeccionesCheck();
+						sicheck.setBanTipoTramiteDetalle(c.getBanTipoTramiteDetalle());
+						sicheck.setSitiosInspecciones(c.getSitiosInspecciones());
+						serviceSitiosInspCheck.registrar(sicheck);
 					}
+					bandejaEntradaInspecciones = serviceBandejaInspecciones
+							.buscarPorIdSitio(si.getSitios());
+					if (bandejaEntradaInspecciones!=null) {
+						bandejaEntradaInspecciones.setVer(false);
+						serviceBandejaInspecciones.modificar(bandejaEntradaInspecciones);						
+					}		
 					
-					this.listaSitiosInspCheck = serviceSitiosInspCheck.buscarPorIdSitioIns(si);
-				} else {
-					FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,
-							"No tiene el listado del check para este trámite", "Error"));
-				}
+					banCatalogoEstados = serviceBanCatalogoEstados.muestraPorSiglas("T");
+					
+					observaciones = "El usuario" + usuario.getNombre()
+							+ ", ha generado el check de control, la inspección se encuentra en trámite";
+					BandejaEntradaInspecciones banEntInsp = new BandejaEntradaInspecciones();
+					banEntInsp.setBanTipoTramite(banTipoTramite);
+					banEntInsp.setBanCatalogoEstados(banCatalogoEstados);
+					banEntInsp.setSitios(si.getSitios());
+					banEntInsp.setUsuario(usuario);
+					banEntInsp.setObservacion(observaciones);
+					banEntInsp.setFecha(ec.gob.mdg.utils.UtilsDate.fechaActual());
+					banEntInsp.setVer(true);
+					serviceBandejaInspecciones.registrar(banEntInsp);
+
+					this.listaSitiosInspCheck = serviceSitiosInspCheck.buscarPorIdSitioIns(si);					
+					
+				} 
+			}else {
+				FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,
+						"No tiene el listado del check para este trámite", "Error"));
 			}
 		}
 	}
 
-	public void limpiarInspeccionesCheck() {
-		sitiosInspeccionesCheck = new SitiosInspeccionesCheck();
-		tipoDialog = "Nuevo Check";
-	}
-
-	public void mostrarInspeccionesChecK(SitiosInspeccionesCheck i) {
-		this.sitiosInspeccionesCheck = i;
-		tipoDialog = "Modificar Check";
+	public void modificarCheck(SitiosInspeccionesCheck sitiosInspeccionesCheck) throws Exception {
+		if (sitiosInspeccionesCheck != null && usuario==sitiosInspeccionesCheck.getSitiosInspecciones().getUsuario()) {
+			serviceSitiosInspCheck.modificar(sitiosInspeccionesCheck);
+		}else {
+			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,
+					"No puede realizar modificaciones", "Ud. no es el resposable de este Sitio"));
+		}
 	}
 
 	//// LISTAR COORDINACIONES

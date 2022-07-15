@@ -12,8 +12,10 @@
 	<ui:composition template="/WEB-INF/templates/master.xhtml">
 		<ui:define name="content">
 			<h:form id="frm">
-				<h3 style="color: #003778; text-align: center">
+				<h3 style="color: #003778; text-align: center">SITIOS
+					AUTORIZADOS DE LA EMPRESA:
 					#{consultaCalRenSitiosBean.empresa.nombre}</h3>
+
 				<p:growl id="growl" showDetail="true" sticky="true">
 					<p:autoUpdate />
 				</p:growl>
